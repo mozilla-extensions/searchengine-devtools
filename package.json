@@ -9,6 +9,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "web-ext build -s ./extension/ --overwrite-dest",
     "start": "web-ext run --source-dir ./extension/"
   },
   "private": true,
