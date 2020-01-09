@@ -1,0 +1,49 @@
+[
+  {
+    "namespace": "experiments.searchengines",
+    "description": "Search Engines",
+    "functions": [
+      {
+        "name": "getCurrentLocale",
+        "type": "function",
+        "description": "Return currently configured locale",
+        "async": true,
+        "parameters": []
+      },
+      {
+        "name": "getRegions",
+        "type": "function",
+        "description": "Return a list of regions firefox is aware of",
+        "async": true,
+        "parameters": []
+      },
+      {
+        "name": "getCurrentRegion",
+        "type": "function",
+        "description": "Return currently configured region",
+        "async": true,
+        "parameters": []
+      },
+      {
+        "name": "getEngines",
+        "type": "function",
+        "description": "Return the engine configuration for the given region, locale and configuration",
+        "async": true,
+        "parameters": [{
+          "name": "configUrl",
+          "description": "The configuration",
+          "type": "string"
+        }, {
+          "name": "locale",
+          "description": "The users locale",
+          "type": "string"
+        }, {
+          "name": "region",
+          "description": "The users region",
+          "type": "string"
+        }]
+      }
+    ],
+    "events": []
+  }
+]

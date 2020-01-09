@@ -1,0 +1,86 @@
+@import url("chrome://global/skin/in-content/common.css");
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html, body {
+  max-height: 100vh;
+  max-width: 100vw;
+
+  --success-text-color: green;
+  --error-text-color: red;
+  --subtext-color: #888;
+}
+
+body {
+  margin: 40px;
+  color: var(--in-content-text-color);
+}
+
+body.loading {
+  opacity: 0.2;
+}
+
+section {
+  border: 1px solid var(--in-content-border-color);
+  background-color: var(--in-content-box-background);
+  padding: 10px;
+  word-break: break-all;
+  margin-bottom: 10px;
+}
+
+h1, h2, h3, h4 {
+  margin-top: 0;
+}
+
+#settings {
+  display: flex;
+  flex-direction: row;
+}
+
+#settings div {
+  margin-right: 1em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  padding-bottom: .5em;
+}
+
+tbody tr {
+  opacity: 0.6;
+}
+tbody tr:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+tbody tr:nth-child(odd) {
+  background: #333;
+}
+
+td {
+  padding: .3em 1em;
+  border: 0;
+}
+
+.params {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#configuration textarea {
+  width: 100%;
+  height: 250px;
+  line-height: 20px;
+}

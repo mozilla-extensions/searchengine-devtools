@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Search Helper Extension</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="loading">
+
+  <section id="settings">
+    <div>
+      <label for="region-select">Region</label>
+      <select id="region-select"></select>
+    </div>
+
+    <div>
+      <label for="locale-select">Locale</label>
+      <select id="locale-select"></select>
+    </div>
+
+    <button id="reload-engines">Reload Engines</button>
+    <button id="reload-page">Clear Cache & Reload Page</button>
+
+  </section>
+
+  <section id="engines">
+    <table id="engines-table">
+      <thead>
+        <tr>
+          <th>Index</th>
+          <th>Id</th>
+          <th>Version</th>
+          <th>Locales</th>
+          <th>Params</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="configuration">
+    <h2>Configuration:</h2>
+    <textarea id="config"></textarea>
+  </section>
+
+</body>
+
+<script type="text/javascript" src="script.js"></script>
+
+</html>

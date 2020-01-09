@@ -1,0 +1,16 @@
+{
+  "name": "searchengine-devtools",
+  "version": "1.0.0",
+  "description": "A tool to help test search engine configuration changes",
+  "homepage_url": "https://github.com/mozilla/searchengine-devtools",
+  "dependencies": {
+    "web-ext": "^4.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "web-ext run --source-dir ./extension/"
+  },
+  "private": true,
+  "license": "MPLv2"
+}
