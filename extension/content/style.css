@@ -64,12 +64,20 @@ tbody tr:hover {
 }
 
 tbody tr:nth-child(odd) {
-  background: #333;
+  background: var(--in-content-box-background-odd);
 }
 
 td {
   padding: .3em 1em;
   border: 0;
+}
+
+#engines p {
+  color: var(--in-content-deemphasized-text);
+}
+
+#private-browsing-engine {
+  color: var(--in-content-text-color);
 }
 
 .params {

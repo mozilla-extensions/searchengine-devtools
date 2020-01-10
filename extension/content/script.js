@@ -29,6 +29,7 @@ async function loadEngines() {
     <td class="params">${e.params ? JSON.stringify(e.params) : ""}</td>
   </tr>`);
   $("#engines-table tbody").innerHTML = list.join("");
+  $("#private-browsing-engine").innerText = private ? private : "Unset";
 }
 
 async function initUI() {
