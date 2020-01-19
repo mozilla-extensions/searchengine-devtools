@@ -56,10 +56,10 @@ th {
 }
 
 tbody tr {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 tbody tr:hover {
-  opacity: 0.9;
+  opacity: 1;
   cursor: pointer;
 }
 
@@ -91,4 +91,14 @@ td {
   width: 100%;
   height: 250px;
   line-height: 20px;
+}
+
+#locale-region-settings, #settings, #configuration header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#configuration header h2 {
+  margin: 0;
 }

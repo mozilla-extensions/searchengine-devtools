@@ -1,6 +1,11 @@
 "use script";
 
 const searchengines = browser.experiments.searchengines;
+
+if (!searchengines) {
+  alert("SearchEngine Devtools needs to be ran on nightly with prefs enabled (https://webextensions-experiments.readthedocs.io/en/latest/faq.html#why-is-my-experiment-undefined-on-beta-and-release)");
+}
+
 const $ = document.querySelector.bind(document);
 
 const ONE_DAY = 1000  * 60 * 24;
@@ -45,6 +50,9 @@ async function initUI() {
   $("#region-select").innerHTML =
     regions.map(region => `<option>${region}</option>`);
   $("#region-select").value = (await searchengines.getCurrentRegion());
+
+  $("#region-select").addEventListener("change", reloadEngines);
+  $("#locale-select").addEventListener("change", reloadEngines);  
 
   $("#reload-engines").addEventListener("click", reloadEngines);
   $("#reload-page").addEventListener("click", reloadPage);
@@ -91,7 +99,6 @@ async function getLocales() {
 async function fetchCached(url, expiry) {
   let cache = JSON.parse(localStorage.getItem(url));
   if (cache && (Date.now() - expiry) < cache.time) {
-    console.log("using cache");
     return cache.data;
   }
   let request = await fetch(url);

@@ -11,17 +11,18 @@
 <body class="loading">
 
   <section id="settings">
-    <div>
-      <label for="region-select">Region</label>
-      <select id="region-select"></select>
+    <div id="locale-region-settings">
+      <div>
+        <label for="region-select">Region</label>
+        <select id="region-select"></select>
+      </div>
+
+      <div>
+        <label for="locale-select">Locale</label>
+        <select id="locale-select"></select>
+      </div>
     </div>
 
-    <div>
-      <label for="locale-select">Locale</label>
-      <select id="locale-select"></select>
-    </div>
-
-    <button id="reload-engines">Reload Engines</button>
     <button id="reload-page">Clear Cache & Reload Page</button>
 
   </section>
@@ -45,7 +46,10 @@
   </section>
 
   <section id="configuration">
-    <h2>Configuration:</h2>
+    <header>
+      <h2>Configuration:</h2>
+      <button id="reload-engines">Reload Engines</button>
+    </header>
     <textarea id="config"></textarea>
   </section>
 
