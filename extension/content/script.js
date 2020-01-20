@@ -30,7 +30,7 @@ async function loadEngines() {
     <td>${i+1}</td>
     <td>${e.webExtension.id}</td>
     <td>${e.webExtension.version}</td>
-    <td>${e.webExtension.locales}</td>
+    <td>${e.webExtension.locale}</td>
     <td class="params">${e.params ? JSON.stringify(e.params) : ""}</td>
   </tr>`);
   $("#engines-table tbody").innerHTML = list.join("");
@@ -52,7 +52,7 @@ async function initUI() {
   $("#region-select").value = (await searchengines.getCurrentRegion());
 
   $("#region-select").addEventListener("change", reloadEngines);
-  $("#locale-select").addEventListener("change", reloadEngines);  
+  $("#locale-select").addEventListener("change", reloadEngines);
 
   $("#reload-engines").addEventListener("click", reloadEngines);
   $("#reload-page").addEventListener("click", reloadPage);

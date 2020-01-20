@@ -42,8 +42,13 @@ h1, h2, h3, h4 {
   flex-direction: row;
 }
 
-#settings div {
-  margin-right: 1em;
+#locale-region-settings div {
+  margin-right: 2em;
+  text-align: center;
+}
+
+#settings label {
+  display: block;
 }
 
 table {
