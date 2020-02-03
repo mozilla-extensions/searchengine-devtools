@@ -29,7 +29,6 @@ async function loadEngines() {
   let list = engines.map((e, i) => `<tr data-id="${e.webExtension.id}">
     <td>${i+1}</td>
     <td>${e.webExtension.id}</td>
-    <td>${e.webExtension.version}</td>
     <td>${e.webExtension.locale}</td>
     <td class="params">${e.params ? JSON.stringify(e.params) : ""}</td>
   </tr>`);
