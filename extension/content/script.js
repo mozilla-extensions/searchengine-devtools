@@ -10,15 +10,18 @@ const $ = document.querySelector.bind(document);
 
 const ONE_DAY = 1000  * 60 * 24;
 
-const ENGINES_URL = "https://hg.mozilla.org/mozilla-central/raw-file/tip/browser/components/search/extensions/engines.json";
-const LOCALES_URL ="https://hg.mozilla.org/mozilla-central/raw-file/tip/browser/locales/all-locales";
+const ENGINES_MAIN_URL =
+  "https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/search-config/records";
+const ENGINES_PREVIEW_URL =
+  "https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records";
+const LOCALES_URL = "https://hg.mozilla.org/mozilla-central/raw-file/tip/browser/locales/all-locales";
 
-(async function main() {
+async function main() {
   await initUI();
   await loadConfiguration();
   await loadEngines();
   document.body.classList.remove("loading");
-})();
+}
 
 async function loadEngines() {
   let locale = $("#locale-select").value;
@@ -26,13 +29,22 @@ async function loadEngines() {
   let config = "data:application/json;charset=UTF-8," + $("#config").value;
   let { engines, private } =
     await searchengines.getEngines(config, locale, region);
-  let list = engines.map((e, i) => `<tr data-id="${e.webExtension.id}">
-    <td>${i+1}</td>
-    <td>${e.webExtension.id}</td>
-    <td>${e.webExtension.locale}</td>
-    <td class="params">${e.params ? JSON.stringify(e.params) : ""}</td>
-  </tr>`);
-  $("#engines-table tbody").innerHTML = list.join("");
+
+  const list = engines.map((e, i) => `
+    <div data-id="${e.webExtension.id}">${i+1}</div>
+    <div data-id="${e.webExtension.id}">${e.webExtension.id}</div>
+    <div data-id="${e.webExtension.id}">${e.webExtension.locale}</div>
+    <div data-id="${e.webExtension.id}" class="params">
+      ${e.params ? JSON.stringify(e.params) : ""}
+    </div>
+  `);
+  $("#engines-table").innerHTML = `
+    <div>Index</div>
+    <div>Id</div>
+    <div>Locales</div>
+    <div>Params</div>
+  ` + list.join("");
+
   $("#private-browsing-engine").innerText = private ? private : "Unset";
 }
 
@@ -56,17 +68,22 @@ async function initUI() {
   $("#reload-engines").addEventListener("click", reloadEngines);
   $("#reload-page").addEventListener("click", reloadPage);
 
-  $("#engines-table tbody").addEventListener("click", showConfig);
+  $("#engines-table").addEventListener("click", showConfig);
 }
 
 async function loadConfiguration() {
-  let config = JSON.parse((await fetchCached(ENGINES_URL, ONE_DAY)));
+  const URL = $('input[name="server-radio"]:checked').value == "main"
+    ? ENGINES_MAIN_URL
+    : ENGINES_PREVIEW_URL;
+  let config = JSON.parse((await fetchCached(URL, ONE_DAY)));
   $("#configuration textarea").value = JSON.stringify(config, null, 2);
 }
 
 async function showConfig(e) {
-  let row = e.target.closest("tr");
-  let id = row.dataset.id
+  if (e.target.tagName.toLowerCase() != "div") {
+    return;
+  }
+  let id = e.target.dataset.id;
   if (!id) {
     return;
   }
@@ -83,16 +100,22 @@ async function reloadEngines() {
   document.body.classList.remove("loading");
 }
 
-async function reloadPage() {
+function reloadPage(event) {
+  event.preventDefault();
   localStorage.clear();
-  location.reload(true);
+  (async () => {
+    document.body.classList.add("loading");
+    await loadConfiguration();
+    await loadEngines();
+    document.body.classList.remove("loading");
+  })();
 }
 
 async function getLocales() {
   let data = await fetchCached(LOCALES_URL, ONE_DAY);
   let locales = [...data.split("\n").filter(e => e != ""), "en-US"];
   locales = locales.map(l => (l == "ja-JP-mac" ? "ja-JP-macos" : l));
-  return locales;
+  return locales.sort();
 }
 
 async function fetchCached(url, expiry) {
@@ -105,3 +128,5 @@ async function fetchCached(url, expiry) {
   localStorage.setItem(url, JSON.stringify({time: Date.now(), data}));
   return data;
 }
+
+main();

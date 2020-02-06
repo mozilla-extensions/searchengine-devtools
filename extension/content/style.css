@@ -47,34 +47,39 @@ h1, h2, h3, h4 {
   text-align: center;
 }
 
-#settings label {
+#locale-region-settings label {
   display: block;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+#engines-table {
+  display: grid;
+  grid-template-columns: repeat(3, max-content) auto;
 }
 
-th {
+#engines-table > div {
+  padding: .3em 1em;
+}
+
+#engines-table > div:nth-child(-n+4) {
+  font-weight: bold;
+  text-align: center;
   padding-bottom: .5em;
 }
 
-tbody tr {
+#engines-table > div:nth-child(n+4) {
   opacity: 0.8;
-}
-tbody tr:hover {
-  opacity: 1;
   cursor: pointer;
 }
 
-tbody tr:nth-child(odd) {
-  background: var(--in-content-box-background-odd);
+#engines-table > div:nth-child(n+4):hover {
+  opacity: 1;
 }
 
-td {
-  padding: .3em 1em;
-  border: 0;
+#engines-table > div:nth-child(4n+5):nth-child(8n+5),
+#engines-table > div:nth-child(4n+6):nth-child(8n+6),
+#engines-table > div:nth-child(4n+7):nth-child(8n+7),
+#engines-table > div:nth-child(4n+8):nth-child(8n+8) {
+  background: var(--in-content-box-background-odd);
 }
 
 #engines p {
@@ -86,7 +91,6 @@ td {
 }
 
 .params {
-  max-width: 300px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -106,4 +110,17 @@ td {
 
 #configuration header h2 {
   margin: 0;
+}
+
+.radio > label {
+  display: inline-block;
+}
+
+#reload-div {
+  display: flex
+}
+
+#reload-div > button {
+  margin-right: auto;
+  margin-left: auto;
 }
