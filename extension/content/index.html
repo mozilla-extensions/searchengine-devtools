@@ -9,7 +9,7 @@
 </head>
 
 <body class="loading">
-
+  <form>
   <section id="settings">
     <div id="locale-region-settings">
       <div>
@@ -23,23 +23,34 @@
       </div>
     </div>
 
-    <button id="reload-page">Clear Cache & Reload Page</button>
+    <div id="server-settings">
+      <div>
+        <span class="radio">
+          <input type="radio"
+                 id="use-main"
+                 name="server-radio"
+                 value="main"
+                 checked/>
+          <label for="use-main">Use active configuration</label>
+        </span>
+        <span class="radio">
+          <input type="radio"
+                 id="use-preview"
+                 name="server-radio"
+                 value="main-preview"/>
+          <label for="use-preview">Use preview configuration</label>
+        </span>
+      </div>
+      <div id="reload-div">
+        <button id="reload-page">Clear Cache & Reload Page</button>
+      </div>
+    </div>
 
   </section>
 
   <section id="engines">
-    <table id="engines-table">
-      <thead>
-        <tr>
-          <th>Index</th>
-          <th>Id</th>
-          <th>Version</th>
-          <th>Locales</th>
-          <th>Params</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div id="engines-table">
+    </div>
     <p>Private Browsing Engine:
       <span id="private-browsing-engine"></span>
     </p>
@@ -52,6 +63,7 @@
     </header>
     <textarea id="config"></textarea>
   </section>
+</form>
 
 </body>
 
