@@ -113,6 +113,17 @@ h1, h2, h3, h4 {
   margin: 0;
 }
 
+#server-settings > table {
+  border-collapse: collapse;
+}
+
+#server-settings > table,
+#server-settings th,
+#server-settings td {
+  border: 1px solid var(--in-content-border-color);
+  padding: .3em 1em;
+}
+
 .radio > label {
   display: inline-block;
 }

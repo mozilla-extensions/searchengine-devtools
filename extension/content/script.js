@@ -10,10 +10,13 @@ const $ = document.querySelector.bind(document);
 
 const ONE_DAY = 1000  * 60 * 24;
 
-const ENGINES_MAIN_URL =
-  "https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/search-config/records";
-const ENGINES_PREVIEW_URL =
-  "https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records";
+const ENGINES_URLS = {
+  "prod-main": "https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/search-config/records",
+  "prod-preview": "https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records",
+  "stage-main": "https://settings.stage.mozaws.net/v1/buckets/main/collections/search-config/records",
+  "stage-preview": "https://settings.stage.mozaws.net/v1/buckets/main-preview/collections/search-config/records",
+};
+
 const LOCALES_URL = "https://hg.mozilla.org/mozilla-central/raw-file/tip/browser/locales/all-locales";
 
 async function main() {
@@ -74,9 +77,7 @@ async function initUI() {
 }
 
 async function loadConfiguration() {
-  const URL = $('input[name="server-radio"]:checked').value == "main"
-    ? ENGINES_MAIN_URL
-    : ENGINES_PREVIEW_URL;
+  const URL = ENGINES_URLS[$('input[name="server-radio"]:checked').value];
   let config = JSON.parse((await fetchCached(URL, ONE_DAY)));
   $("#configuration textarea").value = JSON.stringify(config, null, 2);
 }
