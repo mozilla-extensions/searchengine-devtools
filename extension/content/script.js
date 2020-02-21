@@ -94,10 +94,9 @@ async function showConfig(e) {
   $("#config").scrollTop = line * parseInt(lineHeight, 10);
 }
 
-async function reloadEngines() {
-  document.body.classList.add("loading");
+async function reloadEngines(event) {
+  event.preventDefault();
   await loadEngines();
-  document.body.classList.remove("loading");
 }
 
 function reloadPage(event) {
