@@ -38,6 +38,7 @@ async function loadEngines() {
     <div data-id="${e.webExtension.id}">${e.webExtension.id}</div>
     <div data-id="${e.webExtension.id}">${e.webExtension.locale}</div>
     <div data-id="${e.webExtension.id}">${e.telemetryId}</div>
+    <div data-id="${e.webExtension.id}">${e.orderHint}</div>
     <div data-id="${e.webExtension.id}" class="params">
       ${e.params ? JSON.stringify(e.params) : ""}
     </div>
@@ -47,6 +48,7 @@ async function loadEngines() {
     <div>Id</div>
     <div>Locales</div>
     <div>Telemetry Id</div>
+    <div>Order Hint</div>
     <div>Params</div>
   ` + list.join("");
 
