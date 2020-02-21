@@ -32,8 +32,8 @@ var searchengines = class extends ExtensionAPI {
           getRegions,
           getCurrentRegion,
           getEngines,
-        }
-      }
-    }
+        },
+      },
+    };
   }
 };
