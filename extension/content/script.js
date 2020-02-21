@@ -1,5 +1,7 @@
 "use script";
 
+/* eslint-disable no-unsanitized/property */
+
 const searchengines = browser.experiments.searchengines;
 
 if (!searchengines) {
@@ -107,7 +109,7 @@ async function showConfig(e) {
     return;
   }
   let textarea = $("#config");
-  let line = config.value.split(id)[0].match(/\n/g).length;
+  let line = textarea.value.split(id)[0].match(/\n/g).length;
   var lineHeight = document.defaultView
     .getComputedStyle(textarea)
     .getPropertyValue("line-height");
