@@ -1,0 +1,4 @@
+!.eslintrc.js
+!.prettierrc.js
+node_modules/
+web-ext-artifacts/

@@ -6,9 +6,18 @@
   "dependencies": {
     "web-ext": "^4.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-fetch-options": "0.0.5",
+    "eslint-plugin-html": "^6.0.0",
+    "eslint-plugin-mozilla": "^2.3.1",
+    "eslint-plugin-no-unsanitized": "^3.0.2",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^1.19.1"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "eslint .",
     "build": "web-ext build -s ./extension/ --overwrite-dest",
     "start": "web-ext run --source-dir ./extension/"
   },

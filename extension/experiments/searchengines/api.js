@@ -1,4 +1,8 @@
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+/* global ExtensionAPI */
+
+const { XPCOMUtils } = ChromeUtils.import(
+  "resource://gre/modules/XPCOMUtils.jsm"
+);
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   Services: "resource://gre/modules/Services.jsm",
@@ -32,8 +36,8 @@ var searchengines = class extends ExtensionAPI {
           getRegions,
           getCurrentRegion,
           getEngines,
-        }
-      }
-    }
+        },
+      },
+    };
   }
 };
