@@ -38,11 +38,13 @@ async function main() {
 async function loadEngines() {
   let locale = $("#locale-select").value;
   let region = $("#region-select").value;
+  let distroID = $("#distro-id").value;
   let config = "data:application/json;charset=UTF-8," + $("#config").value;
   let { engines, private } = await searchengines.getEngines(
     config,
     locale,
-    region
+    region,
+    distroID
   );
 
   const list = engines.map(
@@ -87,6 +89,7 @@ async function initUI() {
 
   $("#region-select").addEventListener("change", reloadEngines);
   $("#locale-select").addEventListener("change", reloadEngines);
+  $("#distro-id").addEventListener("change", reloadEngines);
 
   $("#reload-engines").addEventListener("click", reloadEngines);
   $("#reload-page").addEventListener("click", reloadPage);

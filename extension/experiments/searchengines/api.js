@@ -21,10 +21,10 @@ async function getCurrentLocale() {
   return Services.locale.appLocaleAsBCP47;
 }
 
-async function getEngines(configUrl, locale, region) {
+async function getEngines(configUrl, locale, region, distroID) {
   let engineSelector = new SearchEngineSelector();
   await engineSelector.init(configUrl);
-  return engineSelector.fetchEngineConfiguration(locale, region);
+  return engineSelector.fetchEngineConfiguration(locale, region, "", distroID);
 }
 
 var searchengines = class extends ExtensionAPI {
