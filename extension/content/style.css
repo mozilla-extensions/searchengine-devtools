@@ -17,7 +17,7 @@ html, body {
 }
 
 body {
-  margin: 40px;
+  margin: 15px;
   color: var(--in-content-text-color);
 }
 
@@ -38,8 +38,80 @@ h1, h2, h3, h4 {
 }
 
 #settings {
+  display: grid;
+  grid: auto-flow / max-content 1fr;
+}
+
+#settings {
+  padding: 1em 0.5em;
+}
+
+#configuration {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  height: 15em;
+  padding-left: 0.5em;
+}
+
+#config {
+  margin-top: 0;
+  flex: 3;
+}
+
+#reload-engines {
+  width: max-content;
+  margin: auto;
+}
+
+#engines {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+#engines p {
+  color: var(--in-content-deemphasized-text);
+}
+
+#tabs {
+  display: grid;
+  grid: auto-flow / 1fr 1fr;
+}
+
+#by-engine, #by-locales {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+}
+
+#by-engine[selected], #by-locales[selected] {
+  background-color: var(--in-content-button-background);
+}
+
+#by-engine:hover, #by-locales:hover {
+  background-color: var(--in-content-button-background-hover);
+}
+
+#tab-contents {
+  margin: 1em;
+  /* To stop vertical jumping when going through engine lists */
+  min-height: 32em;
+}
+
+#by-locales-tab, #by-engine-tab {
+  display: none;
+}
+
+#by-locales-tab[selected], #by-engine-tab[selected] {
+  display: block;
+}
+
+#locale-region-settings {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: max-content;
+  margin: 0 auto;
 }
 
 #locale-region-settings div {
@@ -51,9 +123,14 @@ h1, h2, h3, h4 {
   display: block;
 }
 
+#engines {
+  margin: 15px 0px;
+}
+
 #engines-table {
   display: grid;
   grid-template-columns: repeat(5, max-content) auto;
+  padding-top: 1em;
 }
 
 #engines-table > div {
@@ -84,10 +161,6 @@ h1, h2, h3, h4 {
   background: var(--in-content-box-background-odd);
 }
 
-#engines p {
-  color: var(--in-content-deemphasized-text);
-}
-
 #private-browsing-engine {
   color: var(--in-content-text-color);
 }
@@ -96,22 +169,6 @@ h1, h2, h3, h4 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-#configuration textarea {
-  width: 100%;
-  height: 250px;
-  line-height: 20px;
-}
-
-#locale-region-settings, #settings, #configuration header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#configuration header h2 {
-  margin: 0;
 }
 
 #server-settings > table {

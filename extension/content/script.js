@@ -89,18 +89,39 @@ async function initUI() {
 
   $("#region-select").addEventListener("change", reloadEngines);
   $("#locale-select").addEventListener("change", reloadEngines);
-  $("#distro-id").addEventListener("change", reloadEngines);
+  $("#distro-id").addEventListener("input", reloadEngines);
 
   $("#reload-engines").addEventListener("click", reloadEngines);
   $("#reload-page").addEventListener("click", reloadPage);
 
   $("#engines-table").addEventListener("click", showConfig);
+
+  $("#by-locales").setAttribute("selected", true);
+  $("#by-locales-tab").setAttribute("selected", true);
+
+  $("#by-locales").addEventListener("click", changeTabs);
+  $("#by-engine").addEventListener("click", changeTabs);
+}
+
+async function changeTabs(event) {
+  event.preventDefault();
+  if (event.target.id == "by-locales") {
+    $("#by-locales").setAttribute("selected", true);
+    $("#by-engine").removeAttribute("selected");
+    $("#by-locales-tab").setAttribute("selected", true);
+    $("#by-engine-tab").removeAttribute("selected");
+  } else {
+    $("#by-locales").removeAttribute("selected");
+    $("#by-engine").setAttribute("selected", true);
+    $("#by-locales-tab").removeAttribute("selected");
+    $("#by-engine-tab").setAttribute("selected", true);
+  }
 }
 
 async function loadConfiguration() {
   const URL = ENGINES_URLS[$('input[name="server-radio"]:checked').value];
   let config = JSON.parse(await fetchCached(URL, ONE_DAY));
-  $("#configuration textarea").value = JSON.stringify(config, null, 2);
+  $("#config").value = JSON.stringify(config, null, 2);
 }
 
 async function showConfig(e) {
