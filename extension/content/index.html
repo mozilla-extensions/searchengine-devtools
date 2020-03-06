@@ -103,7 +103,35 @@
         </p>
       </div>
       <div id="by-engine-tab">
-        <p>By Engine</p>
+        <fieldset id="engine-selection">
+          <div>
+            <div>
+              <input type="radio"
+                     id="locale-by-engine"
+                     name="by-engine-radio"
+                     value="locale"
+                     checked/>
+              <label for="locale-by-engine">By Locale</label>
+            </div>
+            <div>
+              <input type="radio"
+                     id="region-by-engine"
+                     name="by-engine-radio"
+                     value="region"/>
+              <label for="region-by-engine">By Region</label>
+            </div>
+          </div>
+          <div>
+            <label for="engine-id">Engine Id</label>
+            <input id="engine-id" type="text" />
+          </div>
+          <div>
+            <label id="by-engine-progress"></label>
+          </div>
+        </fieldset>
+
+        <div id="locale-region-results">
+        </div>
       </div>
     </div>
   </section>

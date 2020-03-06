@@ -80,7 +80,7 @@ async function initUI() {
   );
   $("#locale-select").value = await searchengines.getCurrentLocale();
 
-  let regions = (await searchengines.getRegions()).map(r => r.toUpperCase());
+  let regions = await getRegions();
   regions.unshift("default");
   $("#region-select").innerHTML = regions.map(
     region => `<option>${region}</option>`
@@ -90,6 +90,8 @@ async function initUI() {
   $("#region-select").addEventListener("change", reloadEngines);
   $("#locale-select").addEventListener("change", reloadEngines);
   $("#distro-id").addEventListener("input", reloadEngines);
+  $("#engine-id").addEventListener("change", calculateLocaleRegions);
+  $("#locale-by-engine").addEventListener("change", calculateLocaleRegions);
 
   $("#reload-engines").addEventListener("click", reloadEngines);
   $("#reload-page").addEventListener("click", reloadPage);
@@ -145,6 +147,89 @@ async function reloadEngines(event) {
   await loadEngines();
 }
 
+function getProgressString(progress, max) {
+  return `Progress: ${Math.round((progress * 100) / max)}%`;
+}
+
+function filterConfig(config, engineId) {
+  const json = JSON.parse(config);
+  json.data = json.data.filter(item => {
+    return (
+      item.webExtension &&
+      item.webExtension.id &&
+      item.webExtension.id.startsWith(engineId)
+    );
+  });
+  return JSON.stringify(json);
+}
+
+async function calculateLocaleRegions(event) {
+  event.preventDefault();
+  const engineId = $("#engine-id").value;
+  if (!engineId) {
+    return;
+  }
+  $("#by-engine-progress").textContent = "Progress: 0%";
+  $("#locale-region-results").innerHTML = "";
+
+  const allLocales = await getLocales();
+  const allRegions = await getRegions();
+
+  const byLocale = $('input[name="by-engine-radio"]:checked').value == "locale";
+
+  const allBy = byLocale ? allLocales : allRegions;
+  const allSub = byLocale ? allRegions : allLocales;
+
+  const byLength = allBy.length;
+  // Pre-filter the config for just the engine id to reduce the amount of
+  // processing to do.
+  const config =
+    "data:application/json;charset=UTF-8," +
+    filterConfig($("#config").value, engineId);
+
+  let count = 0;
+  const results = new Map();
+
+  for (const item of allBy) {
+    const itemResults = new Set();
+    for (const subItem of allSub) {
+      const { engines } = await searchengines.getEngines(
+        config,
+        byLocale ? item : subItem,
+        byLocale ? subItem : item,
+        ""
+      );
+      for (let engine of engines) {
+        if (engine.webExtension.id.startsWith(engineId)) {
+          itemResults.add(subItem);
+        }
+      }
+    }
+    results.set(item, itemResults);
+    count++;
+    $("#by-engine-progress").textContent = getProgressString(count, byLength);
+  }
+
+  let list = `<div>${byLocale ? "Locales" : "Regions"}</div><div>${
+    byLocale ? "Regions" : "Locales"
+  }</div>`;
+
+  for (const [item, subItem] of results) {
+    const refined = [...subItem].sort();
+    if (
+      refined.length == allSub.length &&
+      refined.every((item, i) => item == allSub[i])
+    ) {
+      list += `<div>${item}</div><div>All ${
+        byLocale ? "Regions" : "Locales"
+      }</div>`;
+    } else {
+      list += `<div>${item}</div><div>${[...subItem].join(",")}</div>`;
+    }
+  }
+  $("#locale-region-results").innerHTML = list;
+}
+
 function reloadPage(event) {
   event.preventDefault();
   localStorage.clear();
@@ -161,6 +246,10 @@ async function getLocales() {
   let locales = [...data.split("\n").filter(e => e != ""), "en-US"];
   locales = locales.map(l => (l == "ja-JP-mac" ? "ja-JP-macos" : l));
   return locales.sort();
+}
+
+async function getRegions() {
+  return (await searchengines.getRegions()).map(r => r.toUpperCase());
 }
 
 async function fetchCached(url, expiry) {
