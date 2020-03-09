@@ -9,6 +9,8 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   SearchEngineSelector: "resource://gre/modules/SearchEngineSelector.jsm",
 });
 
+XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
+
 async function getCurrentRegion() {
   return Services.prefs.getCharPref("browser.search.region", "default");
 }
@@ -23,7 +25,16 @@ async function getCurrentLocale() {
 
 async function getEngines(configUrl, locale, region, distroID) {
   let engineSelector = new SearchEngineSelector();
-  await engineSelector.init(configUrl);
+  if (!("init" in engineSelector)) {
+    engineSelector.getEngineConfiguration = async () => {
+      const response = await fetch(configUrl);
+      const result = (await response.json()).data;
+      engineSelector._configuration = result;
+      return result;
+    };
+  } else {
+    await engineSelector.init(configUrl);
+  }
   return engineSelector.fetchEngineConfiguration(locale, region, "", distroID);
 }
 
