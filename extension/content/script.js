@@ -91,6 +91,7 @@ async function initUI() {
   $("#locale-select").addEventListener("change", reloadEngines);
   $("#distro-id").addEventListener("input", reloadEngines);
   $("#engine-id").addEventListener("change", calculateLocaleRegions);
+  $("#engine-telemetry-id").addEventListener("change", calculateLocaleRegions);
   $("#locale-by-engine").addEventListener("change", calculateLocaleRegions);
   $("#region-by-engine").addEventListener("change", calculateLocaleRegions);
 
@@ -194,6 +195,8 @@ async function doLocaleRegionCalculation(engineId, abortObj) {
   $("#by-engine-progress").value = 0;
   $("#locale-region-results").innerHTML = "";
 
+  const telemetryId = $("#engine-telemetry-id").value;
+
   const allLocales = await getLocales();
   const allRegions = await getRegions();
 
@@ -223,7 +226,13 @@ async function doLocaleRegionCalculation(engineId, abortObj) {
       );
       for (let engine of engines) {
         if (engine.webExtension.id.startsWith(engineId)) {
-          itemResults.add(subItem);
+          if (telemetryId) {
+            if (engine.telemetryId == telemetryId) {
+              itemResults.add(subItem);
+            }
+          } else {
+            itemResults.add(subItem);
+          }
         }
       }
       if (abortObj.abort) {
