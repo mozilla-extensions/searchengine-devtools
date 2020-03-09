@@ -169,7 +169,7 @@ async function calculateLocaleRegions(event) {
   if (!engineId) {
     return;
   }
-  $("#by-engine-progress").textContent = "Progress: 0%";
+  $("#by-engine-progress").value = 0;
   $("#locale-region-results").innerHTML = "";
 
   const allLocales = await getLocales();
@@ -207,7 +207,9 @@ async function calculateLocaleRegions(event) {
     }
     results.set(item, itemResults);
     count++;
-    $("#by-engine-progress").textContent = getProgressString(count, byLength);
+    const percent = Math.round((count * 100) / byLength);
+    $("#by-engine-progress").value = percent;
+    $("#by-engine-progress").textContent = `${percent}%`;
   }
 
   let list = `<div>${byLocale ? "Locales" : "Regions"}</div><div>${
