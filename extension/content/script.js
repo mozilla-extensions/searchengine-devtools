@@ -92,6 +92,7 @@ async function initUI() {
   $("#distro-id").addEventListener("input", reloadEngines);
   $("#engine-id").addEventListener("change", calculateLocaleRegions);
   $("#locale-by-engine").addEventListener("change", calculateLocaleRegions);
+  $("#region-by-engine").addEventListener("change", calculateLocaleRegions);
 
   $("#reload-engines").addEventListener("click", reloadEngines);
   $("#reload-page").addEventListener("click", reloadPage);
@@ -163,12 +164,33 @@ function filterConfig(config, engineId) {
   return JSON.stringify(json);
 }
 
+let currentCalculation;
+
 async function calculateLocaleRegions(event) {
   event.preventDefault();
+
   const engineId = $("#engine-id").value;
   if (!engineId) {
     return;
   }
+
+  if (currentCalculation) {
+    currentCalculation.abort = true;
+    await currentCalculation.finishPromise;
+  }
+
+  currentCalculation = {
+    abort: false,
+  };
+  currentCalculation.finishPromise = doLocaleRegionCalculation(
+    engineId,
+    currentCalculation
+  )
+    .then(() => (currentCalculation = null))
+    .catch(console.error);
+}
+
+async function doLocaleRegionCalculation(engineId, abortObj) {
   $("#by-engine-progress").value = 0;
   $("#locale-region-results").innerHTML = "";
 
@@ -204,6 +226,9 @@ async function calculateLocaleRegions(event) {
           itemResults.add(subItem);
         }
       }
+      if (abortObj.abort) {
+        return;
+      }
     }
     results.set(item, itemResults);
     count++;
@@ -237,6 +262,8 @@ function reloadPage(event) {
   localStorage.clear();
   (async () => {
     document.body.classList.add("loading");
+    $("#locale-region-results").innerHTML = "";
+    $("#locale-by-engine").value = "";
     await loadConfiguration();
     await loadEngines();
     document.body.classList.remove("loading");

@@ -171,6 +171,10 @@ h1, h2, h3, h4 {
   text-overflow: ellipsis;
 }
 
+#configuration textarea {
+  line-height: 20px;
+}
+
 #server-settings > table {
   border-collapse: collapse;
 }
