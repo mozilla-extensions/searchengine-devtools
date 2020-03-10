@@ -41,6 +41,10 @@
           "name": "region",
           "description": "The users region",
           "type": "string"
+        }, {
+          "name": "distroID",
+          "description": "The user's distribution",
+          "type": "string"
         }]
       }
     ],

@@ -10,19 +10,8 @@
 
 <body class="loading">
   <form>
-  <section id="settings">
-    <div id="locale-region-settings">
-      <div>
-        <label for="region-select">Region</label>
-        <select id="region-select" multiple size="4"></select>
-      </div>
-
-      <div>
-        <label for="locale-select">Locale</label>
-        <select id="locale-select" multiple size="4"></select>
-      </div>
-    </div>
-
+  <fieldset id="settings">
+    <legend>Configuration Settings</legend>
     <div id="server-settings">
       <table>
         <tr>
@@ -73,25 +62,83 @@
         <button id="reload-page">Clear Cache & Reload Page</button>
       </div>
     </div>
+    <div id="configuration">
+      <textarea id="config"></textarea>
+      <button id="reload-engines">Use this Schema and Reload Engines</button>
+    </div>
 
-  </section>
+  </fieldset>
 
   <section id="engines">
-    <div id="engines-table">
+    <div id="tabs">
+      <button id="by-locales">Engines by locale/region</button>
+      <button id="by-engine">Locale/region by Engine</button>
     </div>
-    <p>Default engine is the one listed at index 1. Private Browsing Engine:
-      <span id="private-browsing-engine"></span>
-      <br />
-      Sort is approximate: Sort is by default engine, orderHint and then alphabetical by display name.
-    </p>
-  </section>
 
-  <section id="configuration">
-    <header>
-      <h2>Configuration:</h2>
-      <button id="reload-engines">Reload Engines</button>
-    </header>
-    <textarea id="config"></textarea>
+    <div id="tab-contents">
+      <div id="by-locales-tab">
+        <fieldset id="locale-region-settings">
+          <div>
+            <label for="region-select">Region</label>
+            <select id="region-select" multiple size="4"></select>
+          </div>
+
+          <div>
+            <label for="locale-select">Locale</label>
+            <select id="locale-select" multiple size="4"></select>
+          </div>
+
+          <div>
+            <label for="distro-id">Distribution ID</label>
+            <input id="distro-id" type="text" />
+          </div>
+        </fieldset>
+
+        <div id="engines-table">
+        </div>
+        <p>Default engine is the one listed at index 1. Private Browsing Engine:
+          <span id="private-browsing-engine"></span>
+          <br />
+          Sort is approximate: Sort is by default engine, orderHint and then alphabetical by display name.
+        </p>
+      </div>
+      <div id="by-engine-tab">
+        <fieldset id="engine-selection">
+          <div>
+            <div>
+              <input type="radio"
+                     id="locale-by-engine"
+                     name="by-engine-radio"
+                     value="locale"
+                     checked/>
+              <label for="locale-by-engine">By Locale</label>
+            </div>
+            <div>
+              <input type="radio"
+                     id="region-by-engine"
+                     name="by-engine-radio"
+                     value="region"/>
+              <label for="region-by-engine">By Region</label>
+            </div>
+          </div>
+          <div>
+            <label for="engine-id">Engine Id (reqd)</label>
+            <input id="engine-id" type="text" />
+          </div>
+          <div>
+            <label for="engine-telemetry-id">Telemetry Id</label>
+            <input id="engine-telemetry-id" type="text" />
+          </div>
+          <div>
+            <label for="by-engine-progress">Progress:</label>
+            <progress id="by-engine-progress" max="100" value="0"> 0% </progress>
+          </div>
+        </fieldset>
+
+        <div id="locale-region-results">
+        </div>
+      </div>
+    </div>
   </section>
 </form>
 
