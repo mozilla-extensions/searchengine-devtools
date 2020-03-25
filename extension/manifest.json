@@ -20,6 +20,12 @@
     "browser_style": true
   },
 
+  "permissions": [
+    "https://firefox.settings.services.mozilla.com/*",
+    "https://settings.stage.mozaws.net/*",
+    "https://hg.mozilla.org/"
+  ],
+
   "icons": {
     "48": "icon.png",
     "96": "icon.png"
