@@ -47,12 +47,24 @@ async function loadEngines() {
     distroID
   );
 
+  function getTelemetryId(e) {
+    // Based on SearchService.getEngineParams().
+    let telemetryId = e.telemetryId;
+    if (!telemetryId) {
+      telemetryId = e.webExtension.id.split("@")[0];
+      if (e.webExtension.locale != "default") {
+        telemetryId += "-" + e.webExtension.locale;
+      }
+    }
+    return telemetryId;
+  }
+
   const list = engines.map(
     (e, i) => `
     <div data-id="${e.webExtension.id}">${i + 1}</div>
     <div data-id="${e.webExtension.id}">${e.webExtension.id}</div>
     <div data-id="${e.webExtension.id}">${e.webExtension.locale}</div>
-    <div data-id="${e.webExtension.id}">${e.telemetryId}</div>
+    <div data-id="${e.webExtension.id}">${getTelemetryId(e)}</div>
     <div data-id="${e.webExtension.id}">${e.orderHint}</div>
     <div data-id="${e.webExtension.id}" class="params">
       ${e.params ? JSON.stringify(e.params) : ""}
