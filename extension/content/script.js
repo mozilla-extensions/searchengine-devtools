@@ -39,9 +39,8 @@ async function loadEngines() {
   let locale = $("#locale-select").value;
   let region = $("#region-select").value;
   let distroID = $("#distro-id").value;
-  let config = "data:application/json;charset=UTF-8," + $("#config").value;
   let { engines, private } = await searchengines.getEngines(
-    config,
+    $("#config").value,
     locale,
     region,
     distroID
@@ -220,9 +219,7 @@ async function doLocaleRegionCalculation(engineId, abortObj) {
   const byLength = allBy.length;
   // Pre-filter the config for just the engine id to reduce the amount of
   // processing to do.
-  const config =
-    "data:application/json;charset=UTF-8," +
-    filterConfig($("#config").value, engineId);
+  const config = filterConfig($("#config").value, engineId);
 
   let count = 0;
   const results = new Map();

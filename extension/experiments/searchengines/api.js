@@ -27,8 +27,7 @@ async function getEngines(configUrl, locale, region, distroID) {
   let engineSelector = new SearchEngineSelector();
   if (!("init" in engineSelector)) {
     engineSelector.getEngineConfiguration = async () => {
-      const response = await fetch(configUrl);
-      const result = (await response.json()).data;
+      const result = JSON.parse(configUrl).data;
       engineSelector._configuration = result;
       return result;
     };
