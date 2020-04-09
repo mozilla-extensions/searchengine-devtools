@@ -1,7 +1,7 @@
 "use script";
 
 /* eslint-disable no-unsanitized/property */
-
+/* global Diff */
 const searchengines = browser.experiments.searchengines;
 
 if (!searchengines) {
@@ -106,7 +106,6 @@ async function initUI() {
   $("#locale-by-engine").addEventListener("change", calculateLocaleRegions);
   $("#region-by-engine").addEventListener("change", calculateLocaleRegions);
 
-  $("#reload-engines").addEventListener("click", reloadEngines);
   $("#reload-page").addEventListener("click", reloadPage);
 
   $("#engines-table").addEventListener("click", showConfig);
@@ -116,27 +115,42 @@ async function initUI() {
 
   $("#by-locales").addEventListener("click", changeTabs);
   $("#by-engine").addEventListener("click", changeTabs);
+  $("#compare-configs").addEventListener("click", changeTabs);
+
+  $("#changed-sections").addEventListener("change", displayDiff);
 }
 
-async function changeTabs(event) {
+function changeTabs(event) {
   event.preventDefault();
-  if (event.target.id == "by-locales") {
-    $("#by-locales").setAttribute("selected", true);
-    $("#by-engine").removeAttribute("selected");
-    $("#by-locales-tab").setAttribute("selected", true);
-    $("#by-engine-tab").removeAttribute("selected");
+  for (const tab of ["by-engine", "by-locales", "compare-configs"]) {
+    if (tab == event.target.id) {
+      $(`#${tab}`).setAttribute("selected", true);
+      $(`#${tab}-tab`).setAttribute("selected", true);
+    } else {
+      $(`#${tab}`).removeAttribute("selected");
+      $(`#${tab}-tab`).removeAttribute("selected");
+    }
+  }
+  if (event.target.id == "compare-configs") {
+    $("#compare-with").removeAttribute("hidden");
+    doDiffCalculation().catch(console.error);
   } else {
-    $("#by-locales").removeAttribute("selected");
-    $("#by-engine").setAttribute("selected", true);
-    $("#by-locales-tab").removeAttribute("selected");
-    $("#by-engine-tab").setAttribute("selected", true);
+    $("#compare-with").setAttribute("hidden", true);
   }
 }
 
 async function loadConfiguration() {
-  const URL = ENGINES_URLS[$('input[name="server-radio"]:checked').value];
-  let config = JSON.parse(await fetchCached(URL, ONE_DAY));
-  $("#config").value = JSON.stringify(config, null, 2);
+  if (
+    $(`input[name="server-radio"]:checked`).value != "local-text" &&
+    !(
+      $("#compare-configs").hasAttribute("selected") &&
+      $(`input[name="config-radio"]:checked`).value == "local-text"
+    )
+  ) {
+    console.log("fetch");
+    let config = JSON.parse(await fetchCachedConfig("server-radio"));
+    $("#config").value = JSON.stringify(config, null, 2);
+  }
 }
 
 async function showConfig(e) {
@@ -179,7 +193,9 @@ function filterConfig(config, engineId) {
 let currentCalculation;
 
 async function calculateLocaleRegions(event) {
-  event.preventDefault();
+  if (event) {
+    event.preventDefault();
+  }
 
   const engineId = $("#engine-id").value;
   if (!engineId) {
@@ -281,15 +297,18 @@ function reloadPage(event) {
   (async () => {
     document.body.classList.add("loading");
     $("#locale-region-results").innerHTML = "";
-    $("#locale-by-engine").value = "";
     await loadConfiguration();
     await loadEngines();
+    await doDiffCalculation();
+    if ($("#by-engine").hasAttribute("selected")) {
+      await calculateLocaleRegions();
+    }
     document.body.classList.remove("loading");
   })();
 }
 
 async function getLocales() {
-  let data = await fetchCached(LOCALES_URL, ONE_DAY);
+  let data = await fetchCached(LOCALES_URL);
   let locales = [...data.split("\n").filter(e => e != ""), "en-US"];
   locales = locales.map(l => (l == "ja-JP-mac" ? "ja-JP-macos" : l));
   return locales.sort();
@@ -299,7 +318,15 @@ async function getRegions() {
   return (await searchengines.getRegions()).map(r => r.toUpperCase());
 }
 
-async function fetchCached(url, expiry) {
+function fetchCachedConfig(radioButtonId, expiry) {
+  const buttonValue = $(`input[name="${radioButtonId}"]:checked`).value;
+  if (buttonValue == "local-text") {
+    return $("#config").value;
+  }
+  return fetchCached(ENGINES_URLS[buttonValue]);
+}
+
+async function fetchCached(url, expiry = ONE_DAY) {
   let cache = JSON.parse(localStorage.getItem(url));
   if (cache && Date.now() - expiry < cache.time) {
     return cache.data;
@@ -308,6 +335,86 @@ async function fetchCached(url, expiry) {
   let data = await request.text();
   localStorage.setItem(url, JSON.stringify({ time: Date.now(), data }));
   return data;
+}
+
+async function getDiffData() {
+  const oldConfig = JSON.parse(await fetchCachedConfig("server-radio"));
+  const newConfig = JSON.parse(await fetchCachedConfig("config-radio"));
+
+  const webExtensionIds = new Set();
+
+  function mapConfig(configData) {
+    const map = new Map();
+    for (const config of configData) {
+      webExtensionIds.add(config.webExtension.id);
+      const newConfigData = { ...config };
+      delete newConfigData.last_modified;
+      delete newConfigData.id;
+      delete newConfigData.schema;
+      map.set(config.webExtension.id, newConfigData);
+    }
+    return map;
+  }
+
+  const result = {
+    oldConfigMap: mapConfig(oldConfig.data),
+    newConfigMap: mapConfig(newConfig.data),
+  };
+
+  result.webExtensionIds = [...webExtensionIds.keys()].sort();
+
+  return result;
+}
+
+function getDiff(oldObj, newObj) {
+  return Diff.diffJson(oldObj || {}, newObj || {});
+}
+
+function removeAllChildren(element) {
+  while (element.firstChild) {
+    element.firstChild.remove();
+  }
+}
+
+async function doDiffCalculation() {
+  const { oldConfigMap, newConfigMap, webExtensionIds } = await getDiffData();
+
+  const changedSections = $("#changed-sections");
+  removeAllChildren(changedSections);
+  removeAllChildren($("#diff-display"));
+
+  const fragment = document.createDocumentFragment();
+  for (const id of webExtensionIds) {
+    const fullDiff = getDiff(oldConfigMap.get(id), newConfigMap.get(id));
+    if (fullDiff.length > 1 || fullDiff[0].added || fullDiff[0].removed) {
+      const option = document.createElement("option");
+      option.appendChild(document.createTextNode(`${id}`));
+      fragment.appendChild(option);
+    }
+  }
+  $("#changed-sections").appendChild(fragment);
+}
+
+async function displayDiff() {
+  const { oldConfigMap, newConfigMap } = await getDiffData();
+
+  const id = $("#changed-sections").value;
+  const fullDiff = getDiff(oldConfigMap.get(id), newConfigMap.get(id));
+
+  const diffDisplay = $("#diff-display");
+  removeAllChildren(diffDisplay);
+  const fragment = document.createDocumentFragment();
+  for (const diff of fullDiff) {
+    let color = diff.added ? "green" : "grey";
+    if (diff.removed) {
+      color = "red";
+    }
+    const div = document.createElement("pre");
+    div.appendChild(document.createTextNode(diff.value));
+    div.style.color = color;
+    fragment.appendChild(div);
+  }
+  diffDisplay.appendChild(fragment);
 }
 
 main();

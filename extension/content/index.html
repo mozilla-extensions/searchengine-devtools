@@ -10,70 +10,113 @@
 
 <body class="loading">
   <form>
-  <fieldset id="settings">
-    <legend>Configuration Settings</legend>
-    <div id="server-settings">
-      <table>
-        <tr>
-          <th>Server</th>
-          <th colspan="2">Configuration</th>
-        </tr>
-        <tr>
-          <td>Production:</td>
-          <td>
-            <span class="radio">
+    <section id="engines">
+      <div id="tabs">
+        <button id="by-locales">Engines by locale/region</button>
+        <button id="by-engine">Locale/region by Engine</button>
+        <button id="compare-configs">Compare Configurations</button>
+      </div>
+
+      <div id="server-settings">
+        <fieldset id="settings">
+          <legend>Primary Config</legend>
+          <div id="primary-settings" class="server-settings-table">
+            <div>Server</div>
+            <div>Configuration</div>
+            <div>Production:</div>
+            <div>
               <input type="radio"
                      id="use-prod-main"
                      name="server-radio"
                      value="prod-main"
                      checked/>
               <label for="use-prod-main">Active</label>
-            </span>
-          </td>
-          <td>
-            <input type="radio"
-                   id="use-prod-preview"
-                   name="server-radio"
-                   value="prod-preview"/>
-            <label for="use-prod-preview">In Review</label>
-          </td>
-        </tr>
-        <tr>
-          <td>Staging:</td>
-          <td>
-            <span class="radio">
+            </div>
+            <div>
+              <input type="radio"
+                     id="use-prod-preview"
+                     name="server-radio"
+                     value="prod-preview"/>
+              <label for="use-prod-preview">In Review</label>
+            </div>
+            <div>Staging:</div>
+            <div>
               <input type="radio"
                      id="use-stage-main"
                      name="server-radio"
                      value="stage-main"/>
               <label for="use-stage-main">Active</label>
-            </span>
-          </td>
-          <td>
-            <input type="radio"
-                   id="use-stage-preview"
-                   name="server-radio"
-                   value="stage-preview"/>
-            <label for="use-stage-preview">In Review</label>
-          </td>
-        </tr>
-      </table>
-      <div id="reload-div">
-        <button id="reload-page">Clear Cache & Reload Page</button>
+            </div>
+            <div>
+              <input type="radio"
+                     id="use-stage-preview"
+                     name="server-radio"
+                     value="stage-preview"/>
+              <label for="use-stage-preview">In Review</label>
+            </div>
+            <div>Local:</div>
+            <div>
+              <input type="radio"
+                     id="use-local-text"
+                     name="server-radio"
+                     value="local-text"/>
+              <label for="use-local-text">Use config from textbox</label>
+            </div>
+          </div>
+        </fieldset>
+        <div id="configuration">
+          <textarea id="config"></textarea>
+        </div>
+        <fieldset id="compare-with" hidden="true">
+          <legend>Compare With</legend>
+          <div id="compare-settings" class="server-settings-table">
+            <div>Server</div>
+            <div>Configuration</div>
+            <div>Production:</div>
+            <div>
+              <input type="radio"
+                     id="config-use-prod-main"
+                     name="config-radio"
+                     value="prod-main"/>
+              <label for="config-use-prod-main">Active</label>
+            </div>
+            <div>
+              <input type="radio"
+                     id="config-use-prod-preview"
+                     name="config-radio"
+                     value="prod-preview"
+                     checked/>
+              <label for="config-use-prod-preview">In Review</label>
+            </div>
+            <div>Staging:</div>
+            <div>
+              <input type="radio"
+                     id="config-use-stage-main"
+                     name="config-radio"
+                     value="stage-main"/>
+              <label for="config-use-stage-main">Active</label>
+            </div>
+            <div>
+              <input type="radio"
+                     id="config-use-stage-preview"
+                     name="config-radio"
+                     value="stage-preview"/>
+              <label for="config-use-stage-preview">In Review</label>
+            </div>
+            <div>Local:</div>
+            <div>
+              <input type="radio"
+                     id="config-use-local-text"
+                     name="config-radio"
+                     value="local-text"/>
+              <label for="config-use-local-text">Use config from textbox</label>
+            </div>
+          </div>
+        </fieldset>
+        <div id="reload-div">
+          <button id="reload-page">Use these servers/configuration</button>
+        </div>
       </div>
-    </div>
-    <div id="configuration">
-      <textarea id="config"></textarea>
-      <button id="reload-engines">Use this Schema and Reload Engines</button>
-    </div>
-
-  </fieldset>
-
-  <section id="engines">
-    <div id="tabs">
-      <button id="by-locales">Engines by locale/region</button>
-      <button id="by-engine">Locale/region by Engine</button>
-    </div>
 
     <div id="tab-contents">
       <div id="by-locales-tab">
@@ -138,12 +181,25 @@
         <div id="locale-region-results">
         </div>
       </div>
+      <div id="compare-configs-tab">
+        <div>
+          <div id="overview">
+            <label for="changed-sections">Changed engines:</label>
+            <div>
+              <select id="changed-sections" multiple size="4"></select>
+            </div>
+          </div>
+          <div id="diff-display">
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </form>
 
 </body>
 
+<script type="text/javascript" src="diff.min.js"></script>
 <script type="text/javascript" src="script.js"></script>
 
 </html>

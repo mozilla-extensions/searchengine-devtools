@@ -4,6 +4,7 @@
   "description": "A tool to help test search engine configuration changes",
   "homepage_url": "https://github.com/mozilla/searchengine-devtools",
   "dependencies": {
+    "diff": "4.0.2",
     "web-ext": "^4.0.0"
   },
   "devDependencies": {
@@ -18,8 +19,8 @@
   },
   "scripts": {
     "test": "eslint .",
-    "build": "web-ext build -s ./extension/ --overwrite-dest",
-    "start": "web-ext run --source-dir ./extension/"
+    "build": "cp node_modules/diff/dist/diff.min.js extension/content/ && web-ext build -s ./extension/ --overwrite-dest",
+    "start": "cp node_modules/diff/dist/diff.min.js extension/content/ && web-ext run --source-dir ./extension/"
   },
   "private": true,
   "license": "MPLv2"
