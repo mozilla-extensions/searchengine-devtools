@@ -58,6 +58,16 @@ async function loadEngines() {
     return telemetryId;
   }
 
+  // Approximate the default sort order (we can't do exact order as
+  // we don't have the display names)
+  const collator = new Intl.Collator();
+  engines.sort((a, b) => {
+    if (a.orderHint == b.orderHint) {
+      return collator.compare(a.webExtension.id, b.webExtension.id);
+    }
+    return b.orderHint - a.orderHint;
+  });
+
   const list = engines.map(
     (e, i) => `
     <div data-id="${e.webExtension.id}">${i + 1}</div>
