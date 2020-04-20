@@ -5,21 +5,27 @@
   "homepage_url": "https://github.com/mozilla/searchengine-devtools",
   "dependencies": {
     "diff": "4.0.2",
-    "web-ext": "^4.0.0"
+    "web-ext": "4.1.0"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.0",
+    "eslint": "6.8.0",
+    "eslint-config-prettier": "6.10.1",
     "eslint-plugin-fetch-options": "0.0.5",
-    "eslint-plugin-html": "^6.0.0",
-    "eslint-plugin-mozilla": "^2.3.1",
-    "eslint-plugin-no-unsanitized": "^3.0.2",
-    "eslint-plugin-prettier": "^3.1.2",
-    "prettier": "^1.19.1"
+    "eslint-plugin-html": "6.0.2",
+    "eslint-plugin-mozilla": "2.4.0",
+    "eslint-plugin-no-unsanitized": "3.1.0",
+    "eslint-plugin-prettier": "3.1.3",
+    "npm-run-all": "4.1.5",
+    "prettier": "1.19.1",
+    "rimraf": "3.0.2"
   },
   "scripts": {
     "test": "eslint .",
-    "build": "cp node_modules/diff/dist/diff.min.js extension/content/ && web-ext build -s ./extension/ --overwrite-dest",
+    "build": "npm-run-all clean build:installdiff build:extension build:finalize",
+    "build:installdiff": "cp node_modules/diff/dist/diff.min.js extension/content/",
+    "build:extension": "web-ext build -s ./extension/ --overwrite-dest",
+    "build:finalize": "mv web-ext-artifacts/*.zip web-ext-artifacts/searchengine-devtools.xpi",
+    "clean": "rimraf web-ext-artifacts",
     "start": "cp node_modules/diff/dist/diff.min.js extension/content/ && web-ext run --source-dir ./extension/"
   },
   "private": true,
