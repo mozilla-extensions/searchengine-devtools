@@ -2,6 +2,7 @@
 
 import json
 import requests
+import sys
 
 API_ENDPOINT = \
  "https://settings-writer.stage.mozaws.net/v1/" + \
@@ -22,6 +23,12 @@ response = requests.get(API_ENDPOINT, headers={"Authorization": AUTH})
 
 existingEngines = response.json()
 
+# Handle python 2 backwards compatibility.
+if sys.version_info[0] < 3:
+    inputFn = raw_input
+else:
+    inputFn = input
+
 
 def findExistingEngine(id):
     for engine in existingEngines["data"]:
@@ -40,7 +47,7 @@ def yes_or_no(question):
 
 
 for engine in engines["data"]:
-    print engine["webExtension"]["id"]
+    print(engine["webExtension"]["id"])
 
     existing = findExistingEngine(engine["webExtension"]["id"])
 
@@ -57,7 +64,8 @@ for engine in engines["data"]:
     # Delete things we don't want to upload / don't want to compare.
     existingId = existing["id"]
     for item in ["id", "last_modified", "schema"]:
-        del engine[item]
+        if item in engine:
+            del engine[item]
         del existing[item]
 
     if engine == existing:
