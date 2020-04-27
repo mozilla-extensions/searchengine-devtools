@@ -30,8 +30,8 @@ else:
     inputFn = input
 
 
-def findExistingEngine(id):
-    for engine in existingEngines["data"]:
+def findEngine(id, engineSet):
+    for engine in engineSet["data"]:
         if engine["webExtension"]["id"] == id:
             return engine
     return
@@ -49,7 +49,7 @@ def yes_or_no(question):
 for engine in engines["data"]:
     print(engine["webExtension"]["id"])
 
-    existing = findExistingEngine(engine["webExtension"]["id"])
+    existing = findEngine(engine["webExtension"]["id"], existingEngines)
 
     if not existing:
         response = requests.post(API_ENDPOINT, headers={"Authorization": AUTH},
@@ -77,7 +77,31 @@ for engine in engines["data"]:
                                 headers={"Authorization": AUTH},
                                 json={"data": engine})
 
-        print (response.status_code)
+        print(response.status_code)
         if response.status_code != 200 and response.status_code != 201:
             print("BAD UPDATE!")
             print(response.text)
+
+enginesToRemove = []
+for engine in existingEngines["data"]:
+    newConfigEngine = findEngine(engine["webExtension"]["id"],
+                                 engines)
+
+    if not newConfigEngine:
+        enginesToRemove.append(engine)
+
+if len(enginesToRemove) > 0:
+    print("\nEngines to Remove:\n")
+
+    for engine in enginesToRemove:
+        print engine["webExtension"]["id"]
+
+    if yes_or_no('Are you sure you wish to remove the above engines?'):
+        for engine in enginesToRemove:
+            print engine["webExtension"]["id"]
+            response = requests.delete(API_ENDPOINT + "/" + engine["id"],
+                                       headers={"Authorization": AUTH})
+            print(response.status_code)
+            if response.status_code != 200 and response.status_code != 201:
+                print("BAD DELETE!")
+                print(response.text)
