@@ -61,7 +61,19 @@ async function loadEngines() {
   // Approximate the default sort order (we can't do exact order as
   // we don't have the display names)
   const collator = new Intl.Collator();
+  const defaultEngine = engines[0];
   engines.sort((a, b) => {
+    if (a == defaultEngine) {
+      return -1;
+    }
+    if (private) {
+      if (a == private && b == defaultEngine) {
+        return -1;
+      }
+      if (a == defaultEngine && b == private) {
+        return 1;
+      }
+    }
     if (a.orderHint == b.orderHint) {
       return collator.compare(a.webExtension.id, b.webExtension.id);
     }
