@@ -16,13 +16,13 @@ const ONE_DAY = 1000 * 60 * 24;
 
 const ENGINES_URLS = {
   "prod-main":
-    "https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/search-config/records",
+    "https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/search-config/records?_cachebust=%CACHEBUST%",
   "prod-preview":
-    "https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records",
+    "https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records?_cachebust=%CACHEBUST%",
   "stage-main":
-    "https://settings.stage.mozaws.net/v1/buckets/main/collections/search-config/records",
+    "https://settings.stage.mozaws.net/v1/buckets/main/collections/search-config/records?_cachebust=%CACHEBUST%",
   "stage-preview":
-    "https://settings.stage.mozaws.net/v1/buckets/main-preview/collections/search-config/records",
+    "https://settings.stage.mozaws.net/v1/buckets/main-preview/collections/search-config/records?_cachebust=%CACHEBUST%",
 };
 
 const LOCALES_URL =
@@ -353,6 +353,7 @@ async function fetchCached(url, expiry = ONE_DAY) {
   if (cache && Date.now() - expiry < cache.time) {
     return cache.data;
   }
+  url = url.replace(/%CACHEBUST%/, Math.floor(Math.random() * 100000));
   let request = await fetch(url);
   let data = await request.text();
   localStorage.setItem(url, JSON.stringify({ time: Date.now(), data }));
