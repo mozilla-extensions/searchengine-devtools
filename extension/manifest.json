@@ -1,13 +1,14 @@
 {
   "manifest_version": 2,
   "name": "searchengine-devtools",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A tool to help test search engine configuration changes",
   "homepage_url": "https://github.com/mozilla/searchengine-devtools",
 
   "applications": {
     "gecko": {
-      "id": "searchengines-devtools@mozilla.com"
+      "id": "searchengines-devtools@mozilla.com",
+      "update_url": "https://raw.githubusercontent.com/mozilla-extensions/searchengine-devtools/master/update.json"
     }
   },
 
