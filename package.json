@@ -25,7 +25,7 @@
     "build:installdiff": "cp node_modules/diff/dist/diff.min.js extension/content/",
     "build:extension": "web-ext build -s ./extension/ --overwrite-dest",
     "build:finalize": "mv web-ext-artifacts/*.zip web-ext-artifacts/searchengine-devtools.xpi",
-    "clean": "rimraf web-ext-artifacts",
+    "clean": "rimraf web-ext-artifacts extension/content/diff.min.js",
     "start": "cp node_modules/diff/dist/diff.min.js extension/content/ && web-ext run --source-dir ./extension/"
   },
   "private": true,
