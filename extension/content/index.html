@@ -121,12 +121,12 @@
     <div id="tab-contents">
       <div id="by-locales-tab">
         <fieldset id="locale-region-settings">
-          <div>
+          <div id="region-select-wrapper">
             <label for="region-select">Region</label>
             <select id="region-select" multiple size="4"></select>
           </div>
 
-          <div>
+          <div id="locale-select-wrapper">
             <label for="locale-select">Locale</label>
             <select id="locale-select" multiple size="4"></select>
           </div>
@@ -134,6 +134,11 @@
           <div>
             <label for="distro-id">Distribution ID</label>
             <input id="distro-id" type="text" />
+          </div>
+
+          <div>
+            <label for="experiment-id">Experiment ID (81.0a1+)</label>
+            <input id="experiment-id" type="text" />
           </div>
         </fieldset>
 

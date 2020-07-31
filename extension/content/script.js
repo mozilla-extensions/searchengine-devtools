@@ -39,12 +39,14 @@ async function loadEngines() {
   let locale = $("#locale-select").value;
   let region = $("#region-select").value;
   let distroID = $("#distro-id").value;
-  let { engines, private } = await searchengines.getEngines(
-    $("#config").value,
+  let experiment = $("#experiment-id").value;
+  let { engines, private } = await searchengines.getEngines({
+    configUrl: $("#config").value,
     locale,
     region,
-    distroID
-  );
+    distroID,
+    experiment,
+  });
 
   function getTelemetryId(e) {
     // Based on SearchService.getEngineParams().
@@ -123,6 +125,7 @@ async function initUI() {
   $("#region-select").addEventListener("change", reloadEngines);
   $("#locale-select").addEventListener("change", reloadEngines);
   $("#distro-id").addEventListener("input", reloadEngines);
+  $("#experiment-id").addEventListener("input", reloadEngines);
   $("#engine-id").addEventListener("change", calculateLocaleRegions);
   $("#engine-telemetry-id").addEventListener("change", calculateLocaleRegions);
   $("#locale-by-engine").addEventListener("change", calculateLocaleRegions);

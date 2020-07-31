@@ -23,18 +23,32 @@ async function getCurrentLocale() {
   return Services.locale.appLocaleAsBCP47;
 }
 
-async function getEngines(configUrl, locale, region, distroID) {
+async function getEngines(options) {
   let engineSelector = new SearchEngineSelector();
   if (!("init" in engineSelector)) {
     engineSelector.getEngineConfiguration = async () => {
-      const result = JSON.parse(configUrl).data;
+      const result = JSON.parse(options.configUrl).data;
       engineSelector._configuration = result;
       return result;
     };
   } else {
-    await engineSelector.init(configUrl);
+    await engineSelector.init(options.configUrl);
   }
-  return engineSelector.fetchEngineConfiguration(locale, region, "", distroID);
+  try {
+    return await engineSelector.fetchEngineConfiguration(options);
+  } catch (ex) {
+    // We changed how the parameters worked part way through 81.0a1, so try
+    // falling back if the above doesn't work.
+    console.warn(
+      "Falling back to old call method for fetchEngineConfiguration"
+    );
+    return engineSelector.fetchEngineConfiguration(
+      options.locale,
+      options.region,
+      options.channel,
+      options.distroID
+    );
+  }
 }
 
 var searchengines = class extends ExtensionAPI {
