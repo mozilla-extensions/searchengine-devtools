@@ -116,11 +116,18 @@ h1, h2, h3, h4 {
 }
 
 #locale-region-settings {
-  display: flex;
+  display: grid;
   justify-content: space-between;
   align-items: center;
   width: max-content;
   margin: 0 auto;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(2, auto);
+}
+
+#region-select-wrapper,
+#locale-select-wrapper {
+  grid-row: 1 / 3;
 }
 
 #locale-region-settings div {
