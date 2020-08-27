@@ -1,6 +1,9 @@
-"use script";
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* eslint-disable no-unsanitized/property */
+import Utils from "./utils.js";
+
 /* global Diff */
 const searchengines = browser.experiments.searchengines;
 
@@ -40,7 +43,7 @@ async function loadEngines() {
   let region = $("#region-select").value;
   let distroID = $("#distro-id").value;
   let experiment = $("#experiment-id").value;
-  let { engines, private } = await searchengines.getEngines({
+  let { engines, private: privateDefault } = await searchengines.getEngines({
     configUrl: $("#config").value,
     locale,
     region,
@@ -68,11 +71,11 @@ async function loadEngines() {
     if (a == defaultEngine) {
       return -1;
     }
-    if (private) {
-      if (a == private && b == defaultEngine) {
+    if (privateDefault) {
+      if (a == privateDefault && b == defaultEngine) {
         return -1;
       }
-      if (a == defaultEngine && b == private) {
+      if (a == defaultEngine && b == privateDefault) {
         return 1;
       }
     }
@@ -82,44 +85,43 @@ async function loadEngines() {
     return b.orderHint - a.orderHint;
   });
 
-  const list = engines.map(
-    (e, i) => `
-    <div data-id="${e.webExtension.id}">${i + 1}</div>
-    <div data-id="${e.webExtension.id}">${e.webExtension.id}</div>
-    <div data-id="${e.webExtension.id}">${e.webExtension.locale}</div>
-    <div data-id="${e.webExtension.id}">${getTelemetryId(e)}</div>
-    <div data-id="${e.webExtension.id}">${e.orderHint}</div>
-    <div data-id="${e.webExtension.id}" class="params">
-      ${e.params ? JSON.stringify(e.params) : ""}
-    </div>
-  `
-  );
-  $("#engines-table").innerHTML =
-    `
-    <div>Index</div>
-    <div>Id</div>
-    <div>Locales</div>
-    <div>Telemetry Id</div>
-    <div>Order Hint</div>
-    <div>Params</div>
-  ` + list.join("");
+  let fragment = document.createDocumentFragment();
+  Utils.addDiv(fragment, "Index");
+  Utils.addDiv(fragment, "Id");
+  Utils.addDiv(fragment, "Locales");
+  Utils.addDiv(fragment, "Telemetry Id");
+  Utils.addDiv(fragment, "Order Hint");
+  Utils.addDiv(fragment, "Params");
+  for (let [i, e] of engines.entries()) {
+    Utils.addDiv(fragment, i + 1, e.webExtension.id);
+    Utils.addDiv(fragment, e.webExtension.id, e.webExtension.id);
+    Utils.addDiv(fragment, e.webExtension.locale, e.webExtension.id);
+    Utils.addDiv(fragment, getTelemetryId(e), e.webExtension.id);
+    Utils.addDiv(fragment, e.orderHint, e.webExtension.id);
+    Utils.addDiv(
+      fragment,
+      e.params ? JSON.stringify(e.params) : "",
+      e.webExtension.id,
+      "params"
+    );
+  }
+  $("#engines-table").textContent = "";
+  $("#engines-table").appendChild(fragment);
 
-  $("#private-browsing-engine").innerText = private ? private : "Unset";
+  $("#private-browsing-engine").innerText = privateDefault
+    ? privateDefault
+    : "Unset";
 }
 
 async function initUI() {
   let locales = await getLocales();
   locales.unshift("default");
-  $("#locale-select").innerHTML = locales.map(
-    locale => `<option>${locale}</option>`
-  );
+  Utils.insertOptionList($("#locale-select"), locales);
   $("#locale-select").value = await searchengines.getCurrentLocale();
 
   let regions = await getRegions();
   regions.unshift("default");
-  $("#region-select").innerHTML = regions.map(
-    region => `<option>${region}</option>`
-  );
+  Utils.insertOptionList($("#region-select"), regions);
   $("#region-select").value = await searchengines.getCurrentRegion();
 
   $("#region-select").addEventListener("change", reloadEngines);
@@ -199,10 +201,6 @@ async function reloadEngines(event) {
   await loadEngines();
 }
 
-function getProgressString(progress, max) {
-  return `Progress: ${Math.round((progress * 100) / max)}%`;
-}
-
 function filterConfig(config, engineId) {
   const json = JSON.parse(config);
   json.data = json.data.filter(item => {
@@ -245,7 +243,7 @@ async function calculateLocaleRegions(event) {
 
 async function doLocaleRegionCalculation(engineId, abortObj) {
   $("#by-engine-progress").value = 0;
-  $("#locale-region-results").innerHTML = "";
+  $("#locale-region-results").textContent = "";
 
   const telemetryId = $("#engine-telemetry-id").value;
 
@@ -260,7 +258,7 @@ async function doLocaleRegionCalculation(engineId, abortObj) {
   const byLength = allBy.length;
   // Pre-filter the config for just the engine id to reduce the amount of
   // processing to do.
-  const config = filterConfig($("#config").value, engineId);
+  const configUrl = filterConfig($("#config").value, engineId);
 
   let count = 0;
   const results = new Map();
@@ -268,12 +266,13 @@ async function doLocaleRegionCalculation(engineId, abortObj) {
   for (const item of allBy) {
     const itemResults = new Set();
     for (const subItem of allSub) {
-      const { engines } = await searchengines.getEngines(
-        config,
-        byLocale ? item : subItem,
-        byLocale ? subItem : item,
-        ""
-      );
+      const { engines } = await searchengines.getEngines({
+        configUrl,
+        locale: byLocale ? item : subItem,
+        region: byLocale ? subItem : item,
+        distroID: "",
+        experiment: "",
+      });
       for (let engine of engines) {
         if (engine.webExtension.id.startsWith(engineId)) {
           if (telemetryId) {
@@ -296,24 +295,23 @@ async function doLocaleRegionCalculation(engineId, abortObj) {
     $("#by-engine-progress").textContent = `${percent}%`;
   }
 
-  let list = `<div>${byLocale ? "Locales" : "Regions"}</div><div>${
-    byLocale ? "Regions" : "Locales"
-  }</div>`;
+  let fragment = document.createDocumentFragment();
+  Utils.addDiv(fragment, byLocale ? "Locales" : "Regions");
+  Utils.addDiv(fragment, byLocale ? "Regions" : "Locales");
 
   for (const [item, subItem] of results) {
     const refined = [...subItem].sort();
+    Utils.addDiv(fragment, item);
     if (
       refined.length == allSub.length &&
       refined.every((item, i) => item == allSub[i])
     ) {
-      list += `<div>${item}</div><div>All ${
-        byLocale ? "Regions" : "Locales"
-      }</div>`;
+      Utils.addDiv(fragment, `All ${byLocale ? "Regions" : "Locales"}`);
     } else {
-      list += `<div>${item}</div><div>${[...subItem].join(",")}</div>`;
+      Utils.addDiv(fragment, [...subItem].join(","));
     }
   }
-  $("#locale-region-results").innerHTML = list;
+  $("#locale-region-results").appendChild(fragment);
 }
 
 function reloadPage(event) {
@@ -321,7 +319,7 @@ function reloadPage(event) {
   localStorage.clear();
   (async () => {
     document.body.classList.add("loading");
-    $("#locale-region-results").innerHTML = "";
+    $("#locale-region-results").textContent = "";
     await loadConfiguration();
     await loadEngines();
     await doDiffCalculation();
@@ -334,7 +332,13 @@ function reloadPage(event) {
 
 async function getLocales() {
   let data = await fetchCached(LOCALES_URL);
-  let locales = [...data.split("\n").filter(e => e != ""), "en-US"];
+  let locales = [
+    ...data
+      .split("\n")
+      .filter(e => e != "")
+      .filter(e => e.match(/^[a-zA-Z-]+$/)),
+    "en-US",
+  ];
   locales = locales.map(l => (l == "ja-JP-mac" ? "ja-JP-macos" : l));
   return locales.sort();
 }
@@ -396,18 +400,12 @@ function getDiff(oldObj, newObj) {
   return Diff.diffJson(oldObj || {}, newObj || {});
 }
 
-function removeAllChildren(element) {
-  while (element.firstChild) {
-    element.firstChild.remove();
-  }
-}
-
 async function doDiffCalculation() {
   const { oldConfigMap, newConfigMap, webExtensionIds } = await getDiffData();
 
   const changedSections = $("#changed-sections");
-  removeAllChildren(changedSections);
-  removeAllChildren($("#diff-display"));
+  Utils.removeAllChildren(changedSections);
+  Utils.removeAllChildren($("#diff-display"));
 
   const fragment = document.createDocumentFragment();
   for (const id of webExtensionIds) {
@@ -428,7 +426,7 @@ async function displayDiff() {
   const fullDiff = getDiff(oldConfigMap.get(id), newConfigMap.get(id));
 
   const diffDisplay = $("#diff-display");
-  removeAllChildren(diffDisplay);
+  Utils.removeAllChildren(diffDisplay);
   const fragment = document.createDocumentFragment();
   for (const diff of fullDiff) {
     let color = diff.added ? "green" : "grey";
@@ -443,4 +441,4 @@ async function displayDiff() {
   diffDisplay.appendChild(fragment);
 }
 
-main();
+window.addEventListener("load", main, { once: true });

@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "searchengine-devtools",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A tool to help test search engine configuration changes",
   "homepage_url": "https://github.com/mozilla/searchengine-devtools",
 
