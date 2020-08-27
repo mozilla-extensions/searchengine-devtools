@@ -13,5 +13,11 @@ module.exports = {
         webextensions: true,
       },
     },
+    {
+      files: ["extension/content/*.js"],
+      parserOptions: {
+        sourceType: "module",
+      },
+    },
   ],
 };
