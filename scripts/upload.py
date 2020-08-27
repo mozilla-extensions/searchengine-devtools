@@ -39,7 +39,7 @@ def findEngine(id, engineSet):
 
 def yes_or_no(question):
     while "the answer is invalid":
-        reply = str(raw_input(question+' (y/n): ')).lower().strip()
+        reply = str(inputFn(question+' (y/n): ')).lower().strip()
         if reply[0] == 'y':
             return True
         if reply[0] == 'n':
@@ -94,11 +94,11 @@ if len(enginesToRemove) > 0:
     print("\nEngines to Remove:\n")
 
     for engine in enginesToRemove:
-        print engine["webExtension"]["id"]
+        print(engine["webExtension"]["id"])
 
     if yes_or_no('Are you sure you wish to remove the above engines?'):
         for engine in enginesToRemove:
-            print engine["webExtension"]["id"]
+            print(engine["webExtension"]["id"])
             response = requests.delete(API_ENDPOINT + "/" + engine["id"],
                                        headers={"Authorization": AUTH})
             print(response.status_code)
