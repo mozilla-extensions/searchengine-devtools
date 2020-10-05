@@ -1,27 +1,53 @@
 #!/bin/python
 
+import argparse
+from getpass import getpass
 import json
 import requests
 import sys
 
-API_ENDPOINT = \
- "https://settings-writer.stage.mozaws.net/v1/" + \
- "buckets/main-workspace/collections/search-config/records"
-# API_ENDPOINT = \
-#  "https://settings-writer.prod.mozaws.net/v1/" + \
-#  "buckets/main-workspace/collections/search-config/records"
+API_ENDPOINTS = {
+    'dev': "https://kinto.dev.mozaws.net/v1/",
+    'stage': "https://settings-writer.stage.mozaws.net/v1/",
+    'prod': "https://settings-writer.prod.mozaws.net/v1/"
+}
 
-# Fill this in!
-AUTH = ""
+parser = argparse.ArgumentParser(
+    description="""
+Upload dump files to remote settings. It is assumed the dump files are in
+services/dumps/main/ relative to the current directory.
+    """)
+parser.add_argument('-s', '--server',
+                    choices=['dev', 'stage', 'prod'],
+                    help='Which server to upload the collection to.')
+parser.add_argument('-c', '--collection',
+                    dest='collection',
+                    help='The collection to upload (e.g. search-telemetry)')
 
-with open('services/settings/dumps/main/search-config.json', 'r') as jsonFile:
+args = parser.parse_args()
+
+if args.server is None or args.collection is None:
+    parser.print_help()
+    sys.exit(1)
+
+workspace = 'main' if args.server == 'dev' else 'main-workspace'
+
+API_ENDPOINT = API_ENDPOINTS[args.server] + \
+    "buckets/%s/collections/%s/records" % (workspace, args.collection)
+
+authHeader = getpass('Enter Authentication Header (copy from site): ')
+headers = {"Authorization": authHeader}
+
+
+with open('services/settings/dumps/main/%s.json' % args.collection,
+          'r') as jsonFile:
     data = jsonFile.read()
 
-engines = json.loads(data)
+records = json.loads(data)
 
-response = requests.get(API_ENDPOINT, headers={"Authorization": AUTH})
+response = requests.get(API_ENDPOINT, headers=headers)
 
-existingEngines = response.json()
+existingRecords = response.json()
 
 # Handle python 2 backwards compatibility.
 if sys.version_info[0] < 3:
@@ -30,10 +56,19 @@ else:
     inputFn = input
 
 
-def findEngine(id, engineSet):
-    for engine in engineSet["data"]:
-        if engine["webExtension"]["id"] == id:
-            return engine
+def getIdForRecord(record):
+    if args.collection == "search-config":
+        return record["webExtension"]["id"]
+
+    return record["telemetryId"]
+
+
+def findRecord(id, recordSet):
+    if "data" not in recordSet:
+        return
+    for record in recordSet["data"]:
+        if getIdForRecord(record) == id:
+            return record
     return
 
 
@@ -46,14 +81,14 @@ def yes_or_no(question):
             return False
 
 
-for engine in engines["data"]:
-    print(engine["webExtension"]["id"])
+for record in records["data"]:
+    print(getIdForRecord(record))
 
-    existing = findEngine(engine["webExtension"]["id"], existingEngines)
+    existing = findRecord(getIdForRecord(record), existingRecords)
 
     if not existing:
-        response = requests.post(API_ENDPOINT, headers={"Authorization": AUTH},
-                                 json={"data": engine})
+        response = requests.post(API_ENDPOINT, headers=headers,
+                                 json={"data": record})
         if response.status_code != 200 and response.status_code != 201:
             print("BAD UPLOAD!")
             print(response)
@@ -64,43 +99,42 @@ for engine in engines["data"]:
     # Delete things we don't want to upload / don't want to compare.
     existingId = existing["id"]
     for item in ["id", "last_modified", "schema"]:
-        if item in engine:
-            del engine[item]
+        if item in record:
+            del record[item]
         del existing[item]
 
-    if engine == existing:
+    if record == existing:
         print("Up to date")
         continue
 
-    if yes_or_no('Upload changes to ' + engine["webExtension"]["id"]):
+    if yes_or_no('Upload changes to ' + getIdForRecord(record)):
         response = requests.put(API_ENDPOINT + "/" + existingId,
-                                headers={"Authorization": AUTH},
-                                json={"data": engine})
+                                headers=headers,
+                                json={"data": record})
 
         print(response.status_code)
         if response.status_code != 200 and response.status_code != 201:
             print("BAD UPDATE!")
             print(response.text)
 
-enginesToRemove = []
-for engine in existingEngines["data"]:
-    newConfigEngine = findEngine(engine["webExtension"]["id"],
-                                 engines)
+recordsToRemove = []
+for record in existingRecords["data"]:
+    newConfigRecord = findRecord(getIdForRecord(record), records)
 
-    if not newConfigEngine:
-        enginesToRemove.append(engine)
+    if not newConfigRecord:
+        recordsToRemove.append(record)
 
-if len(enginesToRemove) > 0:
-    print("\nEngines to Remove:\n")
+if len(recordsToRemove) > 0:
+    print("\Records to Remove:\n")
 
-    for engine in enginesToRemove:
-        print(engine["webExtension"]["id"])
+    for record in recordsToRemove:
+        print(getIdForRecord(record))
 
-    if yes_or_no('Are you sure you wish to remove the above engines?'):
-        for engine in enginesToRemove:
-            print(engine["webExtension"]["id"])
-            response = requests.delete(API_ENDPOINT + "/" + engine["id"],
-                                       headers={"Authorization": AUTH})
+    if yes_or_no('Are you sure you wish to remove the above records?'):
+        for record in recordsToRemove:
+            print(getIdForRecord(record))
+            response = requests.delete(API_ENDPOINT + "/" + record["id"],
+                                       headers=headers)
             print(response.status_code)
             if response.status_code != 200 and response.status_code != 201:
                 print("BAD DELETE!")
