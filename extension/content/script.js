@@ -203,7 +203,7 @@ async function reloadEngines(event) {
 
 function filterConfig(config, engineId) {
   const json = JSON.parse(config);
-  json.data = json.data.filter(item => {
+  json.data = json.data.filter((item) => {
     return (
       item.webExtension &&
       item.webExtension.id &&
@@ -335,16 +335,16 @@ async function getLocales() {
   let locales = [
     ...data
       .split("\n")
-      .filter(e => e != "")
-      .filter(e => e.match(/^[a-zA-Z-]+$/)),
+      .filter((e) => e != "")
+      .filter((e) => e.match(/^[a-zA-Z-]+$/)),
     "en-US",
   ];
-  locales = locales.map(l => (l == "ja-JP-mac" ? "ja-JP-macos" : l));
+  locales = locales.map((l) => (l == "ja-JP-mac" ? "ja-JP-macos" : l));
   return locales.sort();
 }
 
 async function getRegions() {
-  return (await searchengines.getRegions()).map(r => r.toUpperCase());
+  return (await searchengines.getRegions()).map((r) => r.toUpperCase());
 }
 
 function fetchCachedConfig(radioButtonId, expiry) {
