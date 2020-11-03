@@ -32,6 +32,7 @@ async function getEngines(options) {
   if (!("init" in engineSelector)) {
     engineSelector.getEngineConfiguration = async () => {
       const result = JSON.parse(options.configUrl).data;
+      result.sort((a, b) => a.id.localeCompare(b.id));
       engineSelector._configuration = result;
       return result;
     };
