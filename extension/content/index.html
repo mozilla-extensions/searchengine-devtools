@@ -66,6 +66,7 @@
         </fieldset>
         <div id="configuration">
           <textarea id="config"></textarea>
+          <div id="config-error" hidden="true">Error in configuration, see web console for details</div>
         </div>
         <fieldset id="compare-with" hidden="true">
           <legend>Compare With</legend>
@@ -205,6 +206,7 @@
 </body>
 
 <script type="text/javascript" src="diff.min.js"></script>
+<script type="text/javascript" src="validate.js"></script>
 <script type="module" src="script.js"></script>
 
 </html>

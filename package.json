@@ -8,6 +8,7 @@
     "web-ext": "5.2.0"
   },
   "devDependencies": {
+    "ajv-cli": "3.0.0",
     "eslint": "7.10.0",
     "eslint-config-prettier": "6.12.0",
     "eslint-plugin-fetch-options": "0.0.5",
@@ -17,15 +18,18 @@
     "eslint-plugin-prettier": "3.1.4",
     "npm-run-all": "4.1.5",
     "prettier": "2.1.2",
-    "rimraf": "3.0.2"
+    "rimraf": "3.0.2",
+    "webpack": "5.10.0",
+    "webpack-cli": "4.2.0"
   },
   "scripts": {
     "test": "eslint .",
-    "build": "npm-run-all clean build:installdiff build:extension build:finalize",
+    "build": "npm-run-all clean build:installdiff build:createvalidate build:extension build:finalize",
     "build:installdiff": "cp node_modules/diff/dist/diff.min.js extension/content/",
     "build:extension": "web-ext build -s ./extension/ --overwrite-dest",
     "build:finalize": "mv web-ext-artifacts/*.zip web-ext-artifacts/searchengine-devtools.xpi",
-    "clean": "rimraf web-ext-artifacts extension/content/diff.min.js",
+    "build:createvalidate": "ajv compile --verbose --all-errors -s schemas/search-engine-config-schema.json -o validate.js && webpack && rm validate.js",
+    "clean": "rimraf web-ext-artifacts extension/content/diff.min.js extension/content/validate.js",
     "start": "cp node_modules/diff/dist/diff.min.js extension/content/ && web-ext run --source-dir ./extension/"
   },
   "private": true,

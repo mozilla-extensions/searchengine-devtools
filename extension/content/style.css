@@ -284,3 +284,7 @@ fieldset > div td {
 #diff-display > pre {
   margin: 0;
 }
+
+#config-error {
+  color: red;
+}
