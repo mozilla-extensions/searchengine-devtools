@@ -4,7 +4,7 @@
 
 import Utils from "./utils.js";
 
-/* global Diff */
+/* global validate, Diff */
 const searchengines = browser.experiments.searchengines;
 
 if (!searchengines) {
@@ -43,6 +43,11 @@ async function loadEngines() {
   let region = $("#region-select").value;
   let distroID = $("#distro-id").value;
   let experiment = $("#experiment-id").value;
+
+  if (!validateConfiguration(JSON.parse($("#config").value))) {
+    return;
+  }
+
   let { engines, private: privateDefault } = await searchengines.getEngines({
     configUrl: $("#config").value,
     locale,
@@ -166,6 +171,30 @@ function changeTabs(event) {
   }
 }
 
+function validateConfiguration(config) {
+  let valid = true;
+  try {
+    for (let item of config.data) {
+      if (!validate(item)) {
+        for (let error of validate.errors) {
+          console.warn(error);
+        }
+        valid = false;
+        break;
+      }
+    }
+  } catch (ex) {
+    console.error(ex);
+    valid = false;
+  }
+  if (!valid) {
+    $("#config-error").removeAttribute("hidden");
+    return false;
+  }
+  $("#config-error").setAttribute("hidden", "true");
+  return true;
+}
+
 async function loadConfiguration() {
   if (
     $(`input[name="server-radio"]:checked`).value != "local-text" &&
@@ -176,6 +205,9 @@ async function loadConfiguration() {
   ) {
     console.log("fetch");
     let config = JSON.parse(await fetchCachedConfig("server-radio"));
+    if (!validateConfiguration(config)) {
+      throw new Error("Configuration from server is invalid");
+    }
     $("#config").value = JSON.stringify(config, null, 2);
   }
 }
@@ -230,10 +262,16 @@ async function calculateLocaleRegions(event) {
     await currentCalculation.finishPromise;
   }
 
+  const config = $("#config").value;
+  if (!validateConfiguration(JSON.parse(config))) {
+    return;
+  }
+
   currentCalculation = {
     abort: false,
   };
   currentCalculation.finishPromise = doLocaleRegionCalculation(
+    config,
     engineId,
     currentCalculation
   )
@@ -241,7 +279,7 @@ async function calculateLocaleRegions(event) {
     .catch(console.error);
 }
 
-async function doLocaleRegionCalculation(engineId, abortObj) {
+async function doLocaleRegionCalculation(config, engineId, abortObj) {
   $("#by-engine-progress").value = 0;
   $("#locale-region-results").textContent = "";
 
@@ -258,7 +296,7 @@ async function doLocaleRegionCalculation(engineId, abortObj) {
   const byLength = allBy.length;
   // Pre-filter the config for just the engine id to reduce the amount of
   // processing to do.
-  const configUrl = filterConfig($("#config").value, engineId);
+  const configUrl = filterConfig(config, engineId);
 
   let count = 0;
   const results = new Map();
@@ -370,6 +408,11 @@ async function fetchCached(url, expiry = ONE_DAY) {
 async function getDiffData() {
   const oldConfig = JSON.parse(await fetchCachedConfig("server-radio"));
   const newConfig = JSON.parse(await fetchCachedConfig("config-radio"));
+
+  if (!validateConfiguration(oldConfig) || !validateConfiguration(newConfig)) {
+    console.error("Configuration is invalid for getDiffData");
+    return { webExtensionIds: [] };
+  }
 
   const webExtensionIds = new Set();
 

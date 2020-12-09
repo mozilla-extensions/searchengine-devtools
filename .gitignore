@@ -4,3 +4,4 @@ web-ext-artifacts
 dist
 *.pyc
 extension/content/diff.min.js
+extension/content/validate.js
