@@ -2,4 +2,5 @@
 !.prettierrc.js
 node_modules/
 web-ext-artifacts/
-extension/content/diff.min.js
+extension/content/diff.js
+extension/content/validate.js

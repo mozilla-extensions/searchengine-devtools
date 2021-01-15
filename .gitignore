@@ -3,5 +3,5 @@ node_modules
 web-ext-artifacts
 dist
 *.pyc
-extension/content/diff.min.js
+extension/content/diff.js
 extension/content/validate.js
