@@ -5,22 +5,22 @@
   "homepage_url": "https://github.com/mozilla/searchengine-devtools",
   "dependencies": {
     "diff": "5.0.0",
-    "web-ext": "5.5.0"
+    "web-ext": "6.0.0"
   },
   "devDependencies": {
-    "ajv-cli": "4.0.1",
-    "eslint": "7.17.0",
-    "eslint-config-prettier": "7.1.0",
+    "ajv-cli": "5.0.0",
+    "eslint": "7.24.0",
+    "eslint-config-prettier": "8.2.0",
     "eslint-plugin-fetch-options": "0.0.5",
-    "eslint-plugin-html": "6.1.1",
-    "eslint-plugin-mozilla": "2.9.2",
-    "eslint-plugin-no-unsanitized": "3.1.4",
-    "eslint-plugin-prettier": "3.3.1",
+    "eslint-plugin-html": "6.1.2",
+    "eslint-plugin-mozilla": "2.10.0",
+    "eslint-plugin-no-unsanitized": "3.1.5",
+    "eslint-plugin-prettier": "3.4.0",
     "npm-run-all": "4.1.5",
     "prettier": "2.2.1",
     "rimraf": "3.0.2",
-    "webpack": "5.14.0",
-    "webpack-cli": "4.3.1"
+    "webpack": "5.33.2",
+    "webpack-cli": "4.6.0"
   },
   "scripts": {
     "test": "eslint .",
@@ -30,7 +30,7 @@
     "build:finalize": "mv web-ext-artifacts/*.zip web-ext-artifacts/searchengine-devtools.xpi",
     "build:createvalidate": "ajv compile --verbose --all-errors -s schemas/search-engine-config-schema.json -o validate.js && webpack && rm validate.js",
     "clean": "rimraf web-ext-artifacts extension/content/diff.js extension/content/validate.js",
-    "start": "cp node_modules/diff/dist/diff.js extension/content/ && web-ext run --source-dir ./extension/"
+    "start": "cp node_modules/diff/dist/diff.js extension/content/ && web-ext run --source-dir ./extension/ -p dev -f /Users/mark/dev/gecko/objdir-ff-opt/dist/Nightly.app/Contents/MacOS/firefox"
   },
   "private": true,
   "license": "MPLv2"
