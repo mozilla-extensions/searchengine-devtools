@@ -31,6 +31,19 @@ const ENGINES_URLS = {
 const LOCALES_URL =
   "https://hg.mozilla.org/mozilla-central/raw-file/tip/browser/locales/all-locales";
 
+const reloadEnginesElements = [
+  "region-select",
+  "locale-select",
+  "distro-id",
+  "experiment-id",
+];
+const calculateLocaleRegionsElements = [
+  "engine-id",
+  "engine-telemetry-id",
+  "locale-by-engine",
+  "region-by-engine",
+];
+
 async function main() {
   await initUI();
   await loadConfiguration();
@@ -129,14 +142,12 @@ async function initUI() {
   Utils.insertOptionList($("#region-select"), regions);
   $("#region-select").value = await searchengines.getCurrentRegion();
 
-  $("#region-select").addEventListener("change", reloadEngines);
-  $("#locale-select").addEventListener("change", reloadEngines);
-  $("#distro-id").addEventListener("input", reloadEngines);
-  $("#experiment-id").addEventListener("input", reloadEngines);
-  $("#engine-id").addEventListener("change", calculateLocaleRegions);
-  $("#engine-telemetry-id").addEventListener("change", calculateLocaleRegions);
-  $("#locale-by-engine").addEventListener("change", calculateLocaleRegions);
-  $("#region-by-engine").addEventListener("change", calculateLocaleRegions);
+  for (let element of reloadEnginesElements) {
+    $(`#${element}`).addEventListener("change", reloadEngines);
+  }
+  for (let element of calculateLocaleRegionsElements) {
+    $(`#${element}`).addEventListener("change", calculateLocaleRegions);
+  }
 
   $("#reload-page").addEventListener("click", reloadPage);
 
@@ -150,6 +161,17 @@ async function initUI() {
   $("#compare-configs").addEventListener("click", changeTabs);
 
   $("#changed-sections").addEventListener("change", displayDiff);
+  $("body > form").addEventListener("keypress", (e) => {
+    if (e.keyCode == "13") {
+      e.preventDefault();
+      if (reloadEnginesElements.includes(e.target.id)) {
+        reloadEngines(e);
+      }
+      if (calculateLocaleRegionsElements.includes(e.target.id)) {
+        calculateLocaleRegions(e);
+      }
+    }
+  });
 }
 
 function changeTabs(event) {
