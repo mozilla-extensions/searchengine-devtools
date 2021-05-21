@@ -28,8 +28,7 @@
   ],
 
   "icons": {
-    "48": "icon.png",
-    "96": "icon.png"
+    "550": "icon.png"
   },
 
   "experiment_apis": {
