@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "diff": "5.0.0",
-    "web-ext": "6.5.0"
+    "web-ext": "6.6.0"
   },
   "devDependencies": {
     "ajv-cli": "5.0.0",
