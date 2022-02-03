@@ -8,16 +8,13 @@ it will automatically reconcile the individual engine sections.
 
 To upload a file:
 
-* The script assumes that the file is in the location
-`services/settings/dumps/main/search-config.json` relative to where you run it.
-This can be changed near the top of the file.
-* Comment or uncomment the relevant three lines for API_ENDPOINT to select
-stage or production as the upload target.
+* The script assumes that you are in the top level of mozilla central. 
+* You may need to install the `requests` library (Ex. `pip install requests`).
+* Run `python path/to/upload.py` and it will give you instructions on a list of arguments to provide.
+* Run `python path/to/upload.py` again with the required arguments `-s {dev,stage,prod}` and `-c COLLECTION` and it will ask for `Enter Authentication Header (copy from site)`.
 * Sign into staging or production, near the top-right of the screen select the
 clipboard icon ("Copy Authentication Header").
-* Paste that header value into the `AUTH=""` section near the top of the file,
-e.g. `AUTH="Bearer <thekey>"`.
-* Run the upload with `python path/to/upload.py`.
+* Paste that header value into the terminal and press enter.
 * Answer yes or no to upload the various engine details.
 * Once uploaded, to see the changes on the preview channel of remote settings,
 you'll need to request review on the remote settings search-config UI.
