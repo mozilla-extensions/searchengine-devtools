@@ -13,7 +13,7 @@ search engine configuration.
 # Install
 
 - Pick the .xpi file from the [releases page](https://github.com/mozilla/searchengine-devtools/releases).
-- When asked for comnfirmation, select "Continue to installation".
+- When asked for confirmation, select "Continue to installation".
 
 > Note: it is highly recommended to use a temporary or development user profile
 
