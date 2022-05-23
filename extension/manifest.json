@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "searchengine-devtools",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "A tool to help test search engine configuration changes",
   "homepage_url": "https://github.com/mozilla/searchengine-devtools",
 
@@ -22,6 +22,7 @@
   },
 
   "permissions": [
+    "mozillaAddons",
     "https://firefox.settings.services.mozilla.com/*",
     "https://settings.stage.mozaws.net/*",
     "https://hg.mozilla.org/"
