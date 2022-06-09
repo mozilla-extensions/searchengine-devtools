@@ -6,12 +6,13 @@
   "webExt": {
     "sourceDir": "./extension/",
     "lint": {
+      "privileged": true,
       "selfHosted": true
     }
   },
   "dependencies": {
     "diff": "5.1.0",
-    "web-ext": "6.8.0"
+    "web-ext": "7.0.0"
   },
   "devDependencies": {
     "ajv-cli": "5.0.0",
