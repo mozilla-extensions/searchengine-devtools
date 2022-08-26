@@ -1,0 +1,65 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#locale-region-settings {
+  display: grid;
+  justify-content: space-between;
+  align-items: center;
+  width: max-content;
+  margin: 0 auto;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(2, auto);
+}
+
+#region-select-wrapper,
+#locale-select-wrapper {
+  grid-row: 1 / 3;
+}
+
+#locale-region-settings div {
+  margin-right: 2em;
+  text-align: center;
+}
+
+#locale-region-settings label {
+  display: block;
+}
+
+#engines-table {
+  display: grid;
+  grid-template-columns: repeat(5, max-content) auto;
+  padding-top: 1em;
+}
+
+#engines-table > div {
+  padding: .3em 1em;
+}
+
+#engines-table > div:nth-child(-n+6) {
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: .5em;
+}
+
+#engines-table > div:nth-child(n+6) {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+#engines-table > div:nth-child(n+6):hover {
+  opacity: 1;
+}
+
+#engines-table > div:nth-child(6n+7):nth-child(12n+7),
+#engines-table > div:nth-child(6n+8):nth-child(12n+8),
+#engines-table > div:nth-child(6n+9):nth-child(12n+9),
+#engines-table > div:nth-child(6n+10):nth-child(12n+10),
+#engines-table > div:nth-child(6n+11):nth-child(12n+11),
+#engines-table > div:nth-child(6n+12):nth-child(12n+12) {
+  background: var(--in-content-box-background-odd);
+}
+
+#private-browsing-engine {
+  color: var(--in-content-text-color);
+}

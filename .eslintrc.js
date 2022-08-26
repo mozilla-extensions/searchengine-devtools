@@ -14,10 +14,13 @@ module.exports = {
       },
     },
     {
-      files: ["extension/content/*.js"],
+      files: ["extension/content/*.js", "extension/content/*.mjs"],
       parserOptions: {
         sourceType: "module",
       },
     },
   ],
+  parserOptions: {
+    ecmaVersion: "latest",
+  },
 };

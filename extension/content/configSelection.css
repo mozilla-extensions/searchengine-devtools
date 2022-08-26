@@ -1,0 +1,44 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+.server-settings-table {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+}
+
+.server-settings-table > div {
+  border: 1px solid var(--in-content-border-color);
+  padding: .3em 1em;
+  margin-left: -1px;
+  margin-bottom: -1px;
+}
+
+.server-settings-table > div:nth-child(2) {
+  grid-column: 2 / 4;
+}
+
+.server-settings-table > div:nth-child(-n+2) {
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: .5em;
+}
+
+.server-settings-table > div:nth-child(10) {
+  grid-column: 2 / 4;
+}
+
+fieldset > div > table {
+  border-collapse: collapse;
+}
+
+fieldset > div > table,
+fieldset > div th,
+fieldset > div td {
+  border: 1px solid var(--in-content-border-color);
+  padding: .3em 1em;
+}
+
+.radio > label {
+  display: inline-block;
+}
