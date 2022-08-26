@@ -1,0 +1,21 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#overview {
+  display: flex;
+}
+
+#overview > label {
+  margin: auto 0;
+  padding: 1ch;
+}
+
+#diff-display {
+  margin: 1ch 0;
+  font-size: 12px;
+}
+
+#diff-display > pre {
+  margin: 0;
+}
