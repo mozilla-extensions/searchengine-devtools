@@ -15,7 +15,7 @@ API_ENDPOINTS = {
 parser = argparse.ArgumentParser(
     description="""
 Upload dump files to remote settings. It is assumed the dump files are in
-services/dumps/main/ relative to the current directory.
+services/settings/dumps/main/ relative to the current directory.
     """)
 parser.add_argument('-s', '--server',
                     choices=['dev', 'stage', 'prod'],
