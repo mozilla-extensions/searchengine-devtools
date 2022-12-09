@@ -16,17 +16,17 @@
   },
   "devDependencies": {
     "ajv-cli": "5.0.0",
-    "eslint": "8.26.0",
+    "eslint": "8.29.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-fetch-options": "0.0.5",
     "eslint-plugin-html": "7.1.0",
-    "eslint-plugin-mozilla": "3.0.0",
-    "eslint-plugin-no-unsanitized": "4.0.1",
+    "eslint-plugin-mozilla": "3.0.1",
+    "eslint-plugin-no-unsanitized": "4.0.2",
     "eslint-plugin-prettier": "4.2.1",
     "npm-run-all": "4.1.5",
-    "prettier": "2.7.1",
+    "prettier": "2.8.1",
     "rimraf": "3.0.2",
-    "webpack": "5.74.0",
+    "webpack": "5.75.0",
     "webpack-cli": "5.0.1"
   },
   "scripts": {
