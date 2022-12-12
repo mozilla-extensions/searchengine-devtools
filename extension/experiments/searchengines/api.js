@@ -4,8 +4,8 @@
 
 /* global ExtensionAPI, XPCOMUtils, Services */
 
-XPCOMUtils.defineLazyModuleGetters(this, {
-  SearchEngineSelector: "resource://gre/modules/SearchEngineSelector.jsm",
+ChromeUtils.defineESModuleGetters(this, {
+  SearchEngineSelector: "resource://gre/modules/SearchEngineSelector.sys.mjs",
 });
 
 XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
@@ -24,31 +24,13 @@ async function getCurrentLocale() {
 
 async function getEngines(options) {
   let engineSelector = new SearchEngineSelector();
-  if (!("init" in engineSelector)) {
-    engineSelector.getEngineConfiguration = async () => {
-      const result = JSON.parse(options.configUrl).data;
-      result.sort((a, b) => a.id.localeCompare(b.id));
-      engineSelector._configuration = result;
-      return result;
-    };
-  } else {
-    await engineSelector.init(options.configUrl);
-  }
-  try {
-    return await engineSelector.fetchEngineConfiguration(options);
-  } catch (ex) {
-    // We changed how the parameters worked part way through 81.0a1, so try
-    // falling back if the above doesn't work.
-    console.warn(
-      "Falling back to old call method for fetchEngineConfiguration"
-    );
-    return engineSelector.fetchEngineConfiguration(
-      options.locale,
-      options.region,
-      options.channel,
-      options.distroID
-    );
-  }
+  engineSelector.getEngineConfiguration = async () => {
+    const result = JSON.parse(options.configUrl).data;
+    result.sort((a, b) => a.id.localeCompare(b.id));
+    engineSelector._configuration = result;
+    return result;
+  };
+  return engineSelector.fetchEngineConfiguration(options);
 }
 
 var searchengines = class extends ExtensionAPI {
