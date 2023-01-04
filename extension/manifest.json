@@ -5,7 +5,7 @@
   "description": "A tool to help test search engine configuration changes",
   "homepage_url": "https://github.com/mozilla/searchengine-devtools",
 
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
       "id": "searchengines-devtools@mozilla.com",
       "update_url": "https://raw.githubusercontent.com/mozilla-extensions/searchengine-devtools/master/update.json"
