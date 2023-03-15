@@ -9,7 +9,7 @@
 
 .server-settings-table > div {
   border: 1px solid var(--in-content-border-color);
-  padding: .3em 1em;
+  padding: 0.3em 1em;
   margin-left: -1px;
   margin-bottom: -1px;
 }
@@ -18,10 +18,10 @@
   grid-column: 2 / 4;
 }
 
-.server-settings-table > div:nth-child(-n+2) {
+.server-settings-table > div:nth-child(-n + 2) {
   font-weight: bold;
   text-align: center;
-  padding-bottom: .5em;
+  padding-bottom: 0.5em;
 }
 
 .server-settings-table > div:nth-child(10) {
@@ -36,7 +36,7 @@ fieldset > div > table,
 fieldset > div th,
 fieldset > div td {
   border: 1px solid var(--in-content-border-color);
-  padding: .3em 1em;
+  padding: 0.3em 1em;
 }
 
 .radio > label {

@@ -1,11 +1,11 @@
 /* eslint-env node */
 module.exports = {
   plugins: ["mozilla"],
-  extends: [
-    "eslint:recommended",
-    "plugin:prettier/recommended",
-    "plugin:mozilla/recommended",
-  ],
+  extends: ["eslint:recommended", "plugin:mozilla/recommended"],
+  rules: {
+    // Prettier is handled separately.
+    "prettier/prettier": "off",
+  },
   overrides: [
     {
       files: ["extension/**"],

@@ -29,32 +29,34 @@
         "type": "function",
         "description": "Return the engine configuration for the given region, locale and configuration",
         "async": true,
-        "parameters": [{
-          "type": "object",
-          "name": "getEnginesProperties",
-          "properties": {
-            "configUrl": {
-              "type": "string",
-              "description": "The configuration"
-            },
-            "locale" : {
-              "type": "string",
-              "description": "The users locale"
-            },
-            "region": {
-              "type": "string",
-              "description": "The users region"
-            },
-            "distroID": {
-              "type": "string",
-              "description": "The user's distribution"
-            },
-            "experiment": {
-              "type": "string",
-              "description": "The user's experiment id"
+        "parameters": [
+          {
+            "type": "object",
+            "name": "getEnginesProperties",
+            "properties": {
+              "configUrl": {
+                "type": "string",
+                "description": "The configuration"
+              },
+              "locale": {
+                "type": "string",
+                "description": "The users locale"
+              },
+              "region": {
+                "type": "string",
+                "description": "The users region"
+              },
+              "distroID": {
+                "type": "string",
+                "description": "The user's distribution"
+              },
+              "experiment": {
+                "type": "string",
+                "description": "The user's experiment id"
+              }
             }
           }
-        }]
+        ]
       }
     ],
     "events": []

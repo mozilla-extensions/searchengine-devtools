@@ -32,6 +32,7 @@
   "scripts": {
     "test": "npm-run-all test:*",
     "test:eslint": "eslint .",
+    "test:prettier": "prettier --check .",
     "test:webext": "web-ext lint",
     "build": "npm-run-all clean build:installdiff build:createvalidate build:extension build:finalize",
     "build:installdiff": "cp node_modules/diff/dist/diff.js extension/content/",
