@@ -33,30 +33,30 @@
 }
 
 #engines-table > div {
-  padding: .3em 1em;
+  padding: 0.3em 1em;
 }
 
-#engines-table > div:nth-child(-n+6) {
+#engines-table > div:nth-child(-n + 6) {
   font-weight: bold;
   text-align: center;
-  padding-bottom: .5em;
+  padding-bottom: 0.5em;
 }
 
-#engines-table > div:nth-child(n+6) {
+#engines-table > div:nth-child(n + 6) {
   opacity: 0.8;
   cursor: pointer;
 }
 
-#engines-table > div:nth-child(n+6):hover {
+#engines-table > div:nth-child(n + 6):hover {
   opacity: 1;
 }
 
-#engines-table > div:nth-child(6n+7):nth-child(12n+7),
-#engines-table > div:nth-child(6n+8):nth-child(12n+8),
-#engines-table > div:nth-child(6n+9):nth-child(12n+9),
-#engines-table > div:nth-child(6n+10):nth-child(12n+10),
-#engines-table > div:nth-child(6n+11):nth-child(12n+11),
-#engines-table > div:nth-child(6n+12):nth-child(12n+12) {
+#engines-table > div:nth-child(6n + 7):nth-child(12n + 7),
+#engines-table > div:nth-child(6n + 8):nth-child(12n + 8),
+#engines-table > div:nth-child(6n + 9):nth-child(12n + 9),
+#engines-table > div:nth-child(6n + 10):nth-child(12n + 10),
+#engines-table > div:nth-child(6n + 11):nth-child(12n + 11),
+#engines-table > div:nth-child(6n + 12):nth-child(12n + 12) {
   background: var(--in-content-box-background-odd);
 }
 
