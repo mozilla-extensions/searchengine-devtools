@@ -1,8 +1,7 @@
-.DS_Store
+!.eslintrc.js
+!.prettierrc.js
 .vscode
-node_modules
-web-ext-artifacts
-dist
-*.pyc
+node_modules/
+web-ext-artifacts/
 extension/content/diff.js
 extension/content/validate.js
