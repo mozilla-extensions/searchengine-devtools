@@ -1,37 +1,31 @@
 {
   "manifest_version": 2,
   "name": "searchengine-devtools",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "A tool to help test search engine configuration changes",
   "homepage_url": "https://github.com/mozilla/searchengine-devtools",
-
   "browser_specific_settings": {
     "gecko": {
       "id": "searchengines-devtools@mozilla.com",
       "update_url": "https://raw.githubusercontent.com/mozilla-extensions/searchengine-devtools/master/update.json"
     }
   },
-
   "background": {
     "scripts": ["background.js"]
   },
-
   "browser_action": {
     "default_title": "SearchEngines Devtools",
     "browser_style": true
   },
-
   "permissions": [
     "mozillaAddons",
     "https://firefox.settings.services.mozilla.com/*",
     "https://settings.stage.mozaws.net/*",
     "https://hg.mozilla.org/"
   ],
-
   "icons": {
     "550": "icon.png"
   },
-
   "experiment_apis": {
     "searchengines": {
       "schema": "experiments/searchengines/schema.json",
