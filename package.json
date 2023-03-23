@@ -24,24 +24,21 @@
     "eslint-plugin-mozilla": "3.0.1",
     "eslint-plugin-no-unsanitized": "4.0.2",
     "eslint-plugin-prettier": "4.2.1",
-    "npm-run-all": "4.1.5",
     "prettier": "2.8.6",
     "rimraf": "4.4.1",
     "webpack": "5.76.3",
     "webpack-cli": "5.0.1"
   },
   "scripts": {
-    "test": "npm-run-all test:*",
-    "test:eslint": "eslint .",
-    "test:prettier": "prettier --check .",
-    "test:webext": "web-ext lint",
-    "build": "npm-run-all clean build:*",
-    "build:installdiff": "cp node_modules/diff/dist/diff.js extension/content/",
-    "build:extension": "web-ext build -s ./extension/ --overwrite-dest",
-    "build:finalize": "mv web-ext-artifacts/*.zip web-ext-artifacts/searchengine-devtools.xpi",
-    "build:createvalidate": "node schemas/generateValidator.js && webpack && rm validate.js",
+    "test": "npm run eslint && npm run prettier && npm run webext",
+    "eslint": "eslint .",
+    "prettier": "prettier --check .",
+    "webext": "web-ext lint",
+    "prebuild": "rimraf web-ext-artifacts && cp node_modules/diff/dist/diff.js extension/content/ && node schemas/generateValidator.js && webpack",
+    "build": "web-ext build -s ./extension/ --overwrite-dest -n searchengine-devtools.xpi",
+    "postbuild": "rm validate.js",
     "clean": "rimraf web-ext-artifacts extension/content/diff.js extension/content/validate.js",
-    "start": "npm-run-all clean build && web-ext run"
+    "start": "npm run clean && npm run build && web-ext run -s extension"
   },
   "private": true,
   "license": "MPLv2"
