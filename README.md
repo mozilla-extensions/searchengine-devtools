@@ -5,10 +5,15 @@ search engine configuration.
 
 # Features
 
-- Change locale and region
-- Change configuration
+**Search Engine by locale and region**
+- Check local changes to search-config by pasting the search-config.json file you’ve changed into the textbox
+- Check which engines are shipped per user by filtering the Region, Local, distribution ID, or Experiment ID fields
 
-![](screenshot.png)
+**Search Locale/region by Engine**
+- Search up the Locales or Regions that the search engine is shipped to
+
+**Compare Configurations**
+- Compare different local, staging, production configurations to see which engines have changed
 
 # Install
 
