@@ -5,6 +5,8 @@ search engine configuration.
 
 # Features
 
+![](screenshot.png)
+
 **Search Engine by local and region**
 
 - Check local changes to search-config by pasting the search-config.json file you’ve changed into the textbox
