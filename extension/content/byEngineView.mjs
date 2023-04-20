@@ -168,7 +168,7 @@ export default class ByEngineView extends HTMLElement {
       Utils.addDiv(fragment, item);
       if (
         refined.length == allSub.length &&
-        refined.every((item, i) => item == allSub[i])
+        refined.every((entry, i) => entry == allSub[i])
       ) {
         Utils.addDiv(fragment, `All ${byLocale ? "Regions" : "Locales"}`);
       } else {
