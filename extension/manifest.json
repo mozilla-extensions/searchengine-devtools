@@ -20,7 +20,7 @@
   "permissions": [
     "mozillaAddons",
     "https://firefox.settings.services.mozilla.com/*",
-    "https://settings.stage.mozaws.net/*",
+    "https://firefox.settings.services.allizom.org/*",
     "https://hg.mozilla.org/"
   ],
   "icons": {

@@ -7,9 +7,9 @@ import requests
 import sys
 
 API_ENDPOINTS = {
-    'dev': "https://kinto.dev.mozaws.net/v1/",
-    'stage': "https://settings-writer.stage.mozaws.net/v1/",
-    'prod': "https://settings-writer.prod.mozaws.net/v1/"
+    'dev': "https://remote-settings-dev.allizom.org/v1/",
+    'stage': "https://remote-settings.allizom.org/v1/",
+    'prod': "https://remote-settings.mozilla.org/v1/"
 }
 
 parser = argparse.ArgumentParser(
