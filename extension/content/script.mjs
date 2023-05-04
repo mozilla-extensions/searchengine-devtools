@@ -24,9 +24,9 @@ const ENGINES_URLS = {
   "prod-preview":
     "https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records?_cachebust=%CACHEBUST%",
   "stage-main":
-    "https://settings.stage.mozaws.net/v1/buckets/main/collections/search-config/records?_cachebust=%CACHEBUST%",
+    "https://firefox.settings.services.allizom.org/v1/buckets/main/collections/search-config/records?_cachebust=%CACHEBUST%",
   "stage-preview":
-    "https://settings.stage.mozaws.net/v1/buckets/main-preview/collections/search-config/records?_cachebust=%CACHEBUST%",
+    "https://firefox.settings.services.allizom.org/v1/buckets/main-preview/collections/search-config/records?_cachebust=%CACHEBUST%",
 };
 
 async function main() {
