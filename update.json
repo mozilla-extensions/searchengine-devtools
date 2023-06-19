@@ -3,8 +3,8 @@
     "searchengines-devtools@mozilla.com": {
       "updates": [
         {
-          "version": "1.1.11buildid20230328.102700",
-          "update_link": "https://github.com/mozilla-extensions/searchengine-devtools/releases/download/1.1.11/searchengine-devtools.xpi"
+          "version": "1.1.12buildid20230616.152737",
+          "update_link": "https://github.com/mozilla-extensions/searchengine-devtools/releases/download/1.1.12/searchengine-devtools.xpi"
         }
       ]
     }
