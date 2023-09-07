@@ -2,10 +2,6 @@
 module.exports = {
   plugins: ["mozilla"],
   extends: ["eslint:recommended", "plugin:mozilla/recommended"],
-  rules: {
-    // Prettier is handled separately.
-    "prettier/prettier": "off",
-  },
   overrides: [
     {
       files: ["extension/**"],
