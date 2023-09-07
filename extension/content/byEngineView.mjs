@@ -154,9 +154,8 @@ export default class ByEngineView extends HTMLElement {
       count++;
       const percent = Math.round((count * 100) / byLength);
       this.shadowRoot.getElementById("by-engine-progress").value = percent;
-      this.shadowRoot.getElementById(
-        "by-engine-progress"
-      ).textContent = `${percent}%`;
+      this.shadowRoot.getElementById("by-engine-progress").textContent =
+        `${percent}%`;
     }
 
     let fragment = document.createDocumentFragment();
