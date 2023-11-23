@@ -4,7 +4,17 @@
 
 .server-settings-table {
   display: grid;
-  grid-template-columns: repeat(3, max-content);
+  /* We include the legend as a column as well. */
+  grid-template-columns: 14ch repeat(5, calc((100% - 14ch) / 5));
+  padding: 0.5em 0.5em;
+  width: auto;
+  border: none;
+}
+
+.server-settings-table > legend {
+  float: left;
+  font-weight: bold;
+  padding-top: 0.3em;
 }
 
 .server-settings-table > div {
@@ -12,20 +22,6 @@
   padding: 0.3em 1em;
   margin-left: -1px;
   margin-bottom: -1px;
-}
-
-.server-settings-table > div:nth-child(2) {
-  grid-column: 2 / 4;
-}
-
-.server-settings-table > div:nth-child(-n + 2) {
-  font-weight: bold;
-  text-align: center;
-  padding-bottom: 0.5em;
-}
-
-.server-settings-table > div:nth-child(10) {
-  grid-column: 2 / 4;
 }
 
 fieldset > div > table {

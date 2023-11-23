@@ -1,0 +1,33 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+@import url("chrome://global/skin/in-content/common.css");
+
+#configuration {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0.5em;
+}
+
+#configuration textarea {
+  line-height: 20px;
+}
+
+#config {
+  margin-top: 0;
+  flex: 3;
+}
+
+#config-error {
+  color: red;
+}
+
+#reload-div {
+  display: flex;
+}
+
+#reload-div > button {
+  margin-right: auto;
+  margin-left: auto;
+}

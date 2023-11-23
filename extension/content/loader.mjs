@@ -56,10 +56,5 @@ export function validateConfiguration(config) {
     console.error(ex);
     valid = false;
   }
-  if (!valid) {
-    document.getElementById("config-error").removeAttribute("hidden");
-    return false;
-  }
-  document.getElementById("config-error").setAttribute("hidden", "true");
-  return true;
+  return valid;
 }
