@@ -3,10 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import ByEngineView from "./byEngineView.mjs";
+import ByEngineViewOld from "./byEngineViewOld.mjs";
 import ConfigSelection from "./configSelection.mjs";
 import ConfigController from "./configController.mjs";
 import CompareView from "./compareView.mjs";
+import CompareViewOld from "./compareViewOld.mjs";
 import EnginesView from "./enginesView.mjs";
+import EnginesViewOld from "./enginesViewOld.mjs";
 
 const searchengines = browser.experiments.searchengines;
 
@@ -22,19 +25,38 @@ async function main() {
   // Always clear the local storage on load, so that we don't have old data.
   localStorage.clear();
 
+  let configFormat =
+    await browser.experiments.searchengines.getCurrentConfigFormat();
+
+  $("#currentConfig").textContent = `Using search-config${
+    configFormat == 1 ? "" : "-v2"
+  }`;
+  $("#currentConfig").setAttribute("format", configFormat);
+
   customElements.define("config-selection", ConfigSelection);
   customElements.define("config-controller", ConfigController);
-  customElements.define("compare-view", CompareView);
-  customElements.define("engines-view", EnginesView);
-  customElements.define("by-engine-view", ByEngineView);
+  if (configFormat == 1) {
+    customElements.define("compare-view", CompareViewOld);
+    customElements.define("engines-view", EnginesViewOld);
+    customElements.define("by-engine-view", ByEngineViewOld);
+  } else {
+    customElements.define("compare-view", CompareView);
+    customElements.define("engines-view", EnginesView);
+    customElements.define("by-engine-view", ByEngineView);
+  }
 
   await initUI();
 
   let configController = $("#config-controller");
-  configController.compareConfigsSelected =
-    $("#compare-configs").hasAttribute("selected");
+  await configController.setCompareConfigsSelected(
+    $("#compare-configs").hasAttribute("selected")
+  );
   await configController.update();
-  await setupEnginesView();
+  try {
+    await setupEnginesView();
+  } catch (ex) {
+    console.error(ex);
+  }
   document.body.classList.remove("loading");
 }
 
@@ -64,8 +86,9 @@ async function changeTabs(event) {
       $(`#${tab}-tab`).removeAttribute("selected");
     }
   }
-  $("#config-controller").compareConfigsSelected =
-    $("#compare-configs").hasAttribute("selected");
+  $("#config-controller").setCompareConfigsSelected(
+    $("#compare-configs").hasAttribute("selected")
+  );
 
   await setupTabs(event.target.id);
 }
@@ -78,12 +101,7 @@ async function showConfig(e) {
   if (!id) {
     return;
   }
-  let textarea = $("#config");
-  let line = textarea.value.split(id)[0].match(/\n/g).length;
-  var lineHeight = document.defaultView
-    .getComputedStyle(textarea)
-    .getPropertyValue("line-height");
-  $("#config").scrollTop = line * parseInt(lineHeight, 10);
+  $("#config-controller").moveConfigToId(id);
 }
 
 function reloadPage(event) {
@@ -94,8 +112,9 @@ function reloadPage(event) {
 
     $("#by-engine-view").clear();
     let configController = $("#config-controller");
-    configController.compareConfigsSelected =
-      $("#compare-configs").hasAttribute("selected");
+    configController.setCompareConfigsSelected(
+      $("#compare-configs").hasAttribute("selected")
+    );
 
     let tabId = ["by-engine", "by-locales", "compare-configs"].find((t) =>
       $(`#${t}`).getAttribute("selected")
@@ -121,6 +140,7 @@ async function setupTabs(tabId) {
     }
     $("config-controller").updateInvalidMessageDisplay(true);
   } catch (ex) {
+    console.error(ex);
     $("config-controller").updateInvalidMessageDisplay(false);
   }
 }

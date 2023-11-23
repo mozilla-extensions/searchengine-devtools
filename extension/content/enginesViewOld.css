@@ -28,45 +28,36 @@
 
 #engines-table {
   display: grid;
-  grid-template-columns: repeat(7, max-content);
+  grid-template-columns: repeat(5, max-content) auto;
   padding-top: 1em;
-  margin: 0 auto;
-  width: max-content;
 }
 
 #engines-table > div {
   padding: 0.3em 1em;
 }
 
-#engines-table > div:nth-child(-n + 7) {
+#engines-table > div:nth-child(-n + 6) {
   font-weight: bold;
   text-align: center;
   padding-bottom: 0.5em;
 }
 
-#engines-table > div:nth-child(n + 7) {
+#engines-table > div:nth-child(n + 6) {
   opacity: 0.8;
   cursor: pointer;
 }
 
-#engines-table > div:nth-child(n + 7):hover {
+#engines-table > div:nth-child(n + 6):hover {
   opacity: 1;
 }
 
-#engines-table > div:nth-child(7n + 8):nth-child(14n + 8),
-#engines-table > div:nth-child(7n + 9):nth-child(14n + 9),
-#engines-table > div:nth-child(7n + 10):nth-child(14n + 10),
-#engines-table > div:nth-child(7n + 11):nth-child(14n + 11),
-#engines-table > div:nth-child(7n + 12):nth-child(14n + 12),
-#engines-table > div:nth-child(7n + 13):nth-child(14n + 13),
-#engines-table > div:nth-child(7n + 14):nth-child(14n + 14) {
+#engines-table > div:nth-child(6n + 7):nth-child(12n + 7),
+#engines-table > div:nth-child(6n + 8):nth-child(12n + 8),
+#engines-table > div:nth-child(6n + 9):nth-child(12n + 9),
+#engines-table > div:nth-child(6n + 10):nth-child(12n + 10),
+#engines-table > div:nth-child(6n + 11):nth-child(12n + 11),
+#engines-table > div:nth-child(6n + 12):nth-child(12n + 12) {
   background: var(--in-content-box-background-odd);
-}
-
-#pb-message {
-  margin-left: auto;
-  margin-right: auto;
-  width: max-content;
 }
 
 #private-browsing-engine {

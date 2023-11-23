@@ -12,7 +12,7 @@ const calculateLocaleRegionsElements = [
   "region-by-engine",
 ];
 
-export default class ByEngineView extends HTMLElement {
+export default class ByEngineViewOld extends HTMLElement {
   #currentCalculation = null;
   #config = null;
 
@@ -137,9 +137,9 @@ export default class ByEngineView extends HTMLElement {
           experiment: "",
         });
         for (let engine of engines) {
-          if (engine.identifier.startsWith(engineId)) {
+          if (engine.webExtension.id.startsWith(engineId)) {
             if (telemetryId) {
-              if (Utils.calculateTelemetryId(engine) == telemetryId) {
+              if (engine.telemetryId == telemetryId) {
                 itemResults.add(subItem);
               }
             } else {
@@ -184,7 +184,9 @@ export default class ByEngineView extends HTMLElement {
     return JSON.stringify({
       data: config.data.filter((item) => {
         return (
-          item.recordType == "engine" && item.identifier.startsWith(engineId)
+          item.webExtension &&
+          item.webExtension.id &&
+          item.webExtension.id.startsWith(engineId)
         );
       }),
     });
