@@ -15,11 +15,36 @@ export default class ConfigSelection extends HTMLElement {
     if (select) {
       this.shadowRoot.getElementById(select).checked = true;
     }
+
+    this.onChange = this.onChange.bind(this);
+  }
+
+  connectedCallback() {
+    if (!this.isConnected) {
+      return;
+    }
+    for (let selector of this.shadowRoot.querySelectorAll(
+      "input[name='server-radio']"
+    )) {
+      selector.addEventListener("change", this.onChange.bind(this));
+    }
+  }
+
+  disconnectedCallback() {
+    for (let selector of this.shadowRoot.querySelectorAll(
+      "input[name='server-radio']"
+    )) {
+      selector.removeEventListener("change", this.onChange.bind(this));
+    }
   }
 
   get selected() {
     return this.shadowRoot.querySelectorAll(
       "input[name='server-radio']:checked"
     )[0].value;
+  }
+
+  onChange() {
+    this.dispatchEvent(new Event("change"));
   }
 }

@@ -4,9 +4,9 @@
 
 import ByEngineView from "./byEngineView.mjs";
 import ConfigSelection from "./configSelection.mjs";
+import ConfigController from "./configController.mjs";
 import CompareView from "./compareView.mjs";
 import EnginesView from "./enginesView.mjs";
-import { fetchCached, validateConfiguration } from "./loader.mjs";
 
 const searchengines = browser.experiments.searchengines;
 
@@ -18,33 +18,28 @@ if (!searchengines) {
 
 const $ = document.querySelector.bind(document);
 
-const ENGINES_URLS = {
-  "prod-main":
-    "https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/search-config/records?_cachebust=%CACHEBUST%",
-  "prod-preview":
-    "https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records?_cachebust=%CACHEBUST%",
-  "stage-main":
-    "https://firefox.settings.services.allizom.org/v1/buckets/main/collections/search-config/records?_cachebust=%CACHEBUST%",
-  "stage-preview":
-    "https://firefox.settings.services.allizom.org/v1/buckets/main-preview/collections/search-config/records?_cachebust=%CACHEBUST%",
-};
-
 async function main() {
   // Always clear the local storage on load, so that we don't have old data.
   localStorage.clear();
 
   customElements.define("config-selection", ConfigSelection);
+  customElements.define("config-controller", ConfigController);
   customElements.define("compare-view", CompareView);
   customElements.define("engines-view", EnginesView);
   customElements.define("by-engine-view", ByEngineView);
+
   await initUI();
-  await loadConfiguration();
+
+  let configController = $("#config-controller");
+  configController.compareConfigsSelected =
+    $("#compare-configs").hasAttribute("selected");
+  await configController.update();
   await setupEnginesView();
   document.body.classList.remove("loading");
 }
 
 async function initUI() {
-  $("#reload-page").addEventListener("click", reloadPage);
+  $("#config-controller").addEventListener("change", reloadPage);
 
   $("#engines-view")
     .shadowRoot.getElementById("engines-table")
@@ -58,7 +53,7 @@ async function initUI() {
   $("#compare-configs").addEventListener("click", changeTabs);
 }
 
-function changeTabs(event) {
+async function changeTabs(event) {
   event.preventDefault();
   for (const tab of ["by-engine", "by-locales", "compare-configs"]) {
     if (tab == event.target.id) {
@@ -69,29 +64,10 @@ function changeTabs(event) {
       $(`#${tab}-tab`).removeAttribute("selected");
     }
   }
-  if (event.target.id == "compare-configs") {
-    $("#compare-config").removeAttribute("hidden");
-    setupDiff();
-  } else {
-    $("#compare-config").setAttribute("hidden", true);
-  }
-  setupByEngine();
-}
+  $("#config-controller").compareConfigsSelected =
+    $("#compare-configs").hasAttribute("selected");
 
-async function loadConfiguration() {
-  if (
-    $("#primary-config").selected != "local-text" &&
-    !(
-      $("#compare-configs").hasAttribute("selected") &&
-      $("#compare-config").selected == "local-text"
-    )
-  ) {
-    let config = JSON.parse(await fetchCachedConfig("primary-config"));
-    if (!validateConfiguration(config)) {
-      throw new Error("Configuration from server is invalid");
-    }
-    $("#config").value = JSON.stringify(config, null, 2);
-  }
+  await setupTabs(event.target.id);
 }
 
 async function showConfig(e) {
@@ -115,18 +91,44 @@ function reloadPage(event) {
   localStorage.clear();
   (async () => {
     document.body.classList.add("loading");
+
     $("#by-engine-view").clear();
-    await loadConfiguration();
-    await setupEnginesView();
-    await setupDiff();
-    await setupByEngine();
+    let configController = $("#config-controller");
+    configController.compareConfigsSelected =
+      $("#compare-configs").hasAttribute("selected");
+
+    let tabId = ["by-engine", "by-locales", "compare-configs"].find((t) =>
+      $(`#${t}`).getAttribute("selected")
+    );
+    await setupTabs(tabId);
+
     document.body.classList.remove("loading");
   })();
 }
 
+async function setupTabs(tabId) {
+  try {
+    switch (tabId) {
+      case "compare-configs":
+        await setupDiff();
+        break;
+      case "by-locales":
+        await setupEnginesView();
+        break;
+      case "by-engine":
+        await setupByEngine();
+        break;
+    }
+    $("config-controller").updateInvalidMessageDisplay(true);
+  } catch (ex) {
+    $("config-controller").updateInvalidMessageDisplay(false);
+  }
+}
+
 async function setupDiff() {
-  const oldConfig = JSON.parse(await fetchCachedConfig("primary-config"));
-  const newConfig = JSON.parse(await fetchCachedConfig("compare-config"));
+  let configController = $("#config-controller");
+  const oldConfig = JSON.parse(await configController.fetchPrimaryConfig());
+  const newConfig = JSON.parse(await configController.fetchSecondaryConfig());
   await $("#compare-view")
     .doDiffCalculation(oldConfig, newConfig)
     .catch(console.error);
@@ -136,7 +138,7 @@ async function setupByEngine() {
   if ($("#by-engine").hasAttribute("selected")) {
     await $("#by-engine-view").calculateLocaleRegions(
       null,
-      JSON.parse(await fetchCachedConfig("primary-config"))
+      JSON.parse(await $("#config-controller").fetchPrimaryConfig())
     );
   }
 }
@@ -144,16 +146,8 @@ async function setupByEngine() {
 async function setupEnginesView() {
   await $("#engines-view").loadEngines(
     null,
-    await fetchCachedConfig("primary-config")
+    await $("#config-controller").fetchPrimaryConfig()
   );
-}
-
-function fetchCachedConfig(configSelectionId, expiry) {
-  const buttonValue = $(`#${configSelectionId}`).selected;
-  if (buttonValue == "local-text") {
-    return $("#config").value;
-  }
-  return fetchCached(ENGINES_URLS[buttonValue]);
 }
 
 window.addEventListener("load", main, { once: true });

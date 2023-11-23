@@ -9,34 +9,14 @@
 
   <body class="loading">
     <form>
-      <section id="engines">
+      <div id="engines">
         <div id="tabs">
           <button id="by-locales">Engines by locale/region</button>
           <button id="by-engine">Locale/region by Engine</button>
           <button id="compare-configs">Compare Configurations</button>
         </div>
 
-        <div id="server-settings">
-          <config-selection id="primary-config">
-            <span slot="legend">Primary Config</span>
-          </config-selection>
-          <div id="configuration">
-            <textarea id="config"></textarea>
-            <div id="config-error" hidden="true">
-              Error in configuration, see web console for details
-            </div>
-          </div>
-          <config-selection
-            id="compare-config"
-            select="use-prod-preview"
-            hidden="true"
-          >
-            <span slot="legend">Compare With</span>
-          </config-selection>
-          <div id="reload-div">
-            <button id="reload-page">Use these servers/configuration</button>
-          </div>
-        </div>
+        <config-controller id="config-controller"> </config-controller>
 
         <div id="tab-contents">
           <div id="by-locales-tab">
@@ -51,67 +31,85 @@
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </form>
 
     <template id="config-selection-template">
       <link rel="stylesheet" href="configSelection.css" />
-      <fieldset id="settings">
+      <fieldset id="settings" class="server-settings-table">
         <legend><slot name="legend"></slot></legend>
-        <div id="primary-settings" class="server-settings-table">
-          <div>Server</div>
-          <div>Configuration</div>
-          <div>Production:</div>
-          <div>
-            <input
-              type="radio"
-              id="use-prod-main"
-              name="server-radio"
-              value="prod-main"
-              checked
-            />
-            <label for="use-prod-main">Active</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="use-prod-preview"
-              name="server-radio"
-              value="prod-preview"
-            />
-            <label for="use-prod-preview">In Review</label>
-          </div>
-          <div>Staging:</div>
-          <div>
-            <input
-              type="radio"
-              id="use-stage-main"
-              name="server-radio"
-              value="stage-main"
-            />
-            <label for="use-stage-main">Active</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="use-stage-preview"
-              name="server-radio"
-              value="stage-preview"
-            />
-            <label for="use-stage-preview">In Review</label>
-          </div>
-          <div>Local:</div>
-          <div>
-            <input
-              type="radio"
-              id="use-local-text"
-              name="server-radio"
-              value="local-text"
-            />
-            <label for="use-local-text">Use config from textbox</label>
-          </div>
+        <div>
+          <input
+            type="radio"
+            id="use-prod-main"
+            name="server-radio"
+            value="prod-main"
+            checked
+          />
+          <label for="use-prod-main">Production</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="use-prod-preview"
+            name="server-radio"
+            value="prod-preview"
+          />
+          <label for="use-prod-preview">Production (In Review)</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="use-stage-main"
+            name="server-radio"
+            value="stage-main"
+          />
+          <label for="use-stage-main">Staging</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="use-stage-preview"
+            name="server-radio"
+            value="stage-preview"
+          />
+          <label for="use-stage-preview">Staging (In Review)</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="use-local-text"
+            name="server-radio"
+            value="local-text"
+          />
+          <label for="use-local-text">Manual Entry</label>
         </div>
       </fieldset>
+    </template>
+
+    <template id="config-controller-template">
+      <link rel="stylesheet" href="configController.css" />
+      <config-selection id="primary-config">
+        <span slot="legend">Primary Config</span>
+      </config-selection>
+      <config-selection
+        id="compare-config"
+        select="use-prod-preview"
+        hidden="true"
+      >
+        <span slot="legend">Compare With</span>
+      </config-selection>
+      <div id="configuration">
+        <textarea id="config" hidden="true" rows="10"></textarea>
+        <div id="reload-div" hidden="true">
+          <button type="button" id="reload-page">
+            Update with this configuration
+          </button>
+        </div>
+        <div id="config-error" hidden="true">
+          Error in configuration, see web console for details
+        </div>
+      </div>
     </template>
 
     <template id="engines-view-template">

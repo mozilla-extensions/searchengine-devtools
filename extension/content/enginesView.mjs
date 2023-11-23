@@ -42,20 +42,23 @@ export default class EnginesView extends HTMLElement {
     this.loadEngines();
   }
 
+  async disconnectedCallback() {
+    for (let element of enginesSelectionElements) {
+      this.shadowRoot
+        .getElementById(element)
+        .removeEventListener("change", this.loadEngines);
+      this.shadowRoot
+        .getElementById(element)
+        .addEventListener("keypress", this.handleKeyPress);
+    }
+  }
+
   async initialize() {
     if (this.#initializedPromise) {
       return this.#initializedPromise;
     }
 
     return (this.#initializedPromise = this.#loadRegionsAndLocales());
-  }
-
-  async disconnectedCallback() {
-    for (let element of enginesSelectionElements) {
-      this.shadowRoot
-        .getElementById(element)
-        .removeEventListener("change", this.loadEngines);
-    }
   }
 
   handleKeyPress(event) {
@@ -70,11 +73,15 @@ export default class EnginesView extends HTMLElement {
       event.preventDefault();
     }
     await this.initialize();
+
     if (config) {
+      if (!validateConfiguration(JSON.parse(config))) {
+        this.#config = null;
+        throw new Error("Invalid Config");
+      }
       this.#config = config;
     }
-
-    if (!this.#config || !validateConfiguration(JSON.parse(this.#config))) {
+    if (!this.#config) {
       return;
     }
 
