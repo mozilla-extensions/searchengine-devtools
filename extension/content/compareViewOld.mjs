@@ -7,7 +7,7 @@
 import Utils from "./utils.mjs";
 import { validateConfiguration } from "./loader.mjs";
 
-export default class CompareView extends HTMLElement {
+export default class CompareViewOld extends HTMLElement {
   #oldConfig = null;
   #newConfig = null;
 
@@ -40,7 +40,8 @@ export default class CompareView extends HTMLElement {
     this.#oldConfig = oldConfig;
     this.#newConfig = newConfig;
 
-    const { oldConfigMap, newConfigMap, engineIds } = await this.#getDiffData();
+    const { oldConfigMap, newConfigMap, webExtensionIds } =
+      await this.#getDiffData();
 
     const shadowRoot = this.shadowRoot;
     const changedSections = shadowRoot.getElementById("changed-sections");
@@ -48,7 +49,7 @@ export default class CompareView extends HTMLElement {
     Utils.removeAllChildren(shadowRoot.getElementById("diff-display"));
 
     const fragment = document.createDocumentFragment();
-    for (const id of engineIds) {
+    for (const id of webExtensionIds) {
       const fullDiff = this.#getDiff(
         oldConfigMap.get(id),
         newConfigMap.get(id)
@@ -91,20 +92,20 @@ export default class CompareView extends HTMLElement {
       !(await validateConfiguration(this.#newConfig))
     ) {
       console.error("Configuration is invalid for getDiffData");
-      return { engineIds: [] };
+      return { webExtensionIds: [] };
     }
 
-    const engineIds = new Set();
+    const webExtensionIds = new Set();
 
     function mapConfig(configData) {
       const map = new Map();
       for (const config of configData) {
-        engineIds.add(config.identifier);
+        webExtensionIds.add(config.webExtension.id);
         const newConfigData = { ...config };
         delete newConfigData.last_modified;
         delete newConfigData.id;
         delete newConfigData.schema;
-        map.set(config.identifier, newConfigData);
+        map.set(config.webExtension.id, newConfigData);
       }
       return map;
     }
@@ -114,7 +115,7 @@ export default class CompareView extends HTMLElement {
       newConfigMap: mapConfig(this.#newConfig.data),
     };
 
-    result.engineIds = [...engineIds.keys()].sort();
+    result.webExtensionIds = [...webExtensionIds.keys()].sort();
 
     return result;
   }

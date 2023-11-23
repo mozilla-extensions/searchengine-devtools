@@ -40,12 +40,23 @@ export async function getRegions() {
   );
 }
 
-export function validateConfiguration(config) {
+export async function validateConfiguration(config) {
+  let validator =
+    (await browser.experiments.searchengines.getCurrentConfigFormat()) == "2"
+      ? validate.validateWithSchemaV2
+      : validate.validateWithSchemaV1;
   let valid = true;
+
+  if (!("data" in config)) {
+    console.error("Could not find top-level 'data' property in config.");
+    valid = false;
+    return false;
+  }
+
   try {
     for (let item of config.data) {
-      if (!validate(item)) {
-        for (let error of validate.errors) {
+      if (!validator(item)) {
+        for (let error of validator.errors) {
           console.warn(error);
         }
         valid = false;

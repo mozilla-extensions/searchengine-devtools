@@ -10,14 +10,22 @@ const Ajv = require("ajv");
 const standaloneCode = require("ajv/dist/standalone").default;
 const addFormats = require("ajv-formats");
 
-let schema = JSON.parse(
+let schemaV1 = JSON.parse(
   fs.readFileSync(path.join(__dirname, "search-engine-config-schema.json"))
 );
+let schemaV2 = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "search-engine-config-v2-schema.json"))
+);
 
-const ajv = new Ajv({ code: { source: true } });
+schemaV1.$id = "validateWithSchemaV1";
+schemaV2.$id = "validateWithSchemaV2";
+
+const ajv = new Ajv({
+  schemas: [schemaV1, schemaV2],
+  code: { source: true },
+});
 addFormats(ajv);
-const validate = ajv.compile(schema);
-const moduleCode = standaloneCode(ajv, validate);
+const moduleCode = standaloneCode(ajv);
 
 // Now you can write the module code to file
 fs.writeFileSync(path.join(__dirname, "../validate.js"), moduleCode);

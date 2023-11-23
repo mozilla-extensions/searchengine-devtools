@@ -30,6 +30,12 @@ let Utils = {
       element.firstChild.remove();
     }
   },
+
+  calculateTelemetryId(engineData) {
+    return "telemetrySuffix" in engineData
+      ? `${engineData.identifier}-${engineData.telemetrySuffix}`
+      : engineData.identifier;
+  },
 };
 
 export default Utils;

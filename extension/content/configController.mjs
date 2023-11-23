@@ -4,19 +4,28 @@
 
 import { fetchCached, validateConfiguration } from "./loader.mjs";
 
-const ENGINES_URLS = {
-  "prod-main":
-    "https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/search-config/records?_cachebust=%CACHEBUST%",
-  "prod-preview":
-    "https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records?_cachebust=%CACHEBUST%",
-  "stage-main":
-    "https://firefox.settings.services.allizom.org/v1/buckets/main/collections/search-config/records?_cachebust=%CACHEBUST%",
-  "stage-preview":
-    "https://firefox.settings.services.allizom.org/v1/buckets/main-preview/collections/search-config/records?_cachebust=%CACHEBUST%",
-};
-
 export default class ConfigController extends HTMLElement {
   #compareConfigsSelected = false;
+
+  async getEngineUrl(server) {
+    let url = server.startsWith("prod")
+      ? "https://firefox.settings.services.mozilla.com/v1/buckets/main"
+      : "https://firefox.settings.services.allizom.org/v1/buckets/main";
+
+    if (server.includes("main")) {
+      url += "-preview";
+    }
+
+    url += "/collections/search-config";
+
+    if (
+      (await browser.experiments.searchengines.getCurrentConfigFormat()) == "2"
+    ) {
+      url += "-v2";
+    }
+    url += "/records?_cachebust=%CACHEBUST%";
+    return url;
+  }
 
   constructor() {
     super();
@@ -37,9 +46,9 @@ export default class ConfigController extends HTMLElement {
       .addEventListener("click", this.onChange.bind(this));
   }
 
-  set compareConfigsSelected(selected) {
+  async setCompareConfigsSelected(selected) {
     this.#compareConfigsSelected = selected;
-    this.update();
+    await this.update();
   }
 
   async update() {
@@ -62,7 +71,13 @@ export default class ConfigController extends HTMLElement {
 
     if (loadPrimaryConfigFromServer) {
       let config = JSON.parse(await this.fetchPrimaryConfig());
-      if (!validateConfiguration(config)) {
+      try {
+        if (!(await validateConfiguration(config))) {
+          this.updateInvalidMessageDisplay(false);
+          this.shadowRoot.getElementById("config").value = "";
+          return;
+        }
+      } catch (ex) {
         this.updateInvalidMessageDisplay(false);
         this.shadowRoot.getElementById("config").value = "";
         return;
@@ -87,22 +102,22 @@ export default class ConfigController extends HTMLElement {
     return true;
   }
 
-  fetchPrimaryConfig() {
+  async fetchPrimaryConfig() {
     const buttonValue =
       this.shadowRoot.getElementById(`primary-config`).selected;
     if (buttonValue == "local-text") {
       return this.shadowRoot.getElementById("config").value;
     }
-    return fetchCached(ENGINES_URLS[buttonValue]);
+    return fetchCached(await this.getEngineUrl(buttonValue));
   }
 
-  fetchSecondaryConfig() {
+  async fetchSecondaryConfig() {
     const buttonValue =
       this.shadowRoot.getElementById(`compare-config`).selected;
     if (buttonValue == "local-text") {
       return this.shadowRoot.getElementById("config").value;
     }
-    return fetchCached(ENGINES_URLS[buttonValue]);
+    return fetchCached(await this.getEngineUrl(buttonValue));
   }
 
   get selected() {
@@ -112,8 +127,18 @@ export default class ConfigController extends HTMLElement {
   }
 
   onChange() {
-    console.log("change!");
-    console.log(this.getAttribute("select"));
     this.dispatchEvent(new Event("change"));
+  }
+
+  moveConfigToId(id) {
+    if (this.shadowRoot.getElementById("config").hidden) {
+      return;
+    }
+    let textarea = this.shadowRoot.getElementById("config");
+    let line = textarea.value.split(id)[0].match(/\n/g).length;
+    var lineHeight = document.defaultView
+      .getComputedStyle(textarea)
+      .getPropertyValue("line-height");
+    textarea.scrollTop = line * parseInt(lineHeight, 10);
   }
 }

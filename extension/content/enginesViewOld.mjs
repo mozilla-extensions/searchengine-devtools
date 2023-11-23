@@ -12,13 +12,13 @@ const enginesSelectionElements = [
   "experiment-id",
 ];
 
-export default class EnginesView extends HTMLElement {
+export default class EnginesViewOld extends HTMLElement {
   #config = null;
   #initializedPromise = null;
 
   constructor() {
     super();
-    let template = document.getElementById("engines-view-template");
+    let template = document.getElementById("engines-view-old-template");
     let templateContent = template.content;
 
     let shadowRoot = this.attachShadow({ mode: "open" });
@@ -96,32 +96,59 @@ export default class EnginesView extends HTMLElement {
     let { engines, private: privateDefault } =
       await browser.experiments.searchengines.getEngines(options);
 
-    let fragment = document.createDocumentFragment();
-    Utils.addDiv(fragment, "Default Display Order");
-    Utils.addDiv(fragment, "Identifier");
-    Utils.addDiv(fragment, "Display Name");
-    Utils.addDiv(fragment, "Telemetry Id");
-    Utils.addDiv(fragment, "Partner Code");
-    Utils.addDiv(fragment, "Classification");
-    Utils.addDiv(fragment, "Aliases");
-    for (let [i, e] of engines.entries()) {
-      if (i == 0) {
-        Utils.addDiv(fragment, "1 (Application Default)", e.identifier);
-      } else {
-        Utils.addDiv(fragment, i + 1, e.identifier);
+    function getTelemetryId(e) {
+      // Based on SearchService.getEngineParams().
+      let telemetryId = e.telemetryId;
+      if (!telemetryId) {
+        telemetryId = e.webExtension.id.split("@")[0];
+        if (e.webExtension.locale != "default") {
+          telemetryId += "-" + e.webExtension.locale;
+        }
       }
-      Utils.addDiv(fragment, e.identifier, e.identifier);
-      Utils.addDiv(fragment, e.name, e.identifier);
+      return telemetryId;
+    }
+
+    // Approximate the default sort order (we can't do exact order as
+    // we don't have the display names)
+    const collator = new Intl.Collator();
+    const defaultEngine = engines[0];
+    engines.sort((a, b) => {
+      if (a == defaultEngine) {
+        return -1;
+      }
+      if (privateDefault) {
+        if (a == privateDefault && b == defaultEngine) {
+          return -1;
+        }
+        if (a == defaultEngine && b == privateDefault) {
+          return 1;
+        }
+      }
+      if (a.orderHint == b.orderHint) {
+        return collator.compare(a.webExtension.id, b.webExtension.id);
+      }
+      return b.orderHint - a.orderHint;
+    });
+
+    let fragment = document.createDocumentFragment();
+    Utils.addDiv(fragment, "Index");
+    Utils.addDiv(fragment, "Id");
+    Utils.addDiv(fragment, "Locales");
+    Utils.addDiv(fragment, "Telemetry Id");
+    Utils.addDiv(fragment, "Order Hint");
+    Utils.addDiv(fragment, "Params");
+    for (let [i, e] of engines.entries()) {
+      Utils.addDiv(fragment, i + 1, e.webExtension.id);
+      Utils.addDiv(fragment, e.webExtension.id, e.webExtension.id);
+      Utils.addDiv(fragment, e.webExtension.locale, e.webExtension.id);
+      Utils.addDiv(fragment, getTelemetryId(e), e.webExtension.id);
+      Utils.addDiv(fragment, e.orderHint, e.webExtension.id);
       Utils.addDiv(
         fragment,
-        "telemetrySuffix" in e
-          ? `${e.identifier}-${e.telemetrySuffix}`
-          : e.identifier,
-        e.identifier
+        e.params ? JSON.stringify(e.params) : "",
+        e.webExtension.id,
+        "params"
       );
-      Utils.addDiv(fragment, e.partnerCode, e.identifier);
-      Utils.addDiv(fragment, e.classification, e.identifier);
-      Utils.addDiv(fragment, JSON.stringify(e.aliases), e.identifier);
     }
     this.shadowRoot.getElementById("engines-table").textContent = "";
     this.shadowRoot.getElementById("engines-table").appendChild(fragment);
