@@ -10,6 +10,7 @@ const calculateLocaleRegionsElements = [
   "engine-telemetry-id",
   "locale-by-engine",
   "region-by-engine",
+  "application-name",
 ];
 
 export default class ByEngineView extends HTMLElement {
@@ -107,6 +108,8 @@ export default class ByEngineView extends HTMLElement {
       "engine-telemetry-id"
     ).value;
 
+    const appName = this.shadowRoot.getElementById("application-name").value;
+
     const allLocales = await getLocales();
     const allRegions = await getRegions();
 
@@ -135,6 +138,7 @@ export default class ByEngineView extends HTMLElement {
           region: byLocale ? subItem : item,
           distroID: "",
           experiment: "",
+          appName,
         });
         for (let engine of engines) {
           if (engine.identifier.startsWith(engineId)) {

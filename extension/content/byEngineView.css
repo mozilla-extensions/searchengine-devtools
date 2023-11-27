@@ -4,12 +4,31 @@
 
 #engine-selection {
   display: grid;
-  grid: auto-flow / max-content 1fr 1fr 1fr;
+  grid: auto-flow / max-content repeat(4, 1fr);
+  column-gap: 2ch;
   align-items: center;
+  width: 100%;
+}
+
+#application-name {
+  vertical-align: middle;
+}
+
+#engine-selection > div progress,
+#engine-selection > div select {
+  min-width: 100%;
 }
 
 #engine-selection > div {
-  padding: 0 0.5em;
+  text-align: center;
+}
+
+#engine-selection > div > label {
+  display: block;
+}
+
+#engine-selection > div > input {
+  width: calc(100% - 8px);
 }
 
 #locale-region-results {

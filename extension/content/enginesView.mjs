@@ -8,6 +8,7 @@ import { getLocales, getRegions, validateConfiguration } from "./loader.mjs";
 const enginesSelectionElements = [
   "region-select",
   "locale-select",
+  "application-name",
   "distro-id",
   "experiment-id",
 ];
@@ -58,7 +59,7 @@ export default class EnginesView extends HTMLElement {
       return this.#initializedPromise;
     }
 
-    return (this.#initializedPromise = this.#loadRegionsAndLocales());
+    return (this.#initializedPromise = this.#loadSelectElements());
   }
 
   handleKeyPress(event) {
@@ -91,6 +92,7 @@ export default class EnginesView extends HTMLElement {
       region: this.shadowRoot.getElementById("region-select").value,
       distroID: this.shadowRoot.getElementById("distro-id").value,
       experiment: this.shadowRoot.getElementById("experiment-id").value,
+      appName: this.shadowRoot.getElementById("application-name").value,
     };
 
     let { engines, private: privateDefault } =
@@ -130,7 +132,7 @@ export default class EnginesView extends HTMLElement {
       privateDefault ? privateDefault : "Unset";
   }
 
-  async #loadRegionsAndLocales() {
+  async #loadSelectElements() {
     let locales = await getLocales();
     locales.unshift("default");
     Utils.insertOptionList(

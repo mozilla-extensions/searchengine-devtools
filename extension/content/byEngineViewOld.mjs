@@ -10,6 +10,7 @@ const calculateLocaleRegionsElements = [
   "engine-telemetry-id",
   "locale-by-engine",
   "region-by-engine",
+  "application-name",
 ];
 
 export default class ByEngineViewOld extends HTMLElement {
@@ -18,7 +19,7 @@ export default class ByEngineViewOld extends HTMLElement {
 
   constructor() {
     super();
-    let template = document.getElementById("by-engine-view-template");
+    let template = document.getElementById("by-engine-view-old-template");
     let templateContent = template.content;
 
     let shadowRoot = this.attachShadow({ mode: "open" });
@@ -107,6 +108,8 @@ export default class ByEngineViewOld extends HTMLElement {
       "engine-telemetry-id"
     ).value;
 
+    const appName = this.shadowRoot.getElementById("application-name").value;
+
     const allLocales = await getLocales();
     const allRegions = await getRegions();
 
@@ -135,6 +138,7 @@ export default class ByEngineViewOld extends HTMLElement {
           region: byLocale ? subItem : item,
           distroID: "",
           experiment: "",
+          appName,
         });
         for (let engine of engines) {
           if (engine.webExtension.id.startsWith(engineId)) {

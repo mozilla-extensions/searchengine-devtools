@@ -60,6 +60,10 @@
               "experiment": {
                 "type": "string",
                 "description": "The user's experiment id"
+              },
+              "appName": {
+                "type": "string",
+                "description": "The application's name"
               }
             }
           }

@@ -19,3 +19,7 @@
 #diff-display > pre {
   margin: 0;
 }
+
+#changed-sections {
+  min-width: 20ch;
+}
