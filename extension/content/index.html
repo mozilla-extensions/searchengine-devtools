@@ -118,12 +118,23 @@
       <fieldset id="locale-region-settings">
         <div id="region-select-wrapper">
           <label for="region-select">Region</label>
-          <select id="region-select" multiple size="4"></select>
+          <select id="region-select" size="4"></select>
         </div>
 
         <div id="locale-select-wrapper">
           <label for="locale-select">Locale</label>
-          <select id="locale-select" multiple size="4"></select>
+          <select id="locale-select" size="4"></select>
+        </div>
+
+        <div id="application-name-wrapper">
+          <label for="application-name">Application</label>
+          <select id="application-name" multiple size="5">
+            <option value="firefox" selected>Firefox</option>
+            <option value="firefox-android">Firefox (Android)</option>
+            <option value="focus-android">Focus (Android)</option>
+            <option value="firefox-ios">Firefox (iOS)</option>
+            <option value="focus-ios">Focus (iOS)</option>
+          </select>
         </div>
 
         <div>
@@ -132,7 +143,7 @@
         </div>
 
         <div>
-          <label for="experiment-id">Experiment ID (81.0a1+)</label>
+          <label for="experiment-id">Experiment ID</label>
           <input id="experiment-id" type="text" />
         </div>
       </fieldset>
@@ -149,12 +160,19 @@
       <fieldset id="locale-region-settings">
         <div id="region-select-wrapper">
           <label for="region-select">Region</label>
-          <select id="region-select" multiple size="4"></select>
+          <select id="region-select" size="4"></select>
         </div>
 
         <div id="locale-select-wrapper">
           <label for="locale-select">Locale</label>
-          <select id="locale-select" multiple size="4"></select>
+          <select id="locale-select" size="4"></select>
+        </div>
+
+        <div id="application-name-wrapper">
+          <label for="application-name">Application</label>
+          <select id="application-name" multiple size="5">
+            <option value="firefox" selected>Firefox</option>
+          </select>
         </div>
 
         <div>
@@ -200,6 +218,65 @@
               value="region"
             />
             <label for="region-by-engine">By Region</label>
+          </div>
+        </div>
+        <div id="application-name-wrapper">
+          <label for="application-name">Application Name</label>
+          <select id="application-name" multiple size="5">
+            <option value="firefox" selected>Firefox</option>
+            <option value="firefox-android">Firefox (Android)</option>
+            <option value="focus-android">Focus (Android)</option>
+            <option value="firefox-ios">Firefox (iOS)</option>
+            <option value="focus-ios">Focus (iOS)</option>
+          </select>
+        </div>
+        <div>
+          <label for="engine-id">Engine Id (reqd)</label>
+          <input id="engine-id" type="text" />
+        </div>
+        <div>
+          <label for="engine-telemetry-id">Telemetry Id</label>
+          <input id="engine-telemetry-id" type="text" />
+        </div>
+        <div>
+          <label for="by-engine-progress">Progress:</label>
+          <progress id="by-engine-progress" max="100" value="0">0%</progress>
+        </div>
+      </fieldset>
+
+      <div id="locale-region-results"></div>
+    </template>
+
+    <template id="by-engine-view-old-template">
+      <link rel="stylesheet" href="byEngineView.css" />
+      <fieldset id="engine-selection">
+        <div>
+          <div>
+            <input
+              type="radio"
+              id="locale-by-engine"
+              name="by-engine-radio"
+              value="locale"
+              checked
+            />
+            <label for="locale-by-engine">By Locale</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="region-by-engine"
+              name="by-engine-radio"
+              value="region"
+            />
+            <label for="region-by-engine">By Region</label>
+          </div>
+        </div>
+        <div id="application-name-wrapper">
+          <label for="application-name">Application Name</label>
+          <div>
+            <select id="application-name" multiple size="5">
+              <option value="firefox" selected>Firefox</option>
+            </select>
           </div>
         </div>
         <div>

@@ -8,22 +8,32 @@
   align-items: center;
   width: max-content;
   margin: 0 auto;
-  grid-template-columns: repeat(3, auto);
   grid-template-rows: repeat(2, auto);
+  grid-template-columns: repeat(4, calc(25% - 6em / 4));
+  column-gap: 2ch;
+  width: 80%;
 }
 
+#application-name-wrapper,
 #region-select-wrapper,
 #locale-select-wrapper {
   grid-row: 1 / 3;
 }
 
-#locale-region-settings div {
-  margin-right: 2em;
+#locale-region-settings > div > select {
+  min-width: 100%;
+}
+
+#locale-region-settings > div {
   text-align: center;
 }
 
-#locale-region-settings label {
+#locale-region-settings > div > label {
   display: block;
+}
+
+#locale-region-settings > div > input {
+  width: calc(100% - 8px);
 }
 
 #engines-table {

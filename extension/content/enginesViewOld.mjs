@@ -8,6 +8,7 @@ import { getLocales, getRegions, validateConfiguration } from "./loader.mjs";
 const enginesSelectionElements = [
   "region-select",
   "locale-select",
+  "application-name",
   "distro-id",
   "experiment-id",
 ];
@@ -91,6 +92,7 @@ export default class EnginesViewOld extends HTMLElement {
       region: this.shadowRoot.getElementById("region-select").value,
       distroID: this.shadowRoot.getElementById("distro-id").value,
       experiment: this.shadowRoot.getElementById("experiment-id").value,
+      appName: this.shadowRoot.getElementById("application-name").value,
     };
 
     let { engines, private: privateDefault } =
