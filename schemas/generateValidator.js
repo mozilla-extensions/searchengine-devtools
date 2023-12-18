@@ -11,10 +11,10 @@ const standaloneCode = require("ajv/dist/standalone").default;
 const addFormats = require("ajv-formats");
 
 let schemaV1 = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "search-engine-config-schema.json"))
+  fs.readFileSync(path.join(__dirname, "search-config-schema.json"))
 );
 let schemaV2 = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "search-engine-config-v2-schema.json"))
+  fs.readFileSync(path.join(__dirname, "search-config-v2-schema.json"))
 );
 
 schemaV1.$id = "validateWithSchemaV1";

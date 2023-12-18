@@ -83,8 +83,8 @@
           },
           "uniqueItems": true
         },
-        "channel": {
-          "title": "Release Channel",
+        "channels": {
+          "title": "Release Channels",
           "description": "An array of release channels that this section applies to (not set = everywhere).",
           "type": "array",
           "items": {
@@ -100,7 +100,7 @@
           "type": "string",
           "pattern": "^[a-zA-Z0-9-]{0,100}$"
         },
-        "applicationId": {
+        "applications": {
           "title": "Application Identifiers",
           "description": "The application(s) this section applies to (default/not specified is everywhere).",
           "type": "array",
@@ -310,9 +310,6 @@
                 "type": "string",
                 "enum": ["general", "unknown"]
               },
-              "environment": {
-                "$ref": "#/definitions/environment"
-              },
               "name": {
                 "title": "Name",
                 "description": "The user visible name for the search engine.",
@@ -331,7 +328,7 @@
                 "$ref": "#/definitions/urls"
               }
             },
-            "required": ["name", "urls", "classification", "environment"]
+            "required": ["name", "urls", "classification"]
           },
           "variants": {
             "title": "Variants",
@@ -363,7 +360,7 @@
             }
           }
         },
-        "required": ["recordType", "identifier", "base"]
+        "required": ["recordType", "identifier", "base", "variants"]
       }
     },
     {
@@ -401,34 +398,21 @@
                 },
                 "default": {
                   "title": "Default",
-                  "description": "The identifier of the engine that will be used as the application default for the associated environment.",
+                  "description": "The identifier of the engine that will be used as the application default for the associated environment. If the entry is suffixed with a star, matching is applied on a \"starts with\" basis.",
                   "type": "string",
-                  "pattern": "^[a-zA-Z0-9-_]*$"
-                },
-                "defaultStartsWith": {
-                  "title": "Default (Starts With)",
-                  "description": "This is the start of the identifier of engines that will be used as the application default for the associated environment. The configuration should ensure that any matching engines are unique in the particular environments.",
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9-_]*$"
+                  "pattern": "^[a-zA-Z0-9-_]*\\*?$"
                 },
                 "defaultPrivate": {
                   "title": "Default - Private Mode",
-                  "description": "The identifier of the engine that will be used as the application default in private mode for the associated environment.",
+                  "description": "The identifier of the engine that will be used as the application default in private mode for the associated environment. If the entry is suffixed with a star, matching is applied on a \"starts with\" basis.",
                   "type": "string",
-                  "pattern": "^[a-zA-Z0-9-_]*$"
-                },
-                "defaultPrivateStartsWith": {
-                  "title": "Default - Private Mode (Starts With)",
-                  "description": "This is the start of the identifier of engines that will be used as the application default in private mode for the associated environment. The configuration should ensure that any matching engines are unique in the particular environments.",
-                  "type": "string",
-                  "pattern": "^[a-zA-Z0-9-_]*$"
+                  "pattern": "^[a-zA-Z0-9-_]*\\*?$"
                 }
               },
               "oneOf": [
                 { "required": ["environment", "default"] },
-                { "required": ["environment", "defaultStartsWith"] },
                 { "required": ["environment", "defaultPrivate"] },
-                { "required": ["environment", "defaultPrivateStartsWith"] }
+                { "required": ["environment", "default", "defaultPrivate"] }
               ]
             }
           }
@@ -460,10 +444,10 @@
                 "order": {
                   "title": "Engine Order",
                   "type": "array",
-                  "description": "The order of the engines for the associated environment. If engines are present for the user but not included in this list, they will follow after the ones in this list in alphabetical order.",
+                  "description": "The order of the engines for the associated environment. If engines are present for the user but not included in this list, they will follow after the ones in this list in alphabetical order. If an individual entry is suffixed with a star, matching is applied on a \"starts with\" basis.",
                   "items": {
                     "type": "string",
-                    "pattern": "^[a-zA-Z0-9-_]*$"
+                    "pattern": "^[a-zA-Z0-9-_]*\\*?$"
                   }
                 }
               },
@@ -471,7 +455,6 @@
             }
           }
         },
-        "additionalProperties": false,
         "required": ["recordType", "orders"]
       }
     }
