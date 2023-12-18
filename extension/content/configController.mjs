@@ -12,7 +12,7 @@ export default class ConfigController extends HTMLElement {
       ? "https://firefox.settings.services.mozilla.com/v1/buckets/main"
       : "https://firefox.settings.services.allizom.org/v1/buckets/main";
 
-    if (server.includes("main")) {
+    if (server.includes("preview")) {
       url += "-preview";
     }
 
