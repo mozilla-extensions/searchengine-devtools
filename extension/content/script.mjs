@@ -56,6 +56,7 @@ async function main() {
     await setupEnginesView();
   } catch (ex) {
     console.error(ex);
+    $("config-controller").updateInvalidMessageDisplay(false);
   }
   document.body.classList.remove("loading");
 }
@@ -86,7 +87,7 @@ async function changeTabs(event) {
       $(`#${tab}-tab`).removeAttribute("selected");
     }
   }
-  $("#config-controller").setCompareConfigsSelected(
+  await $("#config-controller").setCompareConfigsSelected(
     $("#compare-configs").hasAttribute("selected")
   );
 
@@ -112,7 +113,7 @@ function reloadPage(event) {
 
     $("#by-engine-view").clear();
     let configController = $("#config-controller");
-    configController.setCompareConfigsSelected(
+    await configController.setCompareConfigsSelected(
       $("#compare-configs").hasAttribute("selected")
     );
 
