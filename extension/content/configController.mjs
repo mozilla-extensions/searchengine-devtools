@@ -7,26 +7,6 @@ import { fetchCached, validateConfiguration } from "./loader.mjs";
 export default class ConfigController extends HTMLElement {
   #compareConfigsSelected = false;
 
-  async getEngineUrl(server) {
-    let url = server.startsWith("prod")
-      ? "https://firefox.settings.services.mozilla.com/v1/buckets/main"
-      : "https://firefox.settings.services.allizom.org/v1/buckets/main";
-
-    if (server.includes("preview")) {
-      url += "-preview";
-    }
-
-    url += "/collections/search-config";
-
-    if (
-      (await browser.experiments.searchengines.getCurrentConfigFormat()) == "2"
-    ) {
-      url += "-v2";
-    }
-    url += "/records?_cachebust=%CACHEBUST%";
-    return url;
-  }
-
   constructor() {
     super();
     let template = document.getElementById("config-controller-template");
@@ -108,7 +88,7 @@ export default class ConfigController extends HTMLElement {
     if (buttonValue == "local-text") {
       return this.shadowRoot.getElementById("config").value;
     }
-    return fetchCached(await this.getEngineUrl(buttonValue));
+    return fetchCached(await this.#getEngineUrl(buttonValue));
   }
 
   async fetchSecondaryConfig() {
@@ -117,7 +97,28 @@ export default class ConfigController extends HTMLElement {
     if (buttonValue == "local-text") {
       return this.shadowRoot.getElementById("config").value;
     }
-    return fetchCached(await this.getEngineUrl(buttonValue));
+    return fetchCached(await this.#getEngineUrl(buttonValue));
+  }
+
+  async getAttachmentBaseUrl() {
+    const buttonValue =
+      this.shadowRoot.getElementById(`primary-config`).selected;
+    if (buttonValue == "local-text") {
+      return undefined;
+    }
+
+    return buttonValue.startsWith("prod")
+      ? "https://firefox-settings-attachments.cdn.mozilla.net/"
+      : "https://firefox-settings-attachments.cdn.allizom.org/";
+  }
+
+  async fetchIconConfig() {
+    const buttonValue =
+      this.shadowRoot.getElementById(`primary-config`).selected;
+    if (buttonValue == "local-text") {
+      return "{}";
+    }
+    return fetchCached(await this.#getIconsUrl(buttonValue));
   }
 
   get selected() {
@@ -140,5 +141,40 @@ export default class ConfigController extends HTMLElement {
       .getComputedStyle(textarea)
       .getPropertyValue("line-height");
     textarea.scrollTop = line * parseInt(lineHeight, 10);
+  }
+
+  async #getEngineUrl(server) {
+    let url = this.#getConfigUrl(server) + "collections/search-config";
+
+    if (
+      (await browser.experiments.searchengines.getCurrentConfigFormat()) == "2"
+    ) {
+      url += "-v2";
+    }
+
+    return url + "/records?_cachebust=%CACHEBUST%";
+  }
+
+  #getIconsUrl(server) {
+    return (
+      this.#getConfigUrl(server) +
+      "collections/search-config-icons/records?_cachebust=%CACHEBUST%"
+    );
+  }
+
+  #getConfigUrl(server) {
+    let url = this.#getBaseUrl(server) + "buckets/main";
+
+    if (server.includes("preview")) {
+      url += "-preview";
+    }
+
+    return url + "/";
+  }
+
+  #getBaseUrl(server) {
+    return server.startsWith("prod")
+      ? "https://firefox.settings.services.mozilla.com/v1/"
+      : "https://firefox.settings.services.allizom.org/v1/";
   }
 }
