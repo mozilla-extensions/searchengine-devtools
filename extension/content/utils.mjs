@@ -15,6 +15,19 @@ let Utils = {
     element.appendChild(div);
   },
 
+  addImage(element, src, dataId = "") {
+    let div = document.createElement("div");
+    if (dataId) {
+      div.setAttribute("data-id", dataId);
+    }
+    if (src) {
+      let image = document.createElement("img");
+      image.src = src;
+      div.appendChild(image);
+    }
+    element.appendChild(div);
+  },
+
   insertOptionList(field, list) {
     let fragment = document.createDocumentFragment();
     for (let item of list) {

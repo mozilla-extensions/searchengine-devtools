@@ -15,6 +15,8 @@ const enginesSelectionElements = [
 
 export default class EnginesView extends HTMLElement {
   #config = null;
+  #attachmentBaseUrl = null;
+  #iconConfig = null;
   #initializedPromise = null;
 
   constructor() {
@@ -69,7 +71,7 @@ export default class EnginesView extends HTMLElement {
     }
   }
 
-  async loadEngines(event, config) {
+  async loadEngines(event, config, attachmentBaseUrl, iconConfig) {
     if (event) {
       event.preventDefault();
     }
@@ -78,9 +80,13 @@ export default class EnginesView extends HTMLElement {
     if (config) {
       if (!(await validateConfiguration(JSON.parse(config)))) {
         this.#config = null;
+        this.#iconConfig = null;
+        this.#attachmentBaseUrl = null;
         throw new Error("Invalid Config");
       }
       this.#config = config;
+      this.#iconConfig = JSON.parse(iconConfig);
+      this.#attachmentBaseUrl = attachmentBaseUrl;
     }
     if (!this.#config) {
       return;
@@ -106,6 +112,7 @@ export default class EnginesView extends HTMLElement {
     Utils.addDiv(fragment, "Partner Code");
     Utils.addDiv(fragment, "Classification");
     Utils.addDiv(fragment, "Aliases");
+    Utils.addDiv(fragment, "Desktop Icon");
     for (let [i, e] of engines.entries()) {
       if (i == 0) {
         Utils.addDiv(fragment, "1 (Application Default)", e.identifier);
@@ -124,6 +131,11 @@ export default class EnginesView extends HTMLElement {
       Utils.addDiv(fragment, e.partnerCode, e.identifier);
       Utils.addDiv(fragment, e.classification, e.identifier);
       Utils.addDiv(fragment, JSON.stringify(e.aliases), e.identifier);
+      Utils.addImage(
+        fragment,
+        this.#attachmentBaseUrl + this.#getIcon(e.identifier),
+        e.identifier
+      );
     }
     this.shadowRoot.getElementById("engines-table").textContent = "";
     this.shadowRoot.getElementById("engines-table").appendChild(fragment);
@@ -150,5 +162,23 @@ export default class EnginesView extends HTMLElement {
     );
     this.shadowRoot.getElementById("region-select").value =
       await browser.experiments.searchengines.getCurrentRegion();
+  }
+
+  #getIcon(identifier) {
+    let record = this.#iconConfig?.data?.find((r) => {
+      return (
+        r.imageSize == 16 &&
+        r.filter_expression ==
+          'env.appinfo.ID == "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"' &&
+        r.engineIdentifiers.some((i) => {
+          if (i.endsWith("*")) {
+            return identifier.startsWith(i.slice(0, -1));
+          }
+          return identifier == i;
+        })
+      );
+    });
+
+    return record?.attachment.location;
   }
 }
