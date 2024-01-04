@@ -58,12 +58,17 @@ async function getEngines(options) {
   }
 
   engineSelector.getEngineConfiguration = async () => {
-    const result = JSON.parse(options.configUrl).data;
+    let config = JSON.parse(options.configData).data;
     if (!usingV2) {
-      result.sort((a, b) => a.id.localeCompare(b.id));
+      config.sort((a, b) => a.id.localeCompare(b.id));
     }
-    engineSelector._configuration = result;
-    return result;
+    engineSelector._configuration = config;
+
+    engineSelector._configurationOverrides = JSON.parse(
+      options.configOverridesData
+    ).data;
+
+    return config;
   };
   return engineSelector.fetchEngineConfiguration(options);
 }

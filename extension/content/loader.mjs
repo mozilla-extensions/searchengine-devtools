@@ -45,16 +45,30 @@ export async function validateConfiguration(config) {
     (await browser.experiments.searchengines.getCurrentConfigFormat()) == "2"
       ? validate.validateWithSchemaV2
       : validate.validateWithSchemaV1;
+
+  return validateCollectionToSchema(validator, config);
+}
+
+export async function validateConfigurationOverrides(overrides) {
+  let validator =
+    (await browser.experiments.searchengines.getCurrentConfigFormat()) == "2"
+      ? validate.validateWithOverridesSchemaV2
+      : validate.validateWithOverridesSchemaV1;
+
+  return validateCollectionToSchema(validator, overrides);
+}
+
+function validateCollectionToSchema(validator, collection) {
   let valid = true;
 
-  if (!("data" in config)) {
+  if (!("data" in collection)) {
     console.error("Could not find top-level 'data' property in config.");
     valid = false;
     return false;
   }
 
   try {
-    for (let item of config.data) {
+    for (let item of collection.data) {
       if (!validator(item)) {
         for (let error of validator.errors) {
           console.warn(error);

@@ -168,6 +168,7 @@ async function setupEnginesView() {
   await $("#engines-view").loadEngines(
     null,
     await $("#config-controller").fetchPrimaryConfig(),
+    await $("#config-controller").fetchConfigOverrides(),
     await $("#config-controller").getAttachmentBaseUrl(),
     await $("#config-controller").fetchIconConfig()
   );

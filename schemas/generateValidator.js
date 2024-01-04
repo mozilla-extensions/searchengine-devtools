@@ -17,11 +17,22 @@ let schemaV2 = JSON.parse(
   fs.readFileSync(path.join(__dirname, "search-config-v2-schema.json"))
 );
 
+let schemaOverridesV1 = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "search-config-overrides-schema.json"))
+);
+let schemaOverridesV2 = JSON.parse(
+  fs.readFileSync(
+    path.join(__dirname, "search-config-overrides-v2-schema.json")
+  )
+);
+
 schemaV1.$id = "validateWithSchemaV1";
 schemaV2.$id = "validateWithSchemaV2";
+schemaOverridesV1.$id = "validateWithOverridesSchemaV1";
+schemaOverridesV2.$id = "validateWithOverridesSchemaV2";
 
 const ajv = new Ajv({
-  schemas: [schemaV1, schemaV2],
+  schemas: [schemaV1, schemaV2, schemaOverridesV1, schemaOverridesV2],
   code: { source: true },
 });
 addFormats(ajv);
