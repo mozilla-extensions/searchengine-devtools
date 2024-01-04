@@ -3,7 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Utils from "./utils.mjs";
-import { getLocales, getRegions, validateConfiguration } from "./loader.mjs";
+import {
+  getLocales,
+  getRegions,
+  validateConfiguration,
+  validateConfigurationOverrides,
+} from "./loader.mjs";
 
 const enginesSelectionElements = [
   "region-select",
@@ -15,6 +20,7 @@ const enginesSelectionElements = [
 
 export default class EnginesView extends HTMLElement {
   #config = null;
+  #configOverrides = null;
   #attachmentBaseUrl = null;
   #iconConfig = null;
   #initializedPromise = null;
@@ -71,20 +77,31 @@ export default class EnginesView extends HTMLElement {
     }
   }
 
-  async loadEngines(event, config, attachmentBaseUrl, iconConfig) {
+  async loadEngines(
+    event,
+    config,
+    configOverrides,
+    attachmentBaseUrl,
+    iconConfig
+  ) {
     if (event) {
       event.preventDefault();
     }
     await this.initialize();
 
     if (config) {
-      if (!(await validateConfiguration(JSON.parse(config)))) {
+      if (
+        !(await validateConfiguration(JSON.parse(config))) ||
+        !(await validateConfigurationOverrides(JSON.parse(configOverrides)))
+      ) {
         this.#config = null;
+        this.#configOverrides = null;
         this.#iconConfig = null;
         this.#attachmentBaseUrl = null;
         throw new Error("Invalid Config");
       }
       this.#config = config;
+      this.#configOverrides = configOverrides;
       this.#iconConfig = JSON.parse(iconConfig);
       this.#attachmentBaseUrl = attachmentBaseUrl;
     }
@@ -93,7 +110,8 @@ export default class EnginesView extends HTMLElement {
     }
 
     let options = {
-      configUrl: this.#config,
+      configData: this.#config,
+      configOverridesData: this.#configOverrides,
       locale: this.shadowRoot.getElementById("locale-select").value,
       region: this.shadowRoot.getElementById("region-select").value,
       distroID: this.shadowRoot.getElementById("distro-id").value,

@@ -41,9 +41,13 @@
             "type": "object",
             "name": "getEnginesProperties",
             "properties": {
-              "configUrl": {
+              "configData": {
                 "type": "string",
-                "description": "The configuration"
+                "description": "The configuration to use (a JSON string)"
+              },
+              "configOverridesData": {
+                "type": "string",
+                "description": "The configuration overrides to use (a JSON string)"
               },
               "locale": {
                 "type": "string",

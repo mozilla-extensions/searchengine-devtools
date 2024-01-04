@@ -100,6 +100,15 @@ export default class ConfigController extends HTMLElement {
     return fetchCached(await this.#getEngineUrl(buttonValue));
   }
 
+  async fetchConfigOverrides() {
+    const buttonValue =
+      this.shadowRoot.getElementById(`primary-config`).selected;
+    if (buttonValue == "local-text") {
+      return '{"data":[]}';
+    }
+    return fetchCached(await this.#getEngineUrl(buttonValue, true));
+  }
+
   async getAttachmentBaseUrl() {
     const buttonValue =
       this.shadowRoot.getElementById(`primary-config`).selected;
@@ -143,8 +152,11 @@ export default class ConfigController extends HTMLElement {
     textarea.scrollTop = line * parseInt(lineHeight, 10);
   }
 
-  async #getEngineUrl(server) {
-    let url = this.#getConfigUrl(server) + "collections/search-config";
+  async #getEngineUrl(server, overrides) {
+    let url =
+      this.#getConfigUrl(server) +
+      "collections/search-config" +
+      (overrides ? "-overrides" : "");
 
     if (
       (await browser.experiments.searchengines.getCurrentConfigFormat()) == "2"

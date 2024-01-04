@@ -124,7 +124,7 @@ export default class ByEngineViewOld extends HTMLElement {
     const byLength = allBy.length;
     // Pre-filter the config for just the engine id to reduce the amount of
     // processing to do.
-    const configUrl = this.#filterConfig(config, engineId);
+    const configData = this.#filterConfig(config, engineId);
 
     let count = 0;
     const results = new Map();
@@ -133,7 +133,9 @@ export default class ByEngineViewOld extends HTMLElement {
       const itemResults = new Set();
       for (const subItem of allSub) {
         const { engines } = await browser.experiments.searchengines.getEngines({
-          configUrl,
+          configData,
+          // No need to apply the overrides for this view.
+          configOverridesData: '{"data":[]}',
           locale: byLocale ? item : subItem,
           region: byLocale ? subItem : item,
           distroID: "",
