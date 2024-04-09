@@ -74,7 +74,7 @@ async function getEngines(options) {
 }
 
 var searchengines = class extends ExtensionAPI {
-  getAPI(context) {
+  getAPI() {
     return {
       experiments: {
         searchengines: {
