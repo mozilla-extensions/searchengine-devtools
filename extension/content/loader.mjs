@@ -30,6 +30,7 @@ export async function getLocales() {
       .filter((e) => e.match(/^[a-zA-Z-]+$/)),
     "en-US",
   ];
+  // Convert ja-JP-mac to BCP47 standard.
   locales = locales.map((l) => (l == "ja-JP-mac" ? "ja-JP-macos" : l));
   return locales.sort();
 }

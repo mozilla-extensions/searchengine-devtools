@@ -43,11 +43,11 @@ async function getCurrentConfigFormat() {
 
 async function getEngines(options) {
   let engineSelector;
-  let usingV2 = false;
+  let useSearchConfigV2 = false;
   if ("newSearchConfigEnabled" in SearchUtils) {
     if (SearchUtils.newSearchConfigEnabled) {
       engineSelector = new SearchEngineSelector();
-      usingV2 = true;
+      useSearchConfigV2 = true;
     } else {
       engineSelector = new SearchEngineSelectorOld();
     }
@@ -59,7 +59,7 @@ async function getEngines(options) {
 
   engineSelector.getEngineConfiguration = async () => {
     let config = JSON.parse(options.configData).data;
-    if (!usingV2) {
+    if (!useSearchConfigV2) {
       config.sort((a, b) => a.id.localeCompare(b.id));
     }
     engineSelector._configuration = config;
@@ -70,7 +70,16 @@ async function getEngines(options) {
 
     return config;
   };
-  return engineSelector.fetchEngineConfiguration(options);
+  let result = await engineSelector.fetchEngineConfiguration(options);
+
+  if (useSearchConfigV2 && "sortEnginesByDefaults" in SearchUtils) {
+    result.engines = SearchUtils.sortEnginesByDefaults({
+      engines: result.engines,
+      appDefaultEngine: result.engines[0],
+      locale: options.locale,
+    });
+  }
+  return result;
 }
 
 var searchengines = class extends ExtensionAPI {
