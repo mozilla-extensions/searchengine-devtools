@@ -34,7 +34,7 @@
       {
         "name": "getEngines",
         "type": "function",
-        "description": "Return the engine configuration for the given region, locale and configuration",
+        "description": "Return the sorted engine configuration for the given region, locale and configuration",
         "async": true,
         "parameters": [
           {
