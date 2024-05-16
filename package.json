@@ -38,7 +38,7 @@
     "build": "web-ext build -s ./extension/ --overwrite-dest -n searchengine-devtools.xpi",
     "postbuild": "rm validate.js",
     "clean": "rimraf web-ext-artifacts extension/content/diff.js extension/content/validate.js",
-    "start": "npm run clean && npm run build && web-ext run -s extension"
+    "start": "npm run clean && npm run build && web-ext run -s extension --pref \"xpinstall.signatures.required=false\" --pref \"extensions.experiments.enabled=true\""
   },
   "private": true,
   "license": "MPLv2"
