@@ -40,7 +40,8 @@ export default class CompareView extends HTMLElement {
     this.#oldConfig = oldConfig;
     this.#newConfig = newConfig;
 
-    const { oldConfigMap, newConfigMap, engineIds } = await this.#getDiffData();
+    const { oldConfigMap, newConfigMap, recordIds } =
+      await this.#getDataForDiff();
 
     const shadowRoot = this.shadowRoot;
     const changedSections = shadowRoot.getElementById("changed-sections");
@@ -48,11 +49,12 @@ export default class CompareView extends HTMLElement {
     Utils.removeAllChildren(shadowRoot.getElementById("diff-display"));
 
     const fragment = document.createDocumentFragment();
-    for (const id of engineIds) {
+    for (const id of recordIds) {
       const fullDiff = this.#getDiff(
         oldConfigMap.get(id),
         newConfigMap.get(id)
       );
+
       if (fullDiff.length > 1 || fullDiff[0].added || fullDiff[0].removed) {
         const option = document.createElement("option");
         option.appendChild(document.createTextNode(`${id}`));
@@ -63,7 +65,7 @@ export default class CompareView extends HTMLElement {
   }
 
   async displayDiff() {
-    const { oldConfigMap, newConfigMap } = await this.#getDiffData();
+    const { oldConfigMap, newConfigMap } = await this.#getDataForDiff();
 
     const shadowRoot = this.shadowRoot;
     const id = shadowRoot.getElementById("changed-sections").value;
@@ -85,26 +87,42 @@ export default class CompareView extends HTMLElement {
     diffDisplay.appendChild(fragment);
   }
 
-  async #getDiffData() {
+  /**
+   * Returns data required to figure out the differences between the two
+   * configurations.
+   *
+   * @returns {object}
+   *   An object containing:
+   *   - {Map} [oldConfigMap]
+   *   - {Map} [newConfigMap]
+   *   - {Set} recordIds
+   *   The maps have keys that are either the identifier of the record, or the
+   *   record type if there is no identifier. The values are the configuration
+   *   records, stripped of unnecessary fields (last_modified, remote settings id,
+   *   remote settings schema).
+   *   recordIds is a set of either the identifier of the record, or the
+   *   record type if there is no identifier.
+   */
+  async #getDataForDiff() {
+    const recordIds = new Set();
+
     if (
       !(await validateConfiguration(this.#oldConfig)) ||
       !(await validateConfiguration(this.#newConfig))
     ) {
       console.error("Configuration is invalid for getDiffData");
-      return { engineIds: [] };
+      return { recordIds };
     }
-
-    const engineIds = new Set();
 
     function mapConfig(configData) {
       const map = new Map();
       for (const config of configData) {
-        engineIds.add(config.identifier);
+        recordIds.add(config.identifier ?? config.recordType);
         const newConfigData = { ...config };
         delete newConfigData.last_modified;
         delete newConfigData.id;
         delete newConfigData.schema;
-        map.set(config.identifier, newConfigData);
+        map.set(config.identifier ?? config.recordType, newConfigData);
       }
       return map;
     }
@@ -114,7 +132,17 @@ export default class CompareView extends HTMLElement {
       newConfigMap: mapConfig(this.#newConfig.data),
     };
 
-    result.engineIds = [...engineIds.keys()].sort();
+    result.recordIds = [...recordIds.keys()].sort((a, b) => {
+      // Put defaultEngines & engineOrders at the top so that it is more
+      // obvious we're changing these.
+      if (a == "defaultEngines" || a == "engineOrders") {
+        return -1;
+      }
+      if (b == "defaultEngines" || b == "engineOrders") {
+        return 1;
+      }
+      return a.localeCompare(b);
+    });
 
     return result;
   }
