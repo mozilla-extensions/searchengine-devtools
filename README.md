@@ -36,5 +36,11 @@ npm install
 Run in a browser with live-reload:
 
 ```
-npm start -- --firefox-binary ~/path/to/firefox
+npm run start -- -f ~/path/to/firefox
+```
+
+For example, if starting Nightly the path to firefox on your machine might be:
+
+```
+npm run start -- -f /Applications/Firefox\ Nightly.app/Contents/MacOS/firefox
 ```
