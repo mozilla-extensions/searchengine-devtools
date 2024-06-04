@@ -95,10 +95,19 @@ def yes_or_no(question):
             return False
 
 
+def strip_record(record):
+    """Delete properties that we don't want to upload compare."""
+    for item in ["id", "last_modified", "schema"]:
+        if item in record:
+            del record[item]
+
+
 for record in records["data"]:
     print(getIdForRecord(record))
 
     existing = findRecord(getIdForRecord(record), existingRecords)
+
+    strip_record(record)
 
     if not existing:
         response = requests.post(API_ENDPOINT, headers=headers, json={"data": record})
@@ -109,12 +118,10 @@ for record in records["data"]:
             print(response.text)
         continue
 
-    # Delete things we don't want to upload / don't want to compare.
+    # Save the id before stripping, as we do need this for modifying the existing
+    # record.
     existingId = existing["id"]
-    for item in ["id", "last_modified", "schema"]:
-        if item in record:
-            del record[item]
-        del existing[item]
+    strip_record(existing)
 
     if record == existing:
         print("Up to date")
