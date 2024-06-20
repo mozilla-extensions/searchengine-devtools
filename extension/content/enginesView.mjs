@@ -8,6 +8,7 @@ import {
   getRegions,
   validateConfiguration,
   validateConfigurationOverrides,
+  validateIconConfiguration,
 } from "./loader.mjs";
 
 const enginesSelectionElements = [
@@ -94,7 +95,8 @@ export default class EnginesView extends HTMLElement {
     if (config) {
       if (
         !(await validateConfiguration(JSON.parse(config))) ||
-        !(await validateConfigurationOverrides(JSON.parse(configOverrides)))
+        !(await validateConfigurationOverrides(JSON.parse(configOverrides))) ||
+        !(await validateIconConfiguration(JSON.parse(iconConfig)))
       ) {
         this.#config = null;
         this.#configOverrides = null;
