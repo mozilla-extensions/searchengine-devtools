@@ -5,6 +5,8 @@
 /* global ExtensionAPI, XPCOMUtils, Services */
 
 ChromeUtils.defineESModuleGetters(this, {
+  FilterExpressions:
+    "resource://gre/modules/components-utils/FilterExpressions.sys.mjs",
   SearchEngineSelector: "resource://gre/modules/SearchEngineSelector.sys.mjs",
   SearchEngineSelectorOld:
     "resource://gre/modules/SearchEngineSelectorOld.sys.mjs",
@@ -82,6 +84,16 @@ async function getEngines(options) {
   return result;
 }
 
+async function jexlFilterMatches(
+  filterExpression,
+  applicationId,
+  applicationVersion
+) {
+  return !!(await FilterExpressions.eval(filterExpression, {
+    env: { appinfo: { ID: applicationId }, version: applicationVersion },
+  }));
+}
+
 var searchengines = class extends ExtensionAPI {
   getAPI() {
     return {
@@ -92,6 +104,7 @@ var searchengines = class extends ExtensionAPI {
           getCurrentRegion,
           getCurrentConfigFormat,
           getEngines,
+          jexlFilterMatches,
         },
       },
     };

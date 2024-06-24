@@ -59,6 +59,13 @@ export async function validateConfigurationOverrides(overrides) {
   return validateCollectionToSchema(validator, overrides);
 }
 
+export async function validateIconConfiguration(iconConfig) {
+  return validateCollectionToSchema(
+    validate.validateWithIconSchemaV1,
+    iconConfig
+  );
+}
+
 function validateCollectionToSchema(validator, collection) {
   let valid = true;
 
