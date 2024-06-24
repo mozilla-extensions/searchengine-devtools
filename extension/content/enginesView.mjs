@@ -134,7 +134,8 @@ export default class EnginesView extends HTMLElement {
     Utils.addDiv(fragment, "Partner Code");
     Utils.addDiv(fragment, "Classification");
     Utils.addDiv(fragment, "Aliases");
-    Utils.addDiv(fragment, "Desktop Icon");
+    Utils.addDiv(fragment, "Desktop Icon (16)");
+    Utils.addDiv(fragment, "Desktop Icon (24)");
     for (let [i, e] of engines.entries()) {
       if (i == 0) {
         Utils.addDiv(fragment, "1 (Application Default)", e);
@@ -153,11 +154,25 @@ export default class EnginesView extends HTMLElement {
       Utils.addDiv(fragment, e.partnerCode, e);
       Utils.addDiv(fragment, e.classification, e);
       Utils.addDiv(fragment, JSON.stringify(e.aliases), e);
+      // We should always have a 16x16.
       Utils.addImage(
         fragment,
-        this.#attachmentBaseUrl + this.#getIcon(e.identifier),
+        this.#attachmentBaseUrl + (await this.#getIcon(e.identifier, 16)),
+        16,
         e
       );
+      // 24x24 is newer so may not exist.
+      let icon24 = await this.#getIcon(e.identifier, 24);
+      if (icon24) {
+        Utils.addImage(
+          fragment,
+          this.#attachmentBaseUrl + icon24,
+          24,
+          e.identifier
+        );
+      } else {
+        Utils.addDiv(fragment, "", e.identifier);
+      }
     }
     this.shadowRoot.getElementById("engines-table").textContent = "";
     this.shadowRoot.getElementById("engines-table").appendChild(fragment);
@@ -186,21 +201,37 @@ export default class EnginesView extends HTMLElement {
       await browser.experiments.searchengines.getCurrentRegion();
   }
 
-  #getIcon(identifier) {
-    let record = this.#iconConfig?.data?.find((r) => {
-      return (
-        r.imageSize == 16 &&
-        r.filter_expression ==
-          'env.appinfo.ID == "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"' &&
-        r.engineIdentifiers.some((i) => {
+  /**
+   * Finds an icon in the remote settings records, according to the required
+   * size and returns the location.
+   *
+   * @param {string} engineIdentifier
+   *   The engine identifier.
+   * @param {number} iconSize
+   *   The requested size of the icon.
+   * @returns {string}
+   *   The location of the icon on the remote settings server.
+   */
+  async #getIcon(engineIdentifier, iconSize) {
+    let browserInfo = await browser.runtime.getBrowserInfo();
+    for (let record of this.#iconConfig?.data ?? []) {
+      if (
+        record.imageSize == iconSize &&
+        (await browser.experiments.searchengines.jexlFilterMatches(
+          record.filter_expression,
+          "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}",
+          browserInfo.version
+        )) &&
+        record.engineIdentifiers.some((i) => {
           if (i.endsWith("*")) {
-            return identifier.startsWith(i.slice(0, -1));
+            return engineIdentifier.startsWith(i.slice(0, -1));
           }
-          return identifier == i;
+          return engineIdentifier == i;
         })
-      );
-    });
-
-    return record?.attachment.location;
+      ) {
+        return record.attachment.location;
+      }
+    }
+    return null;
   }
 }

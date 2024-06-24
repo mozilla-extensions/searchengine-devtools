@@ -15,7 +15,7 @@ let Utils = {
     element.appendChild(div);
   },
 
-  addImage(element, src, data = "") {
+  addImage(element, src, size, data = "") {
     let div = document.createElement("div");
     if (data) {
       div.data = data;
@@ -23,6 +23,7 @@ let Utils = {
     if (src) {
       let image = document.createElement("img");
       image.src = src;
+      image.setAttribute("size", size);
       div.appendChild(image);
     }
     element.appendChild(div);
