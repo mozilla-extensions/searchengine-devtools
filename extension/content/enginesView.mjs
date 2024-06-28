@@ -133,31 +133,29 @@ export default class EnginesView extends HTMLElement {
     Utils.addDiv(fragment, "Desktop Icon");
     for (let [i, e] of engines.entries()) {
       if (i == 0) {
-        Utils.addDiv(fragment, "1 (Application Default)", e.identifier);
+        Utils.addDiv(fragment, "1 (Application Default)", e);
       } else {
-        Utils.addDiv(fragment, i + 1, e.identifier);
+        Utils.addDiv(fragment, i + 1, e);
       }
-      Utils.addDiv(fragment, e.identifier, e.identifier);
-      Utils.addDiv(fragment, e.name, e.identifier);
+      Utils.addDiv(fragment, e.identifier, e);
+      Utils.addDiv(fragment, e.name, e);
       Utils.addDiv(
         fragment,
         "telemetrySuffix" in e
           ? `${e.identifier}-${e.telemetrySuffix}`
           : e.identifier,
-        e.identifier
+        e
       );
-      Utils.addDiv(fragment, e.partnerCode, e.identifier);
-      Utils.addDiv(fragment, e.classification, e.identifier);
-      Utils.addDiv(fragment, JSON.stringify(e.aliases), e.identifier);
+      Utils.addDiv(fragment, e.partnerCode, e);
+      Utils.addDiv(fragment, e.classification, e);
+      Utils.addDiv(fragment, JSON.stringify(e.aliases), e);
       Utils.addImage(
         fragment,
         this.#attachmentBaseUrl + this.#getIcon(e.identifier),
-        e.identifier
+        e
       );
     }
-    this.shadowRoot.getElementById("engines-table").textContent = "";
     this.shadowRoot.getElementById("engines-table").appendChild(fragment);
-
     this.shadowRoot.getElementById("private-browsing-engine").innerText =
       privateDefault ? privateDefault : "Unset";
   }
