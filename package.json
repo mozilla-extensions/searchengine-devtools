@@ -10,6 +10,7 @@
       "selfHosted": true
     }
   },
+  "docker-image": "node-lts-latest",
   "dependencies": {
     "diff": "5.2.0",
     "web-ext": "8.2.0"
