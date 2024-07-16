@@ -36,9 +36,7 @@ async function getCurrentConfigFormat() {
   // The preference was introduced in 120, so anything before that should be
   // treated as the original version. If there is no preference after that,
   // we assume that we are on v2.
-  return Services.vc.compare("120.0", Services.appinfo.version, "120") < 1
-    ? 1
-    : 2;
+  return Services.vc.compare(Services.appinfo.version, "120.0") < 0 ? 1 : 2;
 }
 
 async function getEngines(options) {
