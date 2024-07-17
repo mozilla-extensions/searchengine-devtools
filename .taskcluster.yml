@@ -16,8 +16,8 @@ tasks:
       xpiSigningType: "privileged"
 
       template:
-        repo: https://github.com/mozilla-extensions/xpi-template
-        branch: main
+        repo: https://github.com/jcristau/xpi-template
+        branch: tg9
       trustDomain: xpi
     in:
       $if: 'tasks_for in ["github-pull-request", "github-push", "action", "cron"]'
@@ -217,7 +217,6 @@ tasks:
                     XPI_SIGNING_TYPE: "${xpiSigningType}"
                     TEMPLATE_BASE_REPOSITORY: "${template.repo}"
                     TEMPLATE_HEAD_REPOSITORY: "${template.repo}"
-                    TEMPLATE_HEAD_REV: "${template.branch}"
                     TEMPLATE_HEAD_REF: "${template.branch}"
                     TEMPLATE_REPOSITORY_TYPE: git
                     TEMPLATE_PIP_REQUIREMENTS: taskcluster/requirements.txt
