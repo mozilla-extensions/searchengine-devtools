@@ -17,11 +17,14 @@ ChromeUtils.defineESModuleGetters(this, {
 XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
 
 async function getEngineUrls(engineConfig) {
+  // This supports early versions of search consolidation where
+  // AppProvidedSearchEngine still required webExtension id.
+  // Example: In Bug 1901859, changes were made for Firefox ESR (search-config-v1).
   engineConfig.webExtension = { id: "cute kitten" };
 
-  // WebExtensions automatically assign a null value to optional properties,
-  // which can cause errors when retrieving the URLs. To prevent these errors,
-  // we need to remove any properties that have a null value.
+  // WebExtension APIs translation automatically assigns a null value to optional
+  // properties, which can cause errors when retrieving the URLs. To prevent
+  // these errors, we need to remove any properties that have a null value.
   for (let [key, url] of Object.entries(engineConfig.urls)) {
     if (!url) {
       delete engineConfig.urls[key];

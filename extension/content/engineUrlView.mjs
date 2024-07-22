@@ -30,48 +30,47 @@ export default class EngineUrlView extends HTMLElement {
     return fragment;
   }
 
-  createTableFragment(headers, rowHeaders, sortedUrls) {
+  createTableFragment(colHeaders, rowHeaders, sortedUrls) {
     let fragment = document.createDocumentFragment();
     let table = document.createElement("table");
-    let thead = document.createElement("thead");
-    let tbody = this.createTableBody(rowHeaders);
+    let thead = table.createTHead();
+    let tbody = table.createTBody();
 
-    Array.from(tbody.children).forEach((row, index) => {
-      let td = document.createElement("td");
-      let a = document.createElement("a");
-      a.href = sortedUrls[index];
-      a.text = sortedUrls[index];
-      td.appendChild(a);
-      row.append(td);
+    // Create header row
+    let headerRow = thead.insertRow(-1);
+    colHeaders.forEach((header) =>
+      this.createAndAppendCell(headerRow, "th", header)
+    );
+
+    // Create body rows
+    rowHeaders.forEach((header, index) => {
+      let row = tbody.insertRow(-1);
+      this.createAndAppendCell(row, "th", header);
+
+      let cell = row.insertCell(-1);
+      let url = sortedUrls[index];
+      if (url) {
+        cell.appendChild(this.createAnchor(url));
+      } else {
+        cell.textContent = "Not Specified";
+      }
     });
 
-    thead.appendChild(this.createTableRow(headers, "th"));
-    table.appendChild(thead);
-    table.appendChild(tbody);
     fragment.appendChild(table);
-
     return fragment;
   }
 
-  createTableBody(rowHeaders) {
-    let tbody = document.createElement("tbody");
-    rowHeaders.forEach((header) => {
-      let row = this.createTableRow([header], "th");
-      tbody.appendChild(row);
-    });
-
-    return tbody;
+  createAndAppendCell(row, cellType, textContent) {
+    let cell = document.createElement(cellType);
+    cell.textContent = textContent;
+    row.appendChild(cell);
   }
 
-  createTableRow(cellData, cellType) {
-    let tr = document.createElement("tr");
-    cellData.forEach((data) => {
-      let cell = document.createElement(cellType);
-      let text = document.createTextNode(data);
-      cell.appendChild(text);
-      tr.appendChild(cell);
-    });
-
-    return tr;
+  createAnchor(url) {
+    let a = document.createElement("a");
+    a.href = url;
+    a.textContent = url;
+    a.target = "_blank";
+    return a;
   }
 }

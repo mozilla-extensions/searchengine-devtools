@@ -155,7 +155,9 @@ export default class EnginesView extends HTMLElement {
         e
       );
     }
+    this.shadowRoot.getElementById("engines-table").textContent = "";
     this.shadowRoot.getElementById("engines-table").appendChild(fragment);
+
     this.shadowRoot.getElementById("private-browsing-engine").innerText =
       privateDefault ? privateDefault : "Unset";
   }
