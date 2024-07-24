@@ -25,14 +25,24 @@ let schemaOverridesV2 = JSON.parse(
     path.join(__dirname, "search-config-overrides-v2-schema.json")
   )
 );
+let iconsSchema = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "search-config-icons-schema.json"))
+);
 
 schemaV1.$id = "validateWithSchemaV1";
 schemaV2.$id = "validateWithSchemaV2";
 schemaOverridesV1.$id = "validateWithOverridesSchemaV1";
 schemaOverridesV2.$id = "validateWithOverridesSchemaV2";
+iconsSchema.$id = "validateWithIconSchemaV1";
 
 const ajv = new Ajv({
-  schemas: [schemaV1, schemaV2, schemaOverridesV1, schemaOverridesV2],
+  schemas: [
+    schemaV1,
+    schemaV2,
+    schemaOverridesV1,
+    schemaOverridesV2,
+    iconsSchema,
+  ],
   code: { source: true },
 });
 addFormats(ajv);

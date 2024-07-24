@@ -266,6 +266,29 @@
             }
           }
         ]
+      },
+      {
+        "name": "jexlFilterMatches",
+        "type": "function",
+        "description": "Returns true if the filter matches the given parameters",
+        "async": true,
+        "parameters": [
+          {
+            "name": "filterExpression",
+            "type": "string",
+            "description": "The filter expression to check"
+          },
+          {
+            "name": "applicationId",
+            "type": "string",
+            "description": "The application id to match against"
+          },
+          {
+            "name": "applicationVersion",
+            "type": "string",
+            "description": "The application version to match against"
+          }
+        ]
       }
     ],
     "events": []
