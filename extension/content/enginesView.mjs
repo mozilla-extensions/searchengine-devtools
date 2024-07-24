@@ -89,6 +89,8 @@ export default class EnginesView extends HTMLElement {
     }
     await this.initialize();
 
+    document.getElementById("engine-urls-table").clear();
+
     if (config) {
       if (
         !(await validateConfiguration(JSON.parse(config))) ||

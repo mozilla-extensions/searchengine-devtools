@@ -11,8 +11,8 @@ export default class EngineUrlView extends HTMLElement {
     const COL_HEADERS = [
       "URL Type",
       `Full URL for ${config.name} `,
-      "Method",
-      "Results",
+      // TODO: Add Method display
+      // "Method",
     ];
     const ROW_HEADERS = ["search", "suggest", "trending"];
 
@@ -72,5 +72,13 @@ export default class EngineUrlView extends HTMLElement {
     a.textContent = url;
     a.target = "_blank";
     return a;
+  }
+
+  clear() {
+    for (let childNode of this.children) {
+      if (childNode.tagName.toLowerCase() == "table") {
+        childNode.remove();
+      }
+    }
   }
 }

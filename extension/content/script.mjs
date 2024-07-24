@@ -97,6 +97,7 @@ async function changeTabs(event) {
   await $("#config-controller").setCompareConfigsSelected(
     $("#compare-configs").hasAttribute("selected")
   );
+  $("#engine-urls-table").clear();
 
   await setupTabs(event.target.id);
 }
@@ -125,14 +126,10 @@ async function displayUrls(e) {
 
   // When a new row is clicked, remove the last table to show the new table
   // of urls for the new row
-  for (let i = 0; i < $("#engine-urls-table").children.length; i++) {
-    let childNode = $("#engine-urls-table").children[i];
-    if (childNode.tagName.toLowerCase() == "table") {
-      childNode.remove();
-    }
-  }
+  let engineUrlsTable = $("#engine-urls-table");
+  engineUrlsTable.clear();
 
-  await $("#engine-urls-table").loadEngineUrls(e.target.data);
+  await engineUrlsTable.loadEngineUrls(e.target.data);
 }
 
 function reloadPage(event) {
