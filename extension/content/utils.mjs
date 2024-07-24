@@ -3,11 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 let Utils = {
-  addDiv(element, content, dataId = "", className = "") {
+  addDiv(element, content, data = "", className = "") {
     let div = document.createElement("div");
     div.textContent = content;
-    if (dataId) {
-      div.setAttribute("data-id", dataId);
+    if (data) {
+      div.data = data;
     }
     if (className) {
       div.className = className;
@@ -15,10 +15,10 @@ let Utils = {
     element.appendChild(div);
   },
 
-  addImage(element, src, dataId = "") {
+  addImage(element, src, data = "") {
     let div = document.createElement("div");
-    if (dataId) {
-      div.setAttribute("data-id", dataId);
+    if (data) {
+      div.data = data;
     }
     if (src) {
       let image = document.createElement("img");

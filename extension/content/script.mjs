@@ -10,6 +10,7 @@ import CompareView from "./compareView.mjs";
 import CompareViewOld from "./compareViewOld.mjs";
 import EnginesView from "./enginesView.mjs";
 import EnginesViewOld from "./enginesViewOld.mjs";
+import EngineUrlView from "./engineUrlView.mjs";
 
 const searchengines = browser.experiments.searchengines;
 
@@ -20,6 +21,7 @@ if (!searchengines) {
 }
 
 const $ = document.querySelector.bind(document);
+let lastClickedRow = null;
 
 async function main() {
   // Always clear the local storage on load, so that we don't have old data.
@@ -43,6 +45,7 @@ async function main() {
     customElements.define("compare-view", CompareView);
     customElements.define("engines-view", EnginesView);
     customElements.define("by-engine-view", ByEngineView);
+    customElements.define("engine-url-view", EngineUrlView);
   }
 
   await initUI();
@@ -68,6 +71,10 @@ async function initUI() {
     .shadowRoot.getElementById("engines-table")
     .addEventListener("click", showConfig);
 
+  $("#engines-view")
+    .shadowRoot.getElementById("engines-table")
+    .addEventListener("click", displayUrls);
+
   $("#by-locales").setAttribute("selected", true);
   $("#by-locales-tab").setAttribute("selected", true);
 
@@ -90,6 +97,7 @@ async function changeTabs(event) {
   await $("#config-controller").setCompareConfigsSelected(
     $("#compare-configs").hasAttribute("selected")
   );
+  $("#engine-urls-table").clear();
 
   await setupTabs(event.target.id);
 }
@@ -98,11 +106,30 @@ async function showConfig(e) {
   if (e.target.tagName.toLowerCase() != "div") {
     return;
   }
-  let id = e.target.dataset.id;
+  let id = e.target.data.identifier;
   if (!id) {
     return;
   }
   $("#config-controller").moveConfigToId(id);
+}
+
+async function displayUrls(e) {
+  let clickedRow = e.target.closest("div");
+
+  // If the clicked row is the same as the last clicked row, do nothing
+  if (clickedRow === lastClickedRow) {
+    return;
+  }
+
+  // Update the reference to the last clicked row
+  lastClickedRow = clickedRow;
+
+  // When a new row is clicked, remove the last table to show the new table
+  // of urls for the new row
+  let engineUrlsTable = $("#engine-urls-table");
+  engineUrlsTable.clear();
+
+  await engineUrlsTable.loadEngineUrls(e.target.data);
 }
 
 function reloadPage(event) {

@@ -9,10 +9,56 @@ ChromeUtils.defineESModuleGetters(this, {
   SearchEngineSelectorOld:
     "resource://gre/modules/SearchEngineSelectorOld.sys.mjs",
   SearchUtils: "resource://gre/modules/SearchUtils.sys.mjs",
+  AppProvidedSearchEngine:
+    "resource://gre/modules/AppProvidedSearchEngine.sys.mjs",
 });
 
 // eslint-disable-next-line mozilla/reject-importGlobalProperties
 XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
+
+async function getEngineUrls(engineConfig) {
+  // This supports early versions of search consolidation where
+  // AppProvidedSearchEngine still required webExtension id.
+  // Example: In Bug 1901859, changes were made for Firefox ESR (search-config-v1).
+  engineConfig.webExtension = { id: "cute kitten" };
+
+  // WebExtension APIs translation automatically assigns a null value to optional
+  // properties, which can cause errors when retrieving the URLs. To prevent
+  // these errors, we need to remove any properties that have a null value.
+  for (let [key, url] of Object.entries(engineConfig.urls)) {
+    if (!url) {
+      delete engineConfig.urls[key];
+      continue;
+    }
+
+    if (!url.searchTermParamName) {
+      delete url.searchTermParamName;
+      continue;
+    }
+
+    for (let property of ["experimentConfig", "searchAccessPoint", "value"]) {
+      for (let param of url.params) {
+        if (param[property] === null) {
+          delete param[property];
+        }
+      }
+    }
+  }
+
+  let appProvidedEngine = new AppProvidedSearchEngine({ config: engineConfig });
+  let search = appProvidedEngine.getSubmission("cute kitten", "text/html")?.uri
+    ?.spec;
+  let suggest = appProvidedEngine.getSubmission(
+    "cute kitten",
+    "application/x-suggestions+json"
+  )?.uri?.spec;
+  let trending = appProvidedEngine.getSubmission(
+    "cute kitten",
+    "application/x-trending+json"
+  )?.uri?.spec;
+
+  return { search, suggest, trending };
+}
 
 async function getCurrentRegion() {
   return Services.prefs.getCharPref("browser.search.region", "default");
@@ -90,6 +136,7 @@ var searchengines = class extends ExtensionAPI {
           getCurrentRegion,
           getCurrentConfigFormat,
           getEngines,
+          getEngineUrls,
         },
       },
     };

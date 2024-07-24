@@ -2,6 +2,104 @@
   {
     "namespace": "experiments.searchengines",
     "description": "Search Engines",
+    "types": [
+      {
+        "id": "EngineUrl",
+        "type": "object",
+        "properties": {
+          "base": {
+            "title": "Base",
+            "description": "The PrePath and FilePath of the URL. May include variables for engines which have a variable FilePath, e.g. {searchTerm} for when a search term is within the path of the url.",
+            "type": "string"
+          },
+          "method": {
+            "title": "Method",
+            "description": "The HTTP method to use to send the request. If not specified, defaults to GET.",
+            "type": "string",
+            "pattern": "^(GET|POST)$",
+            "enum": ["GET", "POST"],
+            "optional": true
+          },
+          "params": {
+            "title": "Parameters",
+            "description": "The parameters for this URL.",
+            "type": "array",
+            "optional": true,
+            "items": {
+              "type": "object",
+              "title": "Parameter",
+              "properties": {
+                "name": {
+                  "title": "Name",
+                  "description": "The parameter name",
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9-_]*$"
+                },
+                "value": {
+                  "title": "Value",
+                  "description": "The parameter value, this may be a static value, or additionally contain a parameter replacement, e.g. {inputEncoding}. For the partner code parameter, this field should be {partnerCode}.",
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9-_{}]*$",
+                  "optional": true
+                },
+                "experimentConfig": {
+                  "title": "Experiment Configuration",
+                  "description": "The value for the parameter will be derived from the equivalent experiment configuration value. If not experiment is present, this parameter will not be included in the final url.",
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9-_]*$",
+                  "optional": true
+                },
+                "searchAccessPoint": {
+                  "title": "Search Access Point",
+                  "description": "A parameter whose value depends on the access point where the search was initiated.",
+                  "type": "object",
+                  "optional": true,
+                  "properties": {
+                    "searchbar": {
+                      "title": "Name",
+                      "description": "The value for the parameter when searched from the search bar.",
+                      "type": "string",
+                      "pattern": "^[a-zA-Z0-9-_]*$"
+                    },
+                    "addressbar": {
+                      "title": "Name",
+                      "description": "The value for the parameter when searched from the address bar.",
+                      "type": "string",
+                      "pattern": "^[a-zA-Z0-9-_]*$"
+                    },
+                    "contextmenu": {
+                      "title": "Name",
+                      "description": "The value for the parameter when searched from the context menu.",
+                      "type": "string",
+                      "pattern": "^[a-zA-Z0-9-_]*$"
+                    },
+                    "homepage": {
+                      "title": "Name",
+                      "description": "The value for the parameter when searched from the homepage.",
+                      "type": "string",
+                      "pattern": "^[a-zA-Z0-9-_]*$"
+                    },
+                    "newtab": {
+                      "title": "Name",
+                      "description": "The value for the parameter when searched from the new tab page.",
+                      "type": "string",
+                      "pattern": "^[a-zA-Z0-9-_]*$"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "searchTermParamName": {
+            "title": "Search Term Parameter Name",
+            "description": "The name of the query parameter for the search term. Automatically appended to the end of the query. This may be skipped if `{searchTerm}` is included in the base.",
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-_]*$",
+            "optional": true
+          }
+        }
+      }
+    ],
     "functions": [
       {
         "name": "getCurrentLocale",
@@ -68,6 +166,102 @@
               "appName": {
                 "type": "string",
                 "description": "The application's name"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "getEngineUrls",
+        "type": "function",
+        "description": "Returns an array of search, suggestion, and trending urls.",
+        "async": true,
+        "parameters": [
+          {
+            "type": "object",
+            "name": "engineConfig",
+            "properties": {
+              "identifier": {
+                "title": "Identifier",
+                "description": "The identifier of the search engine. This is used as an internal identifier, e.g. for saving the user's settings for the engine. It is also used to form the base telemetry id and may be extended by telemetrySuffix.",
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9-_]*$"
+              },
+              "notes": {
+                "title": "Notes",
+                "description": "A short notes section used to potentially aid identification of this section for humans. Not intended for to be read by the application.",
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9-_.() ]*$",
+                "optional": true
+              },
+              "telemetrySuffix": {
+                "title": "Telemetry Suffix",
+                "description": "Suffix that is appended to the search engine identifier following a dash, i.e. `<identifier>-<suffix>`. There should always be a suffix supplied if the partner code is different for a reason other than being on a different platform.",
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9-]*$",
+                "optional": true
+              },
+              "aliases": {
+                "title": "Aliases",
+                "description": "An array of aliases that the user can use to search with this engine. The aliases will be prefix by '@' on desktop and potentially other platforms.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z\\xa1-\\uffff]*$"
+                },
+                "uniqueItems": true,
+                "optional": true
+              },
+              "charset": {
+                "title": "Character Set",
+                "description": "The character set this engine uses for queries. Defaults to 'UTF=8' if not set.",
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9-]*$",
+                "optional": true
+              },
+              "classification": {
+                "title": "Classification",
+                "description": "The classification of search engine according to the main search types (e.g. general, shopping, travel, dictionary). Currently, only marking as a general search engine is supported.",
+                "type": "string",
+                "enum": ["general", "unknown"],
+                "optional": true
+              },
+              "name": {
+                "title": "Name",
+                "description": "The user visible name for the search engine.",
+                "type": "string",
+                "maxLength": 100
+              },
+              "partnerCode": {
+                "title": "Partner Code",
+                "description": "The partner code for the engine or variant. This will be inserted into parameters which include '{partnerCode}'",
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9-_]*$",
+                "optional": true
+              },
+              "urls": {
+                "title": "URLs",
+                "description": "The URLs associated with the search engine.",
+                "type": "object",
+                "properties": {
+                  "search": {
+                    "title": "Search URL",
+                    "description": "The URL to use for searches",
+                    "$ref": "EngineUrl"
+                  },
+                  "suggestions": {
+                    "title": "Suggestions URL",
+                    "description": "The URL to use for suggestions",
+                    "$ref": "EngineUrl",
+                    "optional": true
+                  },
+                  "trending": {
+                    "title": "Trending Suggestions URL",
+                    "description": "The URL to use for tending suggestions",
+                    "$ref": "EngineUrl",
+                    "optional": true
+                  }
+                }
               }
             }
           }
