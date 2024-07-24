@@ -1,6 +1,6 @@
 {
   "name": "searchengine-devtools",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "A tool to help test search engine configuration changes",
   "homepage_url": "https://github.com/mozilla/searchengine-devtools",
   "webExt": {
