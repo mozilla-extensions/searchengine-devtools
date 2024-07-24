@@ -59,9 +59,14 @@
   cursor: pointer;
 }
 
-#engines-table > div:nth-child(9n + 10) {
+#engines-table > div:nth-child(9n + 17),
+#engines-table > div:nth-child(9n + 18) {
   opacity: 1;
   text-align: center;
+}
+
+#engines-table > div > img {
+  opacity: 1;
 }
 
 #engines-table > div > img[size="16"] {
