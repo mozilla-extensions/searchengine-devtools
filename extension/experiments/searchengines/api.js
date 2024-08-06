@@ -38,10 +38,12 @@ async function getEngineUrls(engineConfig) {
       continue;
     }
 
-    for (let property of ["experimentConfig", "searchAccessPoint", "value"]) {
-      for (let param of url.params) {
-        if (param[property] === null) {
-          delete param[property];
+    if (url.params) {
+      for (let property of ["experimentConfig", "searchAccessPoint", "value"]) {
+        for (let param of url.params) {
+          if (param[property] === null) {
+            delete param[property];
+          }
         }
       }
     }
