@@ -127,7 +127,6 @@ async function displayUrls(e) {
   // When a new row is clicked, remove the last table to show the new table
   // of urls for the new row
   let engineUrlsTable = $("#engine-urls-table");
-  engineUrlsTable.clear();
 
   await engineUrlsTable.loadEngineUrls(e.target.data);
 }
