@@ -3,6 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 export default class EngineUrlView extends HTMLElement {
+  /**
+   * The table that has been created by this view.
+   * @type {?HTMLTableElement}
+   */
+  #table = null;
+
   constructor() {
     super();
   }
@@ -10,7 +16,7 @@ export default class EngineUrlView extends HTMLElement {
   async loadEngineUrls(config) {
     const COL_HEADERS = [
       "URL Type",
-      `Full URL for ${config.name} `,
+      "",
       // TODO: Add Method display
       // "Method",
     ];
@@ -19,22 +25,19 @@ export default class EngineUrlView extends HTMLElement {
     let urls = await browser.experiments.searchengines.getEngineUrls(config);
     let sortedUrls = ROW_HEADERS.map((key) => urls[key]);
 
-    let fragment = this.createTableFragment(
-      COL_HEADERS,
-      ROW_HEADERS,
-      sortedUrls
-    );
+    if (!this.#table) {
+      this.createTableFragment(COL_HEADERS, ROW_HEADERS);
+    }
 
-    this.appendChild(fragment);
-
-    return fragment;
+    this.#updateTable(`Full URL for ${config.name}`, sortedUrls);
   }
 
-  createTableFragment(colHeaders, rowHeaders, sortedUrls) {
+  createTableFragment(colHeaders, rowHeaders) {
     let fragment = document.createDocumentFragment();
-    let table = document.createElement("table");
-    let thead = table.createTHead();
-    let tbody = table.createTBody();
+    this.#table = document.createElement("table");
+
+    let thead = this.#table.createTHead();
+    let tbody = this.#table.createTBody();
 
     // Create header row
     let headerRow = thead.insertRow(-1);
@@ -43,21 +46,30 @@ export default class EngineUrlView extends HTMLElement {
     );
 
     // Create body rows
-    rowHeaders.forEach((header, index) => {
+    rowHeaders.forEach((header) => {
       let row = tbody.insertRow(-1);
       this.createAndAppendCell(row, "th", header);
 
       let cell = row.insertCell(-1);
-      let url = sortedUrls[index];
-      if (url) {
-        cell.appendChild(this.createAnchor(url));
-      } else {
-        cell.textContent = "Not Specified";
-      }
+      cell.textContent = "";
     });
 
-    fragment.appendChild(table);
-    return fragment;
+    fragment.appendChild(this.#table);
+    this.appendChild(fragment);
+  }
+
+  #updateTable(header, sortedUrls) {
+    this.#table.tHead.rows[0].cells[1].textContent = header;
+
+    let tBody = this.#table.tBodies[0];
+
+    sortedUrls.forEach((url, index) => {
+      if (url) {
+        tBody.rows[index].cells[1].replaceChildren(this.createAnchor(url));
+      } else {
+        tBody.rows[index].cells[1].textContent = "Not Specified";
+      }
+    });
   }
 
   createAndAppendCell(row, cellType, textContent) {
@@ -80,5 +92,6 @@ export default class EngineUrlView extends HTMLElement {
         childNode.remove();
       }
     }
+    this.#table = null;
   }
 }
