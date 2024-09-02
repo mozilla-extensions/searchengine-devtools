@@ -12,7 +12,7 @@
   },
   "docker-image": "node-lts-latest",
   "dependencies": {
-    "diff": "5.2.0",
+    "diff": "6.0.0",
     "web-ext": "8.2.0"
   },
   "devDependencies": {
