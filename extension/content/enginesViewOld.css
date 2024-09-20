@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#locale-region-settings {
+#environment-settings {
   display: grid;
   justify-content: space-between;
   align-items: center;
@@ -20,19 +20,19 @@
   grid-row: 1 / 3;
 }
 
-#locale-region-settings > div > select {
+#environment-settings > div > select {
   min-width: 100%;
 }
 
-#locale-region-settings > div {
+#environment-settings > div {
   text-align: center;
 }
 
-#locale-region-settings > div > label {
+#environment-settings > div > label {
   display: block;
 }
 
-#locale-region-settings > div > input {
+#environment-settings > div > input {
   width: calc(100% - 8px);
 }
 
