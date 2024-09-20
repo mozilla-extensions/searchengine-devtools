@@ -163,9 +163,17 @@
                 "type": "string",
                 "description": "The user's experiment id"
               },
+              "channel": {
+                "type": "string",
+                "description": "The user's update channel"
+              },
               "appName": {
                 "type": "string",
                 "description": "The application's name"
+              },
+              "version": {
+                "type": "string",
+                "description": "The application's version"
               }
             }
           }

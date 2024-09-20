@@ -120,37 +120,53 @@
 
     <template id="engines-view-template">
       <link rel="stylesheet" href="enginesView.css" />
-      <fieldset id="locale-region-settings">
-        <div id="region-select-wrapper">
-          <label for="region-select">Region</label>
-          <select id="region-select" size="4"></select>
-        </div>
-
-        <div id="locale-select-wrapper">
-          <label for="locale-select">Locale</label>
-          <select id="locale-select" size="4"></select>
-        </div>
-
-        <div id="application-name-wrapper">
-          <label for="application-name">Application</label>
-          <select id="application-name" size="5">
-            <option value="firefox" selected>Firefox</option>
-            <option value="firefox-android">Firefox (Android)</option>
-            <option value="focus-android">Focus (Android)</option>
-            <option value="firefox-ios">Firefox (iOS)</option>
-            <option value="focus-ios">Focus (iOS)</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="distro-id">Distribution ID</label>
-          <input id="distro-id" type="text" />
-        </div>
-
-        <div>
-          <label for="experiment-id">Experiment ID</label>
-          <input id="experiment-id" type="text" />
-        </div>
+      <fieldset id="environment-settings">
+        <table>
+          <tr>
+            <th>Region</th>
+            <th>Locale</th>
+            <th>Application</th>
+            <th>Update Channel</th>
+            <th>Distribution ID</th>
+          </tr>
+          <tr>
+            <td rowspan="5"><select id="region-select" size="5"></select></td>
+            <td rowspan="5"><select id="locale-select" size="5"></select></td>
+            <td rowspan="5">
+              <select id="application-name" size="5">
+                <option value="firefox" selected>Firefox</option>
+                <option value="firefox-android">Firefox (Android)</option>
+                <option value="focus-android">Focus (Android)</option>
+                <option value="firefox-ios">Firefox (iOS)</option>
+                <option value="focus-ios">Focus (iOS)</option>
+              </select>
+            </td>
+            <td rowspan="5">
+              <select id="update-channel" size="5">
+                <option value="release" selected>Release</option>
+                <option value="esr">ESR</option>
+                <option value="beta">Beta</option>
+                <option value="nightly">Nightly</option>
+                <option value="default">Default</option>
+              </select>
+            </td>
+            <td>
+              <input id="distro-id" type="text" />
+            </td>
+          </tr>
+          <tr>
+            <th>Experiment ID</th>
+          </tr>
+          <tr>
+            <td><input id="experiment-id" type="text" /></td>
+          </tr>
+          <tr>
+            <th>Version</th>
+          </tr>
+          <tr>
+            <td><input id="application-version" type="text" /></td>
+          </tr>
+        </table>
       </fieldset>
 
       <p id="tooltip">
@@ -165,7 +181,7 @@
 
     <template id="engines-view-old-template">
       <link rel="stylesheet" href="enginesViewOld.css" />
-      <fieldset id="locale-region-settings">
+      <fieldset id="environment-settings">
         <div id="region-select-wrapper">
           <label for="region-select">Region</label>
           <select id="region-select" size="4"></select>

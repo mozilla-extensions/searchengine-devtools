@@ -2,38 +2,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#locale-region-settings {
-  display: grid;
-  justify-content: space-between;
-  align-items: center;
-  width: max-content;
-  margin: 0 auto;
-  grid-template-rows: repeat(2, auto);
-  grid-template-columns: repeat(4, calc(25% - 6em / 4));
-  column-gap: 2ch;
-  width: 80%;
+#environment-settings > table {
+  width: 100%;
+  border-spacing: 15px 0;
 }
 
-#application-name-wrapper,
-#region-select-wrapper,
-#locale-select-wrapper {
-  grid-row: 1 / 3;
-}
-
-#locale-region-settings > div > select {
+#environment-settings select {
   min-width: 100%;
 }
 
-#locale-region-settings > div {
-  text-align: center;
-}
-
-#locale-region-settings > div > label {
+#environment-settings input {
   display: block;
-}
-
-#locale-region-settings > div > input {
-  width: calc(100% - 8px);
+  margin: auto;
+  width: 80%;
 }
 
 #engines-table {
