@@ -15,6 +15,8 @@ const enginesSelectionElements = [
   "region-select",
   "locale-select",
   "application-name",
+  "application-version",
+  "update-channel",
   "distro-id",
   "experiment-id",
 ];
@@ -120,7 +122,9 @@ export default class EnginesView extends HTMLElement {
       region: this.shadowRoot.getElementById("region-select").value,
       distroID: this.shadowRoot.getElementById("distro-id").value,
       experiment: this.shadowRoot.getElementById("experiment-id").value,
+      channel: this.shadowRoot.getElementById("update-channel").value,
       appName: this.shadowRoot.getElementById("application-name").value,
+      version: this.shadowRoot.getElementById("application-version").value,
     };
 
     let { engines, private: privateDefault } =
