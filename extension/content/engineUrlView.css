@@ -14,6 +14,12 @@
   width: max-content;
 }
 
+#engine-urls-table th:last-child,
+#engine-urls-table td:last-child {
+  /* 80px for the button, 30 px for margins */
+  width: 110px;
+}
+
 /* Style for the table headers */
 #engine-urls-table th {
   padding: 10px;

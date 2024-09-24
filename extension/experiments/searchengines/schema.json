@@ -180,6 +180,13 @@
         ]
       },
       {
+        "name": "getSuggestions",
+        "type": "function",
+        "description": "Returns the suggestions from the given URL",
+        "async": true,
+        "parameters": []
+      },
+      {
         "name": "jexlFilterMatches",
         "type": "function",
         "description": "Returns true if the filter matches the given parameters",

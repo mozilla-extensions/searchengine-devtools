@@ -10,6 +10,8 @@ ChromeUtils.defineESModuleGetters(this, {
   SearchEngineSelector: "resource://gre/modules/SearchEngineSelector.sys.mjs",
   SearchEngineSelectorOld:
     "resource://gre/modules/SearchEngineSelectorOld.sys.mjs",
+  SearchSuggestionController:
+    "resource://gre/modules/SearchSuggestionController.sys.mjs",
   SearchUtils: "resource://gre/modules/SearchUtils.sys.mjs",
   AppProvidedSearchEngine:
     "resource://gre/modules/AppProvidedSearchEngine.sys.mjs",
@@ -115,6 +117,41 @@ async function getEngines(options) {
   return result;
 }
 
+// TODO: Update schema.json with additional URL parameter for this function
+// and pass it in, and use it.
+// TODO: Not sure if we need to pass charset as well?
+async function getSuggestions() {
+  let controller = new SearchSuggestionController();
+
+  controller.maxLocalResults = 0;
+
+  let reset;
+  if (!Services.prefs.getBoolPref("browser.search.suggest.enabled")) {
+    reset = true;
+    Services.prefs.setBoolPref("browser.search.suggest.enabled", true);
+  }
+
+  let results = await controller.fetch("cute kitten", false, {
+    getSubmission() {
+      return {
+        uri: Services.io.newURI(
+          "https://www.google.com/complete/search?client=firefox&channel=fen&q=cute+kitten"
+        ),
+      };
+    },
+    supportsResponseType() {
+      return true;
+    },
+  });
+
+  if (reset) {
+    Services.prefs.setBoolPref("browser.search.suggest.enabled", false);
+  }
+
+  // TODO: Return results to UI.
+  console.log(results);
+}
+
 async function jexlFilterMatches(
   filterExpression,
   applicationId,
@@ -136,6 +173,7 @@ var searchengines = class extends ExtensionAPI {
           getCurrentRegion,
           getCurrentConfigFormat,
           getEngines,
+          getSuggestions,
           jexlFilterMatches,
         },
       },

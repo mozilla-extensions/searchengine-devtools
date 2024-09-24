@@ -9,6 +9,8 @@ export default class EngineUrlView extends HTMLElement {
    */
   #table = null;
 
+  #ROW_HEADERS = ["search", "suggest", "trending"];
+
   constructor() {
     super();
   }
@@ -17,15 +19,15 @@ export default class EngineUrlView extends HTMLElement {
     const COL_HEADERS = [
       "URL Type",
       "",
+      "",
       // TODO: Add Method display
       // "Method",
     ];
-    const ROW_HEADERS = ["search", "suggest", "trending"];
 
-    let sortedUrls = ROW_HEADERS.map((key) => config.urls[key]);
+    let sortedUrls = this.#ROW_HEADERS.map((key) => config.urls[key]);
 
     if (!this.#table) {
-      this.createTableFragment(COL_HEADERS, ROW_HEADERS);
+      this.createTableFragment(COL_HEADERS, this.#ROW_HEADERS);
     }
 
     this.#updateTable(`Full URL for ${config.name}`, sortedUrls);
@@ -51,6 +53,18 @@ export default class EngineUrlView extends HTMLElement {
 
       let cell = row.insertCell(-1);
       cell.textContent = "";
+      cell = row.insertCell(-1);
+      if (header == "suggest" || header == "trending") {
+        let button = document.createElement("button");
+        button.textContent = "Test";
+        button.addEventListener(
+          "click",
+          this.testSuggestion.bind(this, header)
+        );
+        cell.appendChild(button);
+      } else {
+        cell.textContent = "";
+      }
     });
 
     fragment.appendChild(this.#table);
@@ -69,6 +83,20 @@ export default class EngineUrlView extends HTMLElement {
         tBody.rows[index].cells[1].textContent = "Not Specified";
       }
     });
+  }
+
+  testSuggestion(header, event) {
+    event.preventDefault();
+
+    browser.experiments.searchengines.getSuggestions();
+
+    // TODO: pass this to getSuggestions() & create a results view with a
+    // filled in EngineSuggestionsView component (skeleton already created).
+    console.log(
+      "Suggestion URL:",
+      this.#table.tBodies[0].rows[this.#ROW_HEADERS.indexOf(header)].children[1]
+        .textContent
+    );
   }
 
   createAndAppendCell(row, cellType, textContent) {
