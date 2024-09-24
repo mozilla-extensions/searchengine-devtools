@@ -125,7 +125,7 @@ export default class ConfigController extends HTMLElement {
     const buttonValue =
       this.shadowRoot.getElementById(`primary-config`).selected;
     if (buttonValue == "local-text") {
-      return "{}";
+      return `{"data":[]}`;
     }
     return fetchCached(await this.#getIconsUrl(buttonValue));
   }
