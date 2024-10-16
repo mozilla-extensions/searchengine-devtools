@@ -144,13 +144,7 @@ export default class EnginesView extends HTMLElement {
       }
       Utils.addDiv(fragment, e.identifier, e);
       Utils.addDiv(fragment, e.name, e);
-      Utils.addDiv(
-        fragment,
-        "telemetrySuffix" in e
-          ? `${e.identifier}-${e.telemetrySuffix}`
-          : e.identifier,
-        e
-      );
+      Utils.addDiv(fragment, e.telemetryId, e);
       Utils.addDiv(fragment, e.partnerCode, e);
       Utils.addDiv(fragment, e.classification, e);
       Utils.addDiv(fragment, JSON.stringify(e.aliases), e);
