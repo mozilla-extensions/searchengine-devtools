@@ -22,8 +22,7 @@ export default class EngineUrlView extends HTMLElement {
     ];
     const ROW_HEADERS = ["search", "suggest", "trending"];
 
-    let urls = await browser.experiments.searchengines.getEngineUrls(config);
-    let sortedUrls = ROW_HEADERS.map((key) => urls[key]);
+    let sortedUrls = ROW_HEADERS.map((key) => config.urls[key]);
 
     if (!this.#table) {
       this.createTableFragment(COL_HEADERS, ROW_HEADERS);
