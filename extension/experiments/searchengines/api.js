@@ -86,7 +86,10 @@ async function getEngines(options) {
     let appProvidedEngine = new AppProvidedSearchEngine({ config: engine });
 
     function getSubmission(type) {
-      return appProvidedEngine.getSubmission("cute kitten", type)?.uri?.spec;
+      return appProvidedEngine.getSubmission(
+        type == "application/x-trending+json" ? "" : "cute kitten",
+        type
+      )?.uri?.spec;
     }
 
     // Return only what we need for the tables display, preferring the
