@@ -1,7 +1,10 @@
 /* eslint-env node */
 module.exports = {
   plugins: ["mozilla"],
-  extends: ["eslint:recommended", "plugin:mozilla/recommended"],
+  extends: ["plugin:mozilla/recommended"],
+  env: {
+    es2024: true,
+  },
   overrides: [
     {
       files: ["extension/**"],
@@ -10,9 +13,18 @@ module.exports = {
       },
     },
     {
-      files: ["extension/content/*.js", "extension/content/*.mjs"],
+      files: ["extension/content/*.mjs"],
+      env: {
+        browser: true,
+      },
       parserOptions: {
         sourceType: "module",
+      },
+    },
+    {
+      files: ["extension/experiments/**"],
+      env: {
+        "mozilla/privileged": true,
       },
     },
   ],

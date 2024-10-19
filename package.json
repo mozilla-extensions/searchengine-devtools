@@ -16,6 +16,7 @@
     "web-ext": "8.3.0"
   },
   "devDependencies": {
+    "@microsoft/eslint-plugin-sdl": "1.0.0",
     "ajv": "8.17.1",
     "ajv-formats": "3.0.1",
     "eslint": "8.57.1",
@@ -23,7 +24,7 @@
     "eslint-plugin-fetch-options": "0.0.5",
     "eslint-plugin-html": "8.1.2",
     "eslint-plugin-json": "3.1.0",
-    "eslint-plugin-mozilla": "3.7.5",
+    "eslint-plugin-mozilla": "4.0.0",
     "eslint-plugin-no-unsanitized": "4.1.2",
     "prettier": "3.3.3",
     "rimraf": "6.0.1",
