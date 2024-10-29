@@ -19,7 +19,7 @@
     "@microsoft/eslint-plugin-sdl": "1.0.0",
     "ajv": "8.17.1",
     "ajv-formats": "3.0.1",
-    "eslint": "8.57.1",
+    "eslint": "9.13.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-fetch-options": "0.0.5",
     "eslint-plugin-html": "8.1.2",
