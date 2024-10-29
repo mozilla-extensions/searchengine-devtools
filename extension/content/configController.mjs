@@ -57,7 +57,7 @@ export default class ConfigController extends HTMLElement {
           this.shadowRoot.getElementById("config").value = "";
           return;
         }
-      } catch (ex) {
+      } catch {
         this.updateInvalidMessageDisplay(false);
         this.shadowRoot.getElementById("config").value = "";
         return;
