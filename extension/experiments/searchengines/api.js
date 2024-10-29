@@ -140,6 +140,7 @@ async function jexlFilterMatches(
   }));
 }
 
+/* exported searchengines */
 var searchengines = class extends ExtensionAPI {
   getAPI() {
     return {
