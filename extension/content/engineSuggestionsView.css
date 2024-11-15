@@ -1,0 +1,27 @@
+/* Set the general styling for the table */
+#engine-suggestions-table table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1rem;
+  text-align: start;
+  border: 1px solid lightgray;
+}
+
+/* Style for the table headers */
+#engine-suggestions-table th {
+  padding: 10px;
+  border: 1px solid lightgray;
+}
+
+/* Style for the table cells */
+#engine-suggestions-table td {
+  padding: 10px;
+  border: 1px solid lightgray;
+}
+
+/* Zebra striping for table rows */
+#engine-suggestions-table tbody tr:nth-child(odd) {
+  background: var(--in-content-box-background-odd);
+}

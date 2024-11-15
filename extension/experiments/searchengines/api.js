@@ -117,12 +117,8 @@ async function getEngines(options) {
   return result;
 }
 
-// TODO: Update schema.json with additional URL parameter for this function
-// and pass it in, and use it.
-// TODO: Not sure if we need to pass charset as well?
-async function getSuggestions() {
+async function getSuggestions(url, suggestionsType) {
   let controller = new SearchSuggestionController();
-
   controller.maxLocalResults = 0;
 
   let reset;
@@ -131,25 +127,30 @@ async function getSuggestions() {
     Services.prefs.setBoolPref("browser.search.suggest.enabled", true);
   }
 
-  let results = await controller.fetch("cute kitten", false, {
-    getSubmission() {
-      return {
-        uri: Services.io.newURI(
-          "https://www.google.com/complete/search?client=firefox&channel=fen&q=cute+kitten"
-        ),
-      };
+  let results = await controller.fetch(
+    suggestionsType == "trending" ? "" : "cute kitten",
+    false,
+    {
+      getSubmission() {
+        return {
+          uri: Services.io.newURI(url),
+        };
+      },
+      supportsResponseType() {
+        return true;
+      },
     },
-    supportsResponseType() {
-      return true;
-    },
-  });
+    0,
+    false,
+    false,
+    suggestionsType == "trending"
+  );
 
   if (reset) {
     Services.prefs.setBoolPref("browser.search.suggest.enabled", false);
   }
 
-  // TODO: Return results to UI.
-  console.log(results);
+  return results.remote.map((r) => r.value);
 }
 
 async function jexlFilterMatches(
