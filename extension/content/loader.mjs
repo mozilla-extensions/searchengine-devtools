@@ -6,7 +6,7 @@
 
 const ONE_DAY = 1000 * 60 * 24;
 const LOCALES_URL =
-  "https://raw.githubusercontent.com/mozilla/gecko-dev/refs/heads/master/browser/locales/all-locales";
+  "https://hg.mozilla.org/mozilla-central/raw-file/tip/browser/locales/all-locales";
 
 export async function fetchCached(url, expiry = ONE_DAY) {
   let originalURL = url;

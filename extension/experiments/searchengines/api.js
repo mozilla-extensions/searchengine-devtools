@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* global ExtensionAPI, XPCOMUtils, Services */
+/* global ExtensionAPI, XPCOMUtils, Services, Cc, Ci */
 
 ChromeUtils.defineESModuleGetters(this, {
   FilterExpressions:
@@ -19,6 +19,12 @@ ChromeUtils.defineESModuleGetters(this, {
 
 // eslint-disable-next-line mozilla/reject-importGlobalProperties
 XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
+
+const ConsoleAPIStorage = Cc["@mozilla.org/consoleAPI-storage;1"].getService(
+  Ci.nsIConsoleAPIStorage
+);
+
+const SEARCH_TERMS = "kitten";
 
 async function getCurrentRegion() {
   return Services.prefs.getCharPref("browser.search.region", "default");
@@ -89,7 +95,7 @@ async function getEngines(options) {
 
     function getSubmission(type) {
       return appProvidedEngine.getSubmission(
-        type == "application/x-trending+json" ? "" : "cute kitten",
+        type == "application/x-trending+json" ? "" : SEARCH_TERMS,
         type
       )?.uri?.spec;
     }
@@ -127,8 +133,23 @@ async function getSuggestions(url, suggestionsType) {
     Services.prefs.setBoolPref("browser.search.suggest.enabled", true);
   }
 
+  let error = undefined;
+  function observeConsole(message) {
+    if (
+      message.level == "error" &&
+      message.filename.includes("SearchSuggestionController")
+    ) {
+      error = ["Error:", ...message.arguments].join(" ");
+    }
+  }
+
+  ConsoleAPIStorage.addLogEventListener(
+    observeConsole,
+    Cc["@mozilla.org/systemprincipal;1"].createInstance(Ci.nsIPrincipal)
+  );
+
   let results = await controller.fetch(
-    suggestionsType == "trending" ? "" : "cute kitten",
+    suggestionsType == "trending" ? "" : SEARCH_TERMS,
     false,
     {
       getSubmission() {
@@ -150,7 +171,9 @@ async function getSuggestions(url, suggestionsType) {
     Services.prefs.setBoolPref("browser.search.suggest.enabled", false);
   }
 
-  return results.remote.map((r) => r.value);
+  await new Promise((resolve) => Services.tm.dispatchToMainThread(resolve));
+  ConsoleAPIStorage.removeLogEventListener(observeConsole);
+  return { suggestions: results.remote.map((r) => r.value), error };
 }
 
 async function jexlFilterMatches(

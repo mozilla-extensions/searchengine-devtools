@@ -107,10 +107,17 @@ export default class EngineUrlView extends HTMLElement {
     let url =
       this.#table.tBodies[0].rows[this.#ROW_HEADERS.indexOf(header)].children[1]
         .textContent;
-    let suggestions = await browser.experiments.searchengines.getSuggestions(
+    let result = await browser.experiments.searchengines.getSuggestions(
       url,
       header
     );
+
+    let suggestions = result.suggestions;
+    if (result.error) {
+      suggestions = [result.error];
+    } else if (!suggestions.length) {
+      suggestions = ["Zero results"];
+    }
 
     this.#suggestionsTable.displaySuggestions(
       suggestions,
