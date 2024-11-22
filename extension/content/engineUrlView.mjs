@@ -103,11 +103,6 @@ export default class EngineUrlView extends HTMLElement {
 
   async testSuggestion(header, event) {
     event.preventDefault();
-    this.#suggestionsTable.displaySuggestions(
-      ["Loading"],
-      header,
-      this.#config.name
-    );
 
     let url =
       this.#table.tBodies[0].rows[this.#ROW_HEADERS.indexOf(header)].children[1]
@@ -129,6 +124,7 @@ export default class EngineUrlView extends HTMLElement {
       header,
       this.#config.name
     );
+    document.getElementById("engine-suggestions-table").scrollIntoView();
   }
 
   createAndAppendCell(row, cellType, textContent) {
