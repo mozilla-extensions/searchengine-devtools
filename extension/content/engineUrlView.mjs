@@ -103,6 +103,11 @@ export default class EngineUrlView extends HTMLElement {
 
   async testSuggestion(header, event) {
     event.preventDefault();
+    this.#suggestionsTable.displaySuggestions(
+      ["Loading"],
+      header,
+      this.#config.name
+    );
 
     let url =
       this.#table.tBodies[0].rows[this.#ROW_HEADERS.indexOf(header)].children[1]
