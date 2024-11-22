@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* global ExtensionAPI, XPCOMUtils, Services */
+/* global ExtensionAPI, XPCOMUtils, Services, Cc, Ci */
 
 ChromeUtils.defineESModuleGetters(this, {
   FilterExpressions:
@@ -10,6 +10,8 @@ ChromeUtils.defineESModuleGetters(this, {
   SearchEngineSelector: "resource://gre/modules/SearchEngineSelector.sys.mjs",
   SearchEngineSelectorOld:
     "resource://gre/modules/SearchEngineSelectorOld.sys.mjs",
+  SearchSuggestionController:
+    "resource://gre/modules/SearchSuggestionController.sys.mjs",
   SearchUtils: "resource://gre/modules/SearchUtils.sys.mjs",
   AppProvidedSearchEngine:
     "resource://gre/modules/AppProvidedSearchEngine.sys.mjs",
@@ -17,6 +19,12 @@ ChromeUtils.defineESModuleGetters(this, {
 
 // eslint-disable-next-line mozilla/reject-importGlobalProperties
 XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
+
+const ConsoleAPIStorage = Cc["@mozilla.org/consoleAPI-storage;1"].getService(
+  Ci.nsIConsoleAPIStorage
+);
+
+const SEARCH_TERMS = "kitten";
 
 async function getCurrentRegion() {
   return Services.prefs.getCharPref("browser.search.region", "default");
@@ -87,7 +95,7 @@ async function getEngines(options) {
 
     function getSubmission(type) {
       return appProvidedEngine.getSubmission(
-        type == "application/x-trending+json" ? "" : "cute kitten",
+        type == "application/x-trending+json" ? "" : SEARCH_TERMS,
         type
       )?.uri?.spec;
     }
@@ -115,6 +123,59 @@ async function getEngines(options) {
   return result;
 }
 
+async function getSuggestions(url, suggestionsType) {
+  let controller = new SearchSuggestionController();
+  controller.maxLocalResults = 0;
+
+  let reset;
+  if (!Services.prefs.getBoolPref("browser.search.suggest.enabled")) {
+    reset = true;
+    Services.prefs.setBoolPref("browser.search.suggest.enabled", true);
+  }
+
+  let error = undefined;
+  function observeConsole(message) {
+    if (
+      message.level == "error" &&
+      message.filename.includes("SearchSuggestionController")
+    ) {
+      error = ["Error:", ...message.arguments].join(" ");
+    }
+  }
+
+  ConsoleAPIStorage.addLogEventListener(
+    observeConsole,
+    Cc["@mozilla.org/systemprincipal;1"].createInstance(Ci.nsIPrincipal)
+  );
+
+  let results = await controller.fetch(
+    suggestionsType == "trending" ? "" : SEARCH_TERMS,
+    false,
+    {
+      getSubmission() {
+        return {
+          uri: Services.io.newURI(url),
+        };
+      },
+      supportsResponseType() {
+        return true;
+      },
+    },
+    0,
+    false,
+    false,
+    suggestionsType == "trending"
+  );
+
+  if (reset) {
+    Services.prefs.setBoolPref("browser.search.suggest.enabled", false);
+  }
+
+  await new Promise((resolve) => Services.tm.dispatchToMainThread(resolve));
+  ConsoleAPIStorage.removeLogEventListener(observeConsole);
+  return { suggestions: results.remote.map((r) => r.value), error };
+}
+
 async function jexlFilterMatches(
   filterExpression,
   applicationId,
@@ -136,6 +197,7 @@ var searchengines = class extends ExtensionAPI {
           getCurrentRegion,
           getCurrentConfigFormat,
           getEngines,
+          getSuggestions,
           jexlFilterMatches,
         },
       },

@@ -8,6 +8,7 @@ import ConfigSelection from "./configSelection.mjs";
 import ConfigController from "./configController.mjs";
 import CompareView from "./compareView.mjs";
 import CompareViewOld from "./compareViewOld.mjs";
+import EngineSuggestionsView from "./engineSuggestionsView.mjs";
 import EnginesView from "./enginesView.mjs";
 import EnginesViewOld from "./enginesViewOld.mjs";
 import EngineUrlView from "./engineUrlView.mjs";
@@ -46,6 +47,7 @@ async function main() {
     customElements.define("engines-view", EnginesView);
     customElements.define("by-engine-view", ByEngineView);
     customElements.define("engine-url-view", EngineUrlView);
+    customElements.define("engine-suggestions-view", EngineSuggestionsView);
   }
 
   await initUI();

@@ -180,6 +180,25 @@
         ]
       },
       {
+        "name": "getSuggestions",
+        "type": "function",
+        "description": "Returns the list of suggestions from the given URL",
+        "async": true,
+        "parameters": [
+          {
+            "name": "url",
+            "type": "string",
+            "description": "The suggestions URL"
+          },
+          {
+            "name": "suggestionsType",
+            "type": "string",
+            "description": "The type of the suggestions URL",
+            "enum": ["suggest", "trending"]
+          }
+        ]
+      },
+      {
         "name": "jexlFilterMatches",
         "type": "function",
         "description": "Returns true if the filter matches the given parameters",
