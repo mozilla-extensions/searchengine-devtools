@@ -6,13 +6,20 @@
 
 const ONE_DAY = 1000 * 60 * 24;
 const LOCALES_URL =
-  "https://hg.mozilla.org/mozilla-central/raw-file/tip/browser/locales/all-locales";
+  "https://raw.githubusercontent.com/mozilla/gecko-dev/refs/heads/master/browser/locales/all-locales";
 
-export async function fetchCached(url, expiry = ONE_DAY) {
+export async function fetchCached(
+  url,
+  invalidatedByReload = true,
+  expiry = ONE_DAY
+) {
   let originalURL = url;
   let cache = JSON.parse(localStorage.getItem(originalURL));
+  let lastReload = localStorage.getItem("lastReload") ?? Date.now();
   if (cache && Date.now() - expiry < cache.time) {
-    return cache.data;
+    if (!invalidatedByReload || lastReload < cache.time) {
+      return cache.data;
+    }
   }
   url = url.replace(/%CACHEBUST%/, Math.floor(Math.random() * 100000));
   let request = await fetch(url);
@@ -22,7 +29,7 @@ export async function fetchCached(url, expiry = ONE_DAY) {
 }
 
 export async function getLocales() {
-  let data = await fetchCached(LOCALES_URL);
+  let data = await fetchCached(LOCALES_URL, false);
   let locales = [
     ...data
       .split("\n")
