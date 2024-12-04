@@ -13,7 +13,7 @@ export default class EngineUrlView extends HTMLElement {
 
   #suggestionsTable = document.getElementById("engine-suggestions-table");
 
-  #ROW_HEADERS = ["search", "suggest", "trending"];
+  #ROW_HEADERS = ["search", "suggest", "trending", "searchForm"];
 
   constructor() {
     super();
