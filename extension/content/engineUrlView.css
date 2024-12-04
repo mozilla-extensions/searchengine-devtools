@@ -1,12 +1,17 @@
 /* Set the general styling for the table */
 #engine-urls-table table {
-  table-layout: fixed;
+  table-layout: auto;
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
   font-size: 1rem;
   text-align: center;
   border: 1px solid lightgray;
+}
+
+#engine-urls-table th,
+#engine-urls-table td {
+  width: 100%;
 }
 
 #engine-urls-table th:first-child,

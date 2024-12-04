@@ -116,6 +116,7 @@ async function getEngines(options) {
         search: getSubmission("text/html"),
         suggest: getSubmission("application/x-suggestions+json"),
         trending: getSubmission("application/x-trending+json"),
+        searchForm: appProvidedEngine.searchForm,
       },
     };
   });
