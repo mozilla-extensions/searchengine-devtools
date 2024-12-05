@@ -25,8 +25,7 @@ const $ = document.querySelector.bind(document);
 let lastClickedRow = null;
 
 async function main() {
-  // Always clear the local storage on load, so that we don't have old data.
-  localStorage.clear();
+  localStorage.setItem("lastReload", Date.now());
 
   let configFormat =
     await browser.experiments.searchengines.getCurrentConfigFormat();
@@ -135,7 +134,8 @@ async function displayUrls(e) {
 
 function reloadPage(event) {
   event.preventDefault();
-  localStorage.clear();
+  localStorage.setItem("lastReload", Date.now());
+
   (async () => {
     document.body.classList.add("loading");
 
