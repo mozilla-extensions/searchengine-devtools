@@ -49,21 +49,14 @@ export async function getRegions() {
 }
 
 export async function validateConfiguration(config) {
-  let validator =
-    (await browser.experiments.searchengines.getCurrentConfigFormat()) == "2"
-      ? validate.validateWithSchemaV2
-      : validate.validateWithSchemaV1;
-
-  return validateCollectionToSchema(validator, config);
+  return validateCollectionToSchema(validate.validateWithSchemaV2, config);
 }
 
 export async function validateConfigurationOverrides(overrides) {
-  let validator =
-    (await browser.experiments.searchengines.getCurrentConfigFormat()) == "2"
-      ? validate.validateWithOverridesSchemaV2
-      : validate.validateWithOverridesSchemaV1;
-
-  return validateCollectionToSchema(validator, overrides);
+  return validateCollectionToSchema(
+    validate.validateWithOverridesSchemaV2,
+    overrides
+  );
 }
 
 export async function validateIconConfiguration(iconConfig) {

@@ -141,6 +141,8 @@ export default class ByEngineView extends HTMLElement {
           distroID: "",
           experiment: "",
           appName,
+          channel: "",
+          version: "",
         });
         for (let engine of engines) {
           if (engine.identifier.startsWith(engineId)) {
@@ -190,7 +192,10 @@ export default class ByEngineView extends HTMLElement {
     return JSON.stringify({
       data: config.data.filter((item) => {
         return (
-          item.recordType == "engine" && item.identifier.startsWith(engineId)
+          (item.recordType == "engine" &&
+            item.identifier.startsWith(engineId)) ||
+          item.recordType == "defaultEngines" ||
+          item.recordType == "engineOrders"
         );
       }),
     });

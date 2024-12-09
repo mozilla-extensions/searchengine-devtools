@@ -9,7 +9,6 @@
 
   <body class="loading">
     <form>
-      <div id="currentConfig"></div>
       <div id="engines">
         <div id="tabs">
           <button id="by-locales">Engines by locale/region</button>
@@ -182,47 +181,6 @@
       </p>
     </template>
 
-    <template id="engines-view-old-template">
-      <link rel="stylesheet" href="enginesViewOld.css" />
-      <fieldset id="environment-settings">
-        <div id="region-select-wrapper">
-          <label for="region-select">Region</label>
-          <select id="region-select" size="4"></select>
-        </div>
-
-        <div id="locale-select-wrapper">
-          <label for="locale-select">Locale</label>
-          <select id="locale-select" size="4"></select>
-        </div>
-
-        <div id="application-name-wrapper">
-          <label for="application-name">Application</label>
-          <select id="application-name" size="5">
-            <option value="firefox" selected>Firefox</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="distro-id">Distribution ID</label>
-          <input id="distro-id" type="text" />
-        </div>
-
-        <div>
-          <label for="experiment-id">Experiment ID (81.0a1+)</label>
-          <input id="experiment-id" type="text" />
-        </div>
-      </fieldset>
-
-      <div id="engines-table"></div>
-      <p>
-        Default engine is the one listed at index 1. Private Browsing Engine:
-        <span id="private-browsing-engine"></span>
-        <br />
-        Sort is approximate: Sort is by default engine, orderHint and then
-        alphabetical by display name.
-      </p>
-    </template>
-
     <template id="by-engine-view-template">
       <link rel="stylesheet" href="byEngineView.css" />
       <fieldset id="engine-selection">
@@ -256,55 +214,6 @@
             <option value="firefox-ios">Firefox (iOS)</option>
             <option value="focus-ios">Focus (iOS)</option>
           </select>
-        </div>
-        <div>
-          <label for="engine-id">Engine Id (reqd)</label>
-          <input id="engine-id" type="text" />
-        </div>
-        <div>
-          <label for="engine-telemetry-id">Telemetry Id</label>
-          <input id="engine-telemetry-id" type="text" />
-        </div>
-        <div>
-          <label for="by-engine-progress">Progress:</label>
-          <progress id="by-engine-progress" max="100" value="0">0%</progress>
-        </div>
-      </fieldset>
-
-      <div id="locale-region-results"></div>
-    </template>
-
-    <template id="by-engine-view-old-template">
-      <link rel="stylesheet" href="byEngineView.css" />
-      <fieldset id="engine-selection">
-        <div>
-          <div>
-            <input
-              type="radio"
-              id="locale-by-engine"
-              name="by-engine-radio"
-              value="locale"
-              checked
-            />
-            <label for="locale-by-engine">By Locale</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="region-by-engine"
-              name="by-engine-radio"
-              value="region"
-            />
-            <label for="region-by-engine">By Region</label>
-          </div>
-        </div>
-        <div id="application-name-wrapper">
-          <label for="application-name">Application Name</label>
-          <div>
-            <select id="application-name" size="5">
-              <option value="firefox" selected>Firefox</option>
-            </select>
-          </div>
         </div>
         <div>
           <label for="engine-id">Engine Id (reqd)</label>
