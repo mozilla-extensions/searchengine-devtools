@@ -47,19 +47,6 @@ h4 {
   margin-top: 0;
 }
 
-#currentConfig {
-  font-weight: bold;
-  text-align: center;
-}
-
-#currentConfig[format="1"] {
-  background-color: #ff7575;
-}
-
-#currentConfig[format="2"] {
-  background-color: rgba(151, 234, 151, 0.6);
-}
-
 #engines {
   display: flex;
   flex-direction: column;

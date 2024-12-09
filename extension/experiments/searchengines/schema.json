@@ -123,13 +123,6 @@
         "parameters": []
       },
       {
-        "name": "getCurrentConfigFormat",
-        "type": "function",
-        "description": "Returns the current configuration format",
-        "async": true,
-        "parameters": []
-      },
-      {
         "name": "getEngines",
         "type": "function",
         "description": "Return the sorted engine configuration for the given region, locale and configuration",

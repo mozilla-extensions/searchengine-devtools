@@ -8,8 +8,6 @@ ChromeUtils.defineESModuleGetters(this, {
   FilterExpressions:
     "resource://gre/modules/components-utils/FilterExpressions.sys.mjs",
   SearchEngineSelector: "resource://gre/modules/SearchEngineSelector.sys.mjs",
-  SearchEngineSelectorOld:
-    "resource://gre/modules/SearchEngineSelectorOld.sys.mjs",
   SearchSuggestionController:
     "resource://gre/modules/SearchSuggestionController.sys.mjs",
   SearchUtils: "resource://gre/modules/SearchUtils.sys.mjs",
@@ -38,40 +36,11 @@ async function getCurrentLocale() {
   return Services.locale.appLocaleAsBCP47;
 }
 
-async function getCurrentConfigFormat() {
-  if ("newSearchConfigEnabled" in SearchUtils) {
-    if (SearchUtils.newSearchConfigEnabled) {
-      return 2;
-    }
-    return 1;
-  }
-  // The preference was introduced in 120, so anything before that should be
-  // treated as the original version. If there is no preference after that,
-  // we assume that we are on v2.
-  return Services.vc.compare(Services.appinfo.version, "120.0") < 0 ? 1 : 2;
-}
-
 async function getEngines(options) {
-  let engineSelector;
-  let useSearchConfigV2 = false;
-  if ("newSearchConfigEnabled" in SearchUtils) {
-    if (SearchUtils.newSearchConfigEnabled) {
-      engineSelector = new SearchEngineSelector();
-      useSearchConfigV2 = true;
-    } else {
-      engineSelector = new SearchEngineSelectorOld();
-    }
-  } else {
-    // If we no longer have the pref, or the preference wasn't there to begin
-    // with, then we assume we can load the new SearchEngineSelector.
-    engineSelector = new SearchEngineSelector();
-  }
+  let engineSelector = new SearchEngineSelector();
 
   engineSelector.getEngineConfiguration = async () => {
     let config = JSON.parse(options.configData).data;
-    if (!useSearchConfigV2) {
-      config.sort((a, b) => a.id.localeCompare(b.id));
-    }
     engineSelector._configuration = config;
 
     engineSelector._configurationOverrides = JSON.parse(
@@ -107,13 +76,11 @@ async function getEngines(options) {
     throw ex;
   }
 
-  if (useSearchConfigV2 && "sortEnginesByDefaults" in SearchUtils) {
-    result.engines = SearchUtils.sortEnginesByDefaults({
-      engines: result.engines,
-      appDefaultEngine: result.engines[0],
-      locale: options.locale,
-    });
-  }
+  result.engines = SearchUtils.sortEnginesByDefaults({
+    engines: result.engines,
+    appDefaultEngine: result.engines[0],
+    locale: options.locale,
+  });
 
   result.engines = result.engines.map((engine) => {
     let appProvidedEngine = new AppProvidedSearchEngine({ config: engine });
@@ -221,7 +188,6 @@ var searchengines = class extends ExtensionAPI {
           getCurrentLocale,
           getRegions,
           getCurrentRegion,
-          getCurrentConfigFormat,
           getEngines,
           getSuggestions,
           jexlFilterMatches,
