@@ -10,16 +10,10 @@ const Ajv = require("ajv");
 const standaloneCode = require("ajv/dist/standalone").default;
 const addFormats = require("ajv-formats");
 
-let schemaV1 = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "search-config-schema.json"))
-);
 let schemaV2 = JSON.parse(
   fs.readFileSync(path.join(__dirname, "search-config-v2-schema.json"))
 );
 
-let schemaOverridesV1 = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "search-config-overrides-schema.json"))
-);
 let schemaOverridesV2 = JSON.parse(
   fs.readFileSync(
     path.join(__dirname, "search-config-overrides-v2-schema.json")
@@ -29,20 +23,12 @@ let iconsSchema = JSON.parse(
   fs.readFileSync(path.join(__dirname, "search-config-icons-schema.json"))
 );
 
-schemaV1.$id = "validateWithSchemaV1";
 schemaV2.$id = "validateWithSchemaV2";
-schemaOverridesV1.$id = "validateWithOverridesSchemaV1";
 schemaOverridesV2.$id = "validateWithOverridesSchemaV2";
 iconsSchema.$id = "validateWithIconSchemaV1";
 
 const ajv = new Ajv({
-  schemas: [
-    schemaV1,
-    schemaV2,
-    schemaOverridesV1,
-    schemaOverridesV2,
-    iconsSchema,
-  ],
+  schemas: [schemaV2, schemaOverridesV2, iconsSchema],
   code: { source: true },
 });
 addFormats(ajv);

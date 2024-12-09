@@ -3,14 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import ByEngineView from "./byEngineView.mjs";
-import ByEngineViewOld from "./byEngineViewOld.mjs";
 import ConfigSelection from "./configSelection.mjs";
 import ConfigController from "./configController.mjs";
 import CompareView from "./compareView.mjs";
-import CompareViewOld from "./compareViewOld.mjs";
 import EngineSuggestionsView from "./engineSuggestionsView.mjs";
 import EnginesView from "./enginesView.mjs";
-import EnginesViewOld from "./enginesViewOld.mjs";
 import EngineUrlView from "./engineUrlView.mjs";
 
 const searchengines = browser.experiments.searchengines;
@@ -27,27 +24,13 @@ let lastClickedRow = null;
 async function main() {
   localStorage.setItem("lastReload", Date.now());
 
-  let configFormat =
-    await browser.experiments.searchengines.getCurrentConfigFormat();
-
-  $("#currentConfig").textContent = `Using search-config${
-    configFormat == 1 ? "" : "-v2"
-  }`;
-  $("#currentConfig").setAttribute("format", configFormat);
-
   customElements.define("config-selection", ConfigSelection);
   customElements.define("config-controller", ConfigController);
-  if (configFormat == 1) {
-    customElements.define("compare-view", CompareViewOld);
-    customElements.define("engines-view", EnginesViewOld);
-    customElements.define("by-engine-view", ByEngineViewOld);
-  } else {
-    customElements.define("compare-view", CompareView);
-    customElements.define("engines-view", EnginesView);
-    customElements.define("by-engine-view", ByEngineView);
-    customElements.define("engine-url-view", EngineUrlView);
-    customElements.define("engine-suggestions-view", EngineSuggestionsView);
-  }
+  customElements.define("compare-view", CompareView);
+  customElements.define("engines-view", EnginesView);
+  customElements.define("by-engine-view", ByEngineView);
+  customElements.define("engine-url-view", EngineUrlView);
+  customElements.define("engine-suggestions-view", EngineSuggestionsView);
 
   await initUI();
 

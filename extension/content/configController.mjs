@@ -158,13 +158,7 @@ export default class ConfigController extends HTMLElement {
       "collections/search-config" +
       (overrides ? "-overrides" : "");
 
-    if (
-      (await browser.experiments.searchengines.getCurrentConfigFormat()) == "2"
-    ) {
-      url += "-v2";
-    }
-
-    return url + "/records?_cachebust=%CACHEBUST%";
+    return url + "-v2/records?_cachebust=%CACHEBUST%";
   }
 
   #getIconsUrl(server) {
