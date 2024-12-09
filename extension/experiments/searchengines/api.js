@@ -80,7 +80,32 @@ async function getEngines(options) {
 
     return config;
   };
-  let result = await engineSelector.fetchEngineConfiguration(options);
+
+  // Due to the way the extension APIs work, if these values are not specified,
+  // then they are given the `null` value. This in turn defeats the default
+  // parameter fallback mechanism for fetchEngineConfiguration as that is
+  // expecting `undefined`. Hence remove these here so that the fallback
+  // can work properly.
+  if (!options.channel) {
+    delete options.channel;
+  }
+  if (!options.version) {
+    delete options.version;
+  }
+
+  let result;
+  try {
+    result = await engineSelector.fetchEngineConfiguration(options);
+  } catch (ex) {
+    // If we are in the "byEngineView", then we may not get any engines returned
+    // from the filtered configuration, hence we return an empty list.
+    if (
+      ex.message == "Could not find any engines in the filtered configuration"
+    ) {
+      return { engines: [] };
+    }
+    throw ex;
+  }
 
   if (useSearchConfigV2 && "sortEnginesByDefaults" in SearchUtils) {
     result.engines = SearchUtils.sortEnginesByDefaults({
