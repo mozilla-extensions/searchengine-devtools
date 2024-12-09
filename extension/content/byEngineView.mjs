@@ -190,7 +190,10 @@ export default class ByEngineView extends HTMLElement {
     return JSON.stringify({
       data: config.data.filter((item) => {
         return (
-          item.recordType == "engine" && item.identifier.startsWith(engineId)
+          (item.recordType == "engine" &&
+            item.identifier.startsWith(engineId)) ||
+          item.recordType == "defaultEngines" ||
+          item.recordType == "engineOrders"
         );
       }),
     });
