@@ -48,27 +48,6 @@ export default class ConfigController extends HTMLElement {
       !!loadPrimaryConfigFromServer;
     this.shadowRoot.getElementById("reload-page").hidden =
       !!loadPrimaryConfigFromServer;
-
-    if (loadPrimaryConfigFromServer) {
-      let config = JSON.parse(await this.fetchPrimaryConfig());
-      try {
-        if (!(await validateConfiguration(config))) {
-          this.updateInvalidMessageDisplay(false);
-          this.shadowRoot.getElementById("config").value = "";
-          return;
-        }
-      } catch {
-        this.updateInvalidMessageDisplay(false);
-        this.shadowRoot.getElementById("config").value = "";
-        return;
-      }
-      this.updateInvalidMessageDisplay(true);
-      this.shadowRoot.getElementById("config").value = JSON.stringify(
-        config,
-        null,
-        2
-      );
-    }
   }
 
   updateInvalidMessageDisplay(valid) {
@@ -85,10 +64,28 @@ export default class ConfigController extends HTMLElement {
   async fetchPrimaryConfig() {
     const buttonValue =
       this.shadowRoot.getElementById(`primary-config`).selected;
-    if (buttonValue == "local-text") {
-      return this.shadowRoot.getElementById("config").value;
+    let config = await (buttonValue == "local-text"
+      ? this.shadowRoot.getElementById("config").value
+      : fetchCached(await this.#getEngineUrl(buttonValue)));
+
+    let parsedConfig;
+    try {
+      parsedConfig = JSON.parse(config);
+      if (!(await validateConfiguration(parsedConfig))) {
+        this.updateInvalidMessageDisplay(false);
+        return "{}";
+      }
+    } catch {
+      this.updateInvalidMessageDisplay(false);
+      return "{}";
     }
-    return fetchCached(await this.#getEngineUrl(buttonValue));
+    this.updateInvalidMessageDisplay(true);
+    this.shadowRoot.getElementById("config").value = JSON.stringify(
+      parsedConfig,
+      null,
+      2
+    );
+    return config;
   }
 
   async fetchSecondaryConfig() {
