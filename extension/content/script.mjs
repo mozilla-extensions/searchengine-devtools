@@ -38,7 +38,6 @@ async function main() {
   await configController.setCompareConfigsSelected(
     $("#compare-configs").hasAttribute("selected")
   );
-  await configController.update();
   try {
     await setupEnginesView();
   } catch (ex) {
@@ -178,10 +177,12 @@ async function setupByEngine() {
 async function setupEnginesView() {
   await $("#engines-view").loadEngines(
     null,
-    await $("#config-controller").fetchPrimaryConfig(),
-    await $("#config-controller").fetchConfigOverrides(),
-    await $("#config-controller").getAttachmentBaseUrl(),
-    await $("#config-controller").fetchIconConfig()
+    ...(await Promise.all([
+      $("#config-controller").fetchPrimaryConfig(),
+      $("#config-controller").fetchConfigOverrides(),
+      $("#config-controller").getAttachmentBaseUrl(),
+      $("#config-controller").fetchIconConfig(),
+    ]))
   );
 }
 
