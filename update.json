@@ -4,7 +4,10 @@
       "updates": [
         {
           "version": "2.6.20241202.142330",
-          "update_link": "https://github.com/mozilla-extensions/searchengine-devtools/releases/download/2.6.0-build1/searchengine-devtools.xpi"
+          "update_link": "https://github.com/mozilla-extensions/searchengine-devtools/releases/download/2.6.0-build1/searchengine-devtools.xpi",
+          "applications": {
+            "gecko": { "strict_min_version": "128.0" }
+          }
         }
       ]
     }
