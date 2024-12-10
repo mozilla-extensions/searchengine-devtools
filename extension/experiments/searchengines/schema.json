@@ -165,7 +165,8 @@
               },
               "channel": {
                 "type": "string",
-                "description": "The user's update channel"
+                "description": "The user's update channel",
+                "optional": true
               },
               "appName": {
                 "type": "string",
@@ -173,7 +174,8 @@
               },
               "version": {
                 "type": "string",
-                "description": "The application's version"
+                "description": "The application's version",
+                "optional": true
               }
             }
           }
