@@ -160,9 +160,7 @@ async function setupDiff() {
   let configController = $("#config-controller");
   const oldConfig = JSON.parse(await configController.fetchPrimaryConfig());
   const newConfig = JSON.parse(await configController.fetchSecondaryConfig());
-  await $("#compare-view")
-    .doDiffCalculation(oldConfig, newConfig)
-    .catch(console.error);
+  await $("#compare-view").doDiffCalculation(oldConfig, newConfig);
 }
 
 async function setupByEngine() {

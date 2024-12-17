@@ -80,11 +80,16 @@ export default class ConfigController extends HTMLElement {
       return "{}";
     }
     this.updateInvalidMessageDisplay(true);
-    this.shadowRoot.getElementById("config").value = JSON.stringify(
-      parsedConfig,
-      null,
-      2
-    );
+    if (
+      !document.getElementById("compare-configs").getAttribute("selected") ||
+      this.shadowRoot.getElementById("compare-config").selected != "local-text"
+    ) {
+      this.shadowRoot.getElementById("config").value = JSON.stringify(
+        parsedConfig,
+        null,
+        2
+      );
+    }
     return config;
   }
 
