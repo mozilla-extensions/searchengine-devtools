@@ -110,8 +110,7 @@ export default class CompareView extends HTMLElement {
       !(await validateConfiguration(this.#oldConfig)) ||
       !(await validateConfiguration(this.#newConfig))
     ) {
-      console.error("Configuration is invalid for getDiffData");
-      return { recordIds };
+      throw new Error("Configuration is invalid for getDiffData");
     }
 
     function mapConfig(configData) {
