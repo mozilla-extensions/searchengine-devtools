@@ -73,16 +73,13 @@ async function getCurrentLocale() {
 async function getEngines(options) {
   let engineSelector = new SearchEngineSelector();
 
-  engineSelector.getEngineConfiguration = async () => {
-    let config = JSON.parse(options.configData).data;
-    engineSelector._configuration = config;
+  engineSelector._onConfigurationUpdated({
+    data: { current: JSON.parse(options.configData).data },
+  });
 
-    engineSelector._configurationOverrides = JSON.parse(
-      options.configOverridesData
-    ).data;
-
-    return config;
-  };
+  engineSelector._onConfigurationOverridesUpdated({
+    data: { current: JSON.parse(options.configOverridesData).data },
+  });
 
   // Due to the way the extension APIs work, if these values are not specified,
   // then they are given the `null` value. This in turn defeats the default
