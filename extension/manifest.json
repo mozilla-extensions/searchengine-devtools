@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "searchengine-devtools",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "A tool to help test search engine configuration changes",
   "homepage_url": "https://github.com/mozilla/searchengine-devtools",
   "browser_specific_settings": {
@@ -11,9 +11,7 @@
       "update_url": "https://raw.githubusercontent.com/mozilla-extensions/searchengine-devtools/master/update.json"
     }
   },
-  "background": {
-    "scripts": ["background.js"]
-  },
+  "background": { "scripts": ["background.js"] },
   "browser_action": {
     "default_title": "SearchEngines Devtools",
     "browser_style": true
@@ -24,9 +22,7 @@
     "https://firefox.settings.services.allizom.org/*",
     "https://hg.mozilla.org/"
   ],
-  "icons": {
-    "550": "icon.png"
-  },
+  "icons": { "550": "icon.png" },
   "experiment_apis": {
     "searchengines": {
       "schema": "experiments/searchengines/schema.json",
