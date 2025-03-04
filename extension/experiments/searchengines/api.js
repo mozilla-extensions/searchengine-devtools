@@ -4,16 +4,50 @@
 
 /* global ExtensionAPI, XPCOMUtils, Services, Cc, Ci */
 
-ChromeUtils.defineESModuleGetters(this, {
-  FilterExpressions:
-    "resource://gre/modules/components-utils/FilterExpressions.sys.mjs",
-  SearchEngineSelector: "resource://gre/modules/SearchEngineSelector.sys.mjs",
-  SearchSuggestionController:
-    "resource://gre/modules/SearchSuggestionController.sys.mjs",
-  SearchUtils: "resource://gre/modules/SearchUtils.sys.mjs",
-  AppProvidedSearchEngine:
-    "resource://gre/modules/AppProvidedSearchEngine.sys.mjs",
-});
+let FilterExpressions;
+let SearchEngineSelector;
+let SearchSuggestionController;
+let SearchUtils;
+let AppProvidedSearchEngine;
+
+// Support pre and post moz-src URLs. These are in two separate try/catch
+// statements, as we expect them to land at separate times.
+try {
+  ({ FilterExpressions } = ChromeUtils.importESModule(
+    "resource://gre/modules/components-utils/FilterExpressions.sys.mjs"
+  ));
+} catch {
+  ({ FilterExpressions } = ChromeUtils.importESModule(
+    "moz-src:///toolkit/components/utils/FilterExpressions.sys.mjs"
+  ));
+}
+try {
+  ({ SearchEngineSelector } = ChromeUtils.importESModule(
+    "resource://gre/modules/SearchEngineSelector.sys.mjs"
+  ));
+  ({ SearchSuggestionController } = ChromeUtils.importESModule(
+    "resource://gre/modules/SearchSuggestionController.sys.mjs"
+  ));
+  ({ SearchUtils } = ChromeUtils.importESModule(
+    "resource://gre/modules/SearchUtils.sys.mjs"
+  ));
+  ({ AppProvidedSearchEngine } = ChromeUtils.importESModule(
+    "resource://gre/modules/AppProvidedSearchEngine.sys.mjs"
+  ));
+} catch {
+  ({ SearchEngineSelector } = ChromeUtils.importESModule(
+    "moz-src:///toolkit/components/search/SearchEngineSelector.sys.mjs"
+  ));
+  ({ SearchSuggestionController } = ChromeUtils.importESModule(
+    "moz-src:///toolkit/components/search/SearchSuggestionController.sys.mjs"
+  ));
+  ({ SearchUtils } = ChromeUtils.importESModule(
+    "moz-src:///toolkit/components/search/SearchUtils.sys.mjs"
+  ));
+  ({ AppProvidedSearchEngine } = ChromeUtils.importESModule(
+    "moz-src:///toolkit/components/search/AppProvidedSearchEngine.sys.mjs"
+  ));
+}
 
 // eslint-disable-next-line mozilla/reject-importGlobalProperties
 XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
@@ -146,9 +180,7 @@ async function getSuggestions(url, suggestionsType) {
     false,
     {
       getSubmission() {
-        return {
-          uri: Services.io.newURI(url),
-        };
+        return { uri: Services.io.newURI(url) };
       },
       supportsResponseType() {
         return true;
