@@ -13,7 +13,7 @@
   "docker-image": "node-lts-latest",
   "dependencies": {
     "diff": "7.0.0",
-    "web-ext": "8.4.0"
+    "web-ext": "8.5.0"
   },
   "devDependencies": {
     "@microsoft/eslint-plugin-sdl": "1.1.0",
