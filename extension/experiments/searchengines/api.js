@@ -203,6 +203,9 @@ async function jexlFilterMatches(
   applicationId,
   applicationVersion
 ) {
+  if (!filterExpression) {
+    return true;
+  }
   return !!(await FilterExpressions.eval(filterExpression, {
     env: { appinfo: { ID: applicationId }, version: applicationVersion },
   }));

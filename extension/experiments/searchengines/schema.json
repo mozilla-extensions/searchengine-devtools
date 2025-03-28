@@ -202,7 +202,8 @@
           {
             "name": "filterExpression",
             "type": "string",
-            "description": "The filter expression to check"
+            "description": "The filter expression to check",
+            "optional": true
           },
           {
             "name": "applicationId",
