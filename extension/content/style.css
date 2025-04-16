@@ -60,7 +60,7 @@ h4 {
 
 #tabs {
   display: grid;
-  grid: auto-flow / 1fr 1fr 1fr;
+  grid: auto-flow / 1fr 1fr 1fr 1fr;
   margin: 0 -15px;
   padding-bottom: 15px;
 }
@@ -74,23 +74,17 @@ h4 {
   margin: auto;
 }
 
-#by-engine,
-#by-locales,
-#compare-configs {
+.tab-button {
   margin: 0;
   padding: 0;
   background-color: var(--in-content-button-background);
 }
 
-#by-engine[selected],
-#by-locales[selected],
-#compare-configs[selected] {
+.tab-button[selected] {
   background-color: transparent;
 }
 
-#by-engine:hover,
-#by-locales:hover,
-#compare-configs:hover {
+.tab-button:hover {
   background-color: var(--in-content-button-background-hover);
 }
 
@@ -100,15 +94,11 @@ h4 {
   min-height: 32em;
 }
 
-#by-locales-tab,
-#by-engine-tab,
-#compare-configs-tab {
+.tab-view {
   display: none;
 }
 
-#by-locales-tab[selected],
-#by-engine-tab[selected],
-#compare-configs-tab[selected] {
+.tab-view[selected] {
   display: block;
 }
 

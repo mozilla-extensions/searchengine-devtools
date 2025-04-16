@@ -1,0 +1,43 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#export-to-csv {
+  margin-bottom: 1em;
+}
+
+#all-engines-table {
+  padding-top: 1em;
+  margin: 0 auto;
+  max-width: 100%;
+  border: 1px solid lightgray;
+  border-collapse: collapse;
+}
+
+#all-engines-table th,
+#all-engines-table td {
+  padding: 0.3em 1em;
+  min-width: max-content;
+  border: 1px solid lightgray;
+}
+
+#all-engines-table .icon {
+  width: 16px;
+  text-align: center;
+}
+
+#all-engines-table img {
+  width: 16px;
+  height: 16px;
+}
+
+#all-engines-table .deployed {
+  min-width: auto;
+  text-wrap: wrap;
+}
+
+#all-engines-table hr {
+  height: 1px;
+  border: none;
+  background-color: lightgray;
+}
