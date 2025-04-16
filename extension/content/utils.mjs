@@ -58,9 +58,38 @@ class _Utils {
   }
 
   /**
+   * Filters search-config-icons to exclude records that do not match the JEXL
+   * filter expression. Only supports filtering by OS, as that is all we
+   * currently require for search-config-icons.
+   *
+   * @param {object[]} unfilteredConfig
+   * @returns object[]
+   */
+  async filterIconConfig(unfilteredConfig) {
+    if (!this.#platform) {
+      this.#platform = (await browser.runtime.getPlatformInfo()).os;
+    }
+    let result = [];
+    for (let record of unfilteredConfig.data) {
+      if (
+        !record.filter_expression ||
+        (await browser.experiments.searchengines.jexlFilterMatches(
+          record.filter_expression,
+          this.#platform
+        ))
+      ) {
+        result.push(record);
+      }
+    }
+    return result;
+  }
+
+  /**
    * Finds an icon in the remote settings records, according to the required
    * size and returns the location.
    *
+   * @param {object[]} iconConfig
+   *   The filtered array of icon records from search-config-icons.
    * @param {string} engineIdentifier
    *   The engine identifier.
    * @param {number} iconSize
@@ -68,18 +97,10 @@ class _Utils {
    * @returns {string}
    *   The location of the icon on the remote settings server.
    */
-  async getIcon(iconConfig, engineIdentifier, iconSize) {
-    if (!this.#platform) {
-      this.#platform = (await browser.runtime.getPlatformInfo()).os;
-    }
-    for (let record of iconConfig?.data ?? []) {
+  getIcon(iconConfig, engineIdentifier, iconSize) {
+    for (let record of iconConfig ?? []) {
       if (
         (!iconSize || record.imageSize == iconSize) &&
-        (!record.filter_expression ||
-          (await browser.experiments.searchengines.jexlFilterMatches(
-            record.filter_expression,
-            this.#platform
-          ))) &&
         record.engineIdentifiers.some((i) => {
           if (i.endsWith("*")) {
             return engineIdentifier.startsWith(i.slice(0, -1));

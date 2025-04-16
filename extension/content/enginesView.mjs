@@ -108,7 +108,8 @@ export default class EnginesView extends HTMLElement {
       }
       this.#config = config;
       this.#configOverrides = configOverrides;
-      this.#iconConfig = JSON.parse(iconConfig);
+      this.#iconConfig = await Utils.filterIconConfig(JSON.parse(iconConfig));
+
       this.#attachmentBaseUrl = attachmentBaseUrl;
     }
     if (!this.#config) {
@@ -154,7 +155,7 @@ export default class EnginesView extends HTMLElement {
       Utils.addImage(
         fragment,
         this.#attachmentBaseUrl +
-          (await Utils.getIcon(this.#iconConfig, e.identifier, 16)),
+          Utils.getIcon(this.#iconConfig, e.identifier, 16),
         16,
         e
       );
