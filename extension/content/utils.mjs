@@ -21,18 +21,49 @@ class _Utils {
     element.appendChild(div);
   }
 
-  addImage(element, src, size, data = "") {
+  /**
+   * Adds an image in the element.
+   *
+   * @param {Element} parentElement
+   * @param {string} imageUrl
+   * @param {number} imageSize
+   * @param {string} data
+   *   Any data to add as a property onto the div.
+   */
+  addImage(parentElement, imageUrl, imageSize, data = "") {
     let div = document.createElement("div");
     if (data) {
       div.data = data;
     }
-    if (src) {
+    if (imageUrl) {
       let image = document.createElement("img");
-      image.src = src;
-      image.setAttribute("size", size);
+      image.src = imageUrl;
+      image.setAttribute("size", imageSize);
       div.appendChild(image);
     }
-    element.appendChild(div);
+    parentElement.appendChild(div);
+  }
+
+  /**
+   * Adds or updates the image in the element.
+   *
+   * @param {Element} parentElement
+   * @param {string} imageUrl
+   * @param {number} imageSize
+   * @param {string} data
+   *   Any data to add as a property onto the div.
+   */
+  addOrUpdateImage(parentElement, imageUrl, imageSize, data = "") {
+    if (
+      parentElement.firstChild?.tagName == "DIV" &&
+      parentElement.firstChild.firstChild?.tagName == "IMG" &&
+      parentElement.firstChild.firstChild?.getAttribute("size") == imageSize
+    ) {
+      parentElement.firstChild.firstChild.src = imageUrl;
+      return;
+    }
+    this.removeAllChildren(parentElement);
+    this.addImage(parentElement, imageUrl, imageSize, data);
   }
 
   insertOptionList(field, list) {

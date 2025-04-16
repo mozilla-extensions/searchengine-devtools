@@ -11,21 +11,31 @@
     <form>
       <div id="engines">
         <div id="tabs">
-          <button id="by-locales">Engines by locale/region</button>
-          <button id="by-engine">Locale/region by Engine</button>
-          <button id="compare-configs">Compare Configurations</button>
+          <button id="by-locales" class="tab-button">
+            Engines by locale/region
+          </button>
+          <button id="all-engines" class="tab-button">All Engines</button>
+          <button id="by-engine" class="tab-button">
+            Locale/region by Engine
+          </button>
+          <button id="compare-configs" class="tab-button">
+            Compare Configurations
+          </button>
         </div>
 
         <config-controller id="config-controller"> </config-controller>
 
         <div id="tab-contents">
-          <div id="by-locales-tab">
+          <div id="by-locales-tab" class="tab-view">
             <engines-view id="engines-view"></engines-view>
           </div>
-          <div id="by-engine-tab">
+          <div id="all-engines-tab" class="tab-view">
+            <all-engines-view id="all-engines-view"></all-engines-view>
+          </div>
+          <div id="by-engine-tab" class="tab-view">
             <by-engine-view id="by-engine-view"></by-engine-view>
           </div>
-          <div id="compare-configs-tab">
+          <div id="compare-configs-tab" class="tab-view">
             <div>
               <compare-view id="compare-view"></compare-view>
             </div>
@@ -179,6 +189,25 @@
         <strong>Private Browsing Application Default:</strong>
         <span id="private-browsing-engine"></span>
       </p>
+    </template>
+
+    <template id="all-engines-view-template">
+      <link rel="stylesheet" href="allEnginesView.css" />
+      <button id="export-to-csv">Download as CSV</button>
+      <table id="all-engines-table">
+        <thead>
+          <tr>
+            <!-- Icon column -->
+            <th>Icon</th>
+            <th>Engine Identifier</th>
+            <th>Display Name</th>
+            <th>Search URL Domain</th>
+            <th>Applications</th>
+            <th>Deployed To</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </template>
 
     <template id="by-engine-view-template">

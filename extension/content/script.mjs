@@ -9,8 +9,11 @@ import CompareView from "./compareView.mjs";
 import EngineSuggestionsView from "./engineSuggestionsView.mjs";
 import EnginesView from "./enginesView.mjs";
 import EngineUrlView from "./engineUrlView.mjs";
+import AllEnginesView from "./allEnginesView.mjs";
 
 const searchengines = browser.experiments.searchengines;
+
+const allTabs = ["by-engine", "all-engines", "by-locales", "compare-configs"];
 
 if (!searchengines) {
   alert(
@@ -28,6 +31,7 @@ async function main() {
   customElements.define("config-controller", ConfigController);
   customElements.define("compare-view", CompareView);
   customElements.define("engines-view", EnginesView);
+  customElements.define("all-engines-view", AllEnginesView);
   customElements.define("by-engine-view", ByEngineView);
   customElements.define("engine-url-view", EngineUrlView);
   customElements.define("engine-suggestions-view", EngineSuggestionsView);
@@ -61,14 +65,14 @@ async function initUI() {
   $("#by-locales").setAttribute("selected", true);
   $("#by-locales-tab").setAttribute("selected", true);
 
-  $("#by-locales").addEventListener("click", changeTabs);
-  $("#by-engine").addEventListener("click", changeTabs);
-  $("#compare-configs").addEventListener("click", changeTabs);
+  for (let tab of allTabs) {
+    $("#" + tab).addEventListener("click", changeTabs);
+  }
 }
 
 async function changeTabs(event) {
   event.preventDefault();
-  for (const tab of ["by-engine", "by-locales", "compare-configs"]) {
+  for (const tab of allTabs) {
     if (tab == event.target.id) {
       $(`#${tab}`).setAttribute("selected", true);
       $(`#${tab}-tab`).setAttribute("selected", true);
@@ -127,9 +131,7 @@ function reloadPage(event) {
       $("#compare-configs").hasAttribute("selected")
     );
 
-    let tabId = ["by-engine", "by-locales", "compare-configs"].find((t) =>
-      $(`#${t}`).getAttribute("selected")
-    );
+    let tabId = allTabs.find((t) => $(`#${t}`).getAttribute("selected"));
     await setupTabs(tabId);
 
     document.body.classList.remove("loading");
@@ -141,6 +143,9 @@ async function setupTabs(tabId) {
     switch (tabId) {
       case "compare-configs":
         await setupDiff();
+        break;
+      case "all-engines":
+        await setupAllEnginesView();
         break;
       case "by-locales":
         await setupEnginesView();
@@ -170,6 +175,17 @@ async function setupByEngine() {
       JSON.parse(await $("#config-controller").fetchPrimaryConfig())
     );
   }
+}
+
+async function setupAllEnginesView() {
+  await $("#all-engines-view").loadEngines(
+    null,
+    ...(await Promise.all([
+      $("#config-controller").fetchPrimaryConfig(),
+      $("#config-controller").getAttachmentBaseUrl(),
+      $("#config-controller").fetchIconConfig(),
+    ]))
+  );
 }
 
 async function setupEnginesView() {
