@@ -206,14 +206,9 @@
             "optional": true
           },
           {
-            "name": "applicationId",
+            "name": "applicationOS",
             "type": "string",
-            "description": "The application id to match against"
-          },
-          {
-            "name": "applicationVersion",
-            "type": "string",
-            "description": "The application version to match against"
+            "description": "The application OS to match against"
           }
         ]
       }
