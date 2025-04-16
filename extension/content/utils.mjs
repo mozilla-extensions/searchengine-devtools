@@ -58,9 +58,9 @@ class _Utils {
   }
 
   /**
-   * Filters search-config-icons to exclude records that do not match the JEXL
-   * filter expression. Only supports filtering by OS, as that is all we
-   * currently require for search-config-icons.
+   * Filters search-config-icons, keeping records without a filter expression or
+   * with expressions that matches the current platform. Only supports filtering
+   * by OS, as that is all we currently require for search-config-icons.
    *
    * @param {object[]} unfilteredConfig
    * @returns object[]
