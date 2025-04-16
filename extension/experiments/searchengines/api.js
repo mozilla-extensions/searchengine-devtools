@@ -198,16 +198,14 @@ async function getSuggestions(url, suggestionsType) {
   return { suggestions: results.remote.map((r) => r.value), error };
 }
 
-async function jexlFilterMatches(
-  filterExpression,
-  applicationId,
-  applicationVersion
-) {
+async function jexlFilterMatches(filterExpression, applicationOS) {
   if (!filterExpression) {
     return true;
   }
   return !!(await FilterExpressions.eval(filterExpression, {
-    env: { appinfo: { ID: applicationId }, version: applicationVersion },
+    env: {
+      appinfo: { OS: applicationOS },
+    },
   }));
 }
 
