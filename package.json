@@ -23,14 +23,14 @@
     "eslint-config-prettier": "10.1.2",
     "eslint-plugin-fetch-options": "0.0.5",
     "eslint-plugin-html": "8.1.2",
-    "eslint-plugin-jsdoc": "50.6.10",
+    "eslint-plugin-jsdoc": "50.6.11",
     "eslint-plugin-json": "4.0.1",
     "eslint-plugin-mozilla": "4.2.1",
     "eslint-plugin-no-unsanitized": "4.1.2",
     "eslint-plugin-promise": "7.2.1",
     "prettier": "3.5.3",
     "rimraf": "6.0.1",
-    "webpack": "5.99.6",
+    "webpack": "5.99.7",
     "webpack-cli": "6.0.1"
   },
   "scripts": {
