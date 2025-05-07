@@ -21,6 +21,15 @@ class _Utils {
     element.appendChild(div);
   }
 
+  /**
+   * Adds an image in the element.
+   *
+   * @param {Element} parentElement
+   * @param {string} imageUrl
+   * @param {number} imageSize
+   * @param {string} data
+   *   Any data to add as a property onto the div.
+   */
   addImage(element, src, size, data = "") {
     let div = document.createElement("div");
     if (data) {
@@ -33,6 +42,28 @@ class _Utils {
       div.appendChild(image);
     }
     element.appendChild(div);
+  }
+
+  /**
+   * Adds or updates the image in the element.
+   *
+   * @param {Element} parentElement
+   * @param {string} imageUrl
+   * @param {number} imageSize
+   * @param {string} data
+   *   Any data to add as a property onto the div.
+   */
+  addOrUpdateImage(parentElement, imageUrl, imageSize, data = "") {
+    if (
+      parentElement.firstChild?.tagName == "DIV" &&
+      parentElement.firstChild.firstChild?.tagName == "IMG" &&
+      parentElement.firstChild.firstChild?.getAttribute("size") == imageSize
+    ) {
+      parentElement.firstChild.firstChild.src = imageUrl;
+      return;
+    }
+    this.removeAllChildren(parentElement);
+    this.addImage(parentElement, imageUrl, imageSize, data);
   }
 
   insertOptionList(field, list) {
