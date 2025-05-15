@@ -7,7 +7,6 @@
 let FilterExpressions;
 let SearchEngineSelector;
 let SearchSuggestionController;
-let SearchUtils;
 let AppProvidedSearchEngine;
 
 // Support pre and post moz-src URLs. These are in two separate try/catch
@@ -28,9 +27,6 @@ try {
   ({ SearchSuggestionController } = ChromeUtils.importESModule(
     "resource://gre/modules/SearchSuggestionController.sys.mjs"
   ));
-  ({ SearchUtils } = ChromeUtils.importESModule(
-    "resource://gre/modules/SearchUtils.sys.mjs"
-  ));
   ({ AppProvidedSearchEngine } = ChromeUtils.importESModule(
     "resource://gre/modules/AppProvidedSearchEngine.sys.mjs"
   ));
@@ -40,9 +36,6 @@ try {
   ));
   ({ SearchSuggestionController } = ChromeUtils.importESModule(
     "moz-src:///toolkit/components/search/SearchSuggestionController.sys.mjs"
-  ));
-  ({ SearchUtils } = ChromeUtils.importESModule(
-    "moz-src:///toolkit/components/search/SearchUtils.sys.mjs"
   ));
   ({ AppProvidedSearchEngine } = ChromeUtils.importESModule(
     "moz-src:///toolkit/components/search/AppProvidedSearchEngine.sys.mjs"
@@ -106,12 +99,6 @@ async function getEngines(options) {
     }
     throw ex;
   }
-
-  result.engines = SearchUtils.sortEnginesByDefaults({
-    engines: result.engines,
-    appDefaultEngine: result.engines[0],
-    locale: options.locale,
-  });
 
   result.engines = result.engines.map((engine) => {
     let appProvidedEngine = new AppProvidedSearchEngine({ config: engine });
