@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "searchengine-devtools",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "A tool to help test search engine configuration changes",
   "homepage_url": "https://github.com/mozilla/searchengine-devtools",
   "browser_specific_settings": {
