@@ -13,7 +13,13 @@ export default class EngineUrlView extends HTMLElement {
 
   #suggestionsTable = document.getElementById("engine-suggestions-table");
 
-  #ROW_HEADERS = ["search", "suggest", "trending", "searchForm"];
+  #ROW_HEADERS = [
+    "search",
+    "suggest",
+    "trending",
+    "visualSearch",
+    "searchForm",
+  ];
 
   constructor() {
     super();
@@ -24,11 +30,11 @@ export default class EngineUrlView extends HTMLElement {
     const COL_HEADERS = [
       "URL Type",
       "",
+      "Display Name",
       "",
       // TODO: Add Method display
       // "Method",
     ];
-
     let sortedUrls = this.#ROW_HEADERS.map((key) => config.urls[key]);
 
     if (!this.#table) {
@@ -60,6 +66,8 @@ export default class EngineUrlView extends HTMLElement {
       let cell = row.insertCell();
       cell.textContent = "";
       cell = row.insertCell();
+      cell.textContent = "";
+      cell = row.insertCell();
       if (header == "suggest" || header == "trending") {
         let button = document.createElement("button");
         button.style.visibility = "hidden";
@@ -85,15 +93,17 @@ export default class EngineUrlView extends HTMLElement {
 
     sortedUrls.forEach((url, index) => {
       let row = tBody.rows[index];
-      let button = row.cells[2].getElementsByTagName("button")[0];
+      let button = row.cells[3].getElementsByTagName("button")[0];
 
       if (url) {
-        row.cells[1].replaceChildren(this.createAnchor(url));
+        row.cells[1].replaceChildren(this.createAnchor(url.uri));
+        row.cells[2].textContent = url.displayName;
         if (button) {
           button.style.visibility = "";
         }
       } else {
         row.cells[1].textContent = "Not Specified";
+        row.cells[2].textContent = "";
         if (button) {
           button.style.visibility = "hidden";
         }

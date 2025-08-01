@@ -9,11 +9,6 @@
   border: 1px solid lightgray;
 }
 
-#engine-urls-table th,
-#engine-urls-table td {
-  width: 100%;
-}
-
 #engine-urls-table th:first-child,
 #engine-urls-table td:first-child {
   width: max-content;
