@@ -37,9 +37,16 @@ try {
   ({ SearchSuggestionController } = ChromeUtils.importESModule(
     "moz-src:///toolkit/components/search/SearchSuggestionController.sys.mjs"
   ));
-  ({ AppProvidedSearchEngine } = ChromeUtils.importESModule(
-    "moz-src:///toolkit/components/search/AppProvidedSearchEngine.sys.mjs"
-  ));
+  try {
+    ({ AppProvidedSearchEngine } = ChromeUtils.importESModule(
+      "moz-src:///toolkit/components/search/AppProvidedSearchEngine.sys.mjs"
+    ));
+  } catch {
+    ({ AppProvidedConfigEngine: AppProvidedSearchEngine } =
+      ChromeUtils.importESModule(
+        "moz-src:///toolkit/components/search/ConfigSearchEngine.sys.mjs"
+      ));
+  }
 }
 
 // eslint-disable-next-line mozilla/reject-importGlobalProperties
