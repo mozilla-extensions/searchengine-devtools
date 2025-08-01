@@ -115,10 +115,22 @@ async function getEngines(options) {
     let appProvidedEngine = new AppProvidedSearchEngine({ config: engine });
 
     function getSubmission(type) {
-      return appProvidedEngine.getSubmission(
-        type == "application/x-trending+json" ? "" : SEARCH_TERMS,
-        type
-      )?.uri?.spec;
+      let engineUrl = appProvidedEngine.wrappedJSObject.getURLOfType(type);
+      let searchTerms = SEARCH_TERMS;
+      switch (type) {
+        case "application/x-trending+json":
+          searchTerms = "";
+          break;
+        case "application/x-visual-search+html":
+          searchTerms =
+            "https://searchfox.org/mozilla-central/static/icons/search.png";
+          break;
+      }
+
+      return {
+        displayName: engineUrl?.displayName,
+        uri: appProvidedEngine.getSubmission(searchTerms, type)?.uri?.spec,
+      };
     }
 
     // Return only what we need for the tables display, preferring the
@@ -138,6 +150,7 @@ async function getEngines(options) {
         suggest: getSubmission("application/x-suggestions+json"),
         trending: getSubmission("application/x-trending+json"),
         searchForm: appProvidedEngine.searchForm,
+        visualSearch: getSubmission("application/x-visual-search+html"),
       },
     };
   });

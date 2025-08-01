@@ -142,6 +142,12 @@
         }
       }
     },
+    "isNewUntil": {
+      "title": "Is New Until",
+      "type": "string",
+      "description": "Indicates the date until which the engine variant, subvariant, or URL is considered new (format: YYYY-MM-DD).",
+      "format": "date"
+    },
     "partnerCode": {
       "title": "Partner Code",
       "description": "The partner code for the engine or variant. This will be inserted into parameters which include '{partnerCode}'",
@@ -172,16 +178,43 @@
           "title": "SearchForm URL",
           "description": "The URL of the search engine homepage",
           "$ref": "#/definitions/url"
+        },
+        "visualSearch": {
+          "title": "Visual search URL",
+          "description": "The URL to use for visual searches",
+          "$ref": "#/definitions/url"
         }
       }
     },
     "url": {
       "type": "object",
       "properties": {
+        "acceptedContentTypes": {
+          "title": "Accepted content types",
+          "description": "If this URL performs searches only for certain MIME types, they should be listed here. If `None`, it's assumed the content type is text or not relevant. This field is intended to be used for URLs like visual search, which might support certain image types and not others. Consumers can use it to determine whether search UI corresponding to the URL should be shown to the user in a given context.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
         "base": {
           "title": "Base",
           "description": "The PrePath and FilePath of the URL. May include variables for engines which have a variable FilePath, e.g. {searchTerm} for when a search term is within the path of the url.",
           "type": "string"
+        },
+        "displayNameMap": {
+          "title": "Name",
+          "description": "A map from locale codes to display names of the URL. This is useful if the URL corresponds to a brand name distinct from the engine's brand name. Since brand names can be localized, this is a map rather than a URL. The client will fall back to the special locale code 'default' when its locale is not present in the map.",
+          "type": "object"
+        },
+        "excludePartnerCodeFromTelemetry": {
+          "title": "Exclude partner code from telemetry",
+          "description": "Whether the engine's partner code should be excluded from telemetry when this URL is visited.",
+          "type": "boolean"
+        },
+        "isNewUntil": {
+          "$ref": "#/definitions/isNewUntil"
         },
         "method": {
           "title": "Method",
@@ -319,6 +352,9 @@
                 "environment": {
                   "$ref": "#/definitions/environment"
                 },
+                "isNewUntil": {
+                  "$ref": "#/definitions/isNewUntil"
+                },
                 "partnerCode": {
                   "$ref": "#/definitions/partnerCode"
                 },
@@ -345,6 +381,9 @@
                     "properties": {
                       "environment": {
                         "$ref": "#/definitions/environment"
+                      },
+                      "isNewUntil": {
+                        "$ref": "#/definitions/isNewUntil"
                       },
                       "partnerCode": {
                         "$ref": "#/definitions/partnerCode"
@@ -489,7 +528,7 @@
             "type": "array",
             "items": {
               "type": "string",
-              "pattern": "^([a-z]{2,3}(-[a-zA-Z]{2,})?(-macos)?|default)$",
+              "pattern": "^(?:[a-z]{2,3}(-[a-zA-Z]{2,})?(?:-macos)?|default)$",
               "minLength": 2
             },
             "uniqueItems": true
