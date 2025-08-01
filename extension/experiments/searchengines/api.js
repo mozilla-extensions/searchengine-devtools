@@ -20,6 +20,8 @@ try {
     "moz-src:///toolkit/components/utils/FilterExpressions.sys.mjs"
   ));
 }
+// These were migrated to moz-src in FF 140, kept for now for backwards
+// compatibililty.
 try {
   ({ SearchEngineSelector } = ChromeUtils.importESModule(
     "resource://gre/modules/SearchEngineSelector.sys.mjs"
@@ -37,9 +39,18 @@ try {
   ({ SearchSuggestionController } = ChromeUtils.importESModule(
     "moz-src:///toolkit/components/search/SearchSuggestionController.sys.mjs"
   ));
-  ({ AppProvidedSearchEngine } = ChromeUtils.importESModule(
-    "moz-src:///toolkit/components/search/AppProvidedSearchEngine.sys.mjs"
-  ));
+  // This was migrated to ConfigSearchEngine in FF 143, kept for now for
+  // backwards compatibililty.
+  try {
+    ({ AppProvidedSearchEngine } = ChromeUtils.importESModule(
+      "moz-src:///toolkit/components/search/AppProvidedSearchEngine.sys.mjs"
+    ));
+  } catch {
+    ({ AppProvidedConfigEngine: AppProvidedSearchEngine } =
+      ChromeUtils.importESModule(
+        "moz-src:///toolkit/components/search/ConfigSearchEngine.sys.mjs"
+      ));
+  }
 }
 
 // eslint-disable-next-line mozilla/reject-importGlobalProperties
