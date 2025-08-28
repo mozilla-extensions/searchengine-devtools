@@ -8,8 +8,9 @@ let FilterExpressions;
 let SearchEngineSelector;
 let SearchSuggestionController;
 let AppProvidedSearchEngine;
+let AppConstants;
 
-// Support pre and post moz-src URLs. These are in two separate try/catch
+// Support pre and post moz-src URLs. These are in separate try/catch
 // statements, as we expect them to land at separate times.
 try {
   ({ FilterExpressions } = ChromeUtils.importESModule(
@@ -18,6 +19,15 @@ try {
 } catch {
   ({ FilterExpressions } = ChromeUtils.importESModule(
     "moz-src:///toolkit/components/utils/FilterExpressions.sys.mjs"
+  ));
+}
+try {
+  ({ AppConstants } = ChromeUtils.importESModule(
+    "resource://gre/modules/AppConstants.sys.mjs"
+  ));
+} catch {
+  ({ AppConstants } = ChromeUtils.importESModule(
+    "moz-src:///toolkit/modules/AppConstants.sys.mjs"
   ));
 }
 // These were migrated to moz-src in FF 140, kept for now for backwards
@@ -183,22 +193,39 @@ async function getSuggestions(url, suggestionsType) {
     Cc["@mozilla.org/systemprincipal;1"].createInstance(Ci.nsIPrincipal)
   );
 
-  let results = await controller.fetch(
-    suggestionsType == "trending" ? "" : SEARCH_TERMS,
-    false,
-    {
-      getSubmission() {
-        return { uri: Services.io.newURI(url) };
+  let results;
+  if (Services.vc.compare(AppConstants.MOZ_APP_VERSION, "144.0a1") >= 0) {
+    results = await controller.fetch({
+      searchString: suggestionsType == "trending" ? "" : SEARCH_TERMS,
+      inPrivateBrowsing: false,
+      engine: {
+        getSubmission() {
+          return { uri: Services.io.newURI(url) };
+        },
+        supportsResponseType() {
+          return true;
+        },
       },
-      supportsResponseType() {
-        return true;
+      fetchTrending: suggestionsType == "trending",
+    });
+  } else {
+    results = await controller.fetch(
+      suggestionsType == "trending" ? "" : SEARCH_TERMS,
+      false,
+      {
+        getSubmission() {
+          return { uri: Services.io.newURI(url) };
+        },
+        supportsResponseType() {
+          return true;
+        },
       },
-    },
-    0,
-    false,
-    false,
-    suggestionsType == "trending"
-  );
+      0,
+      false,
+      false,
+      suggestionsType == "trending"
+    );
+  }
 
   if (reset) {
     Services.prefs.setBoolPref("browser.search.suggest.enabled", false);
