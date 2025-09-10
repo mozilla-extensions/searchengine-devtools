@@ -9,6 +9,9 @@ export default [
       "web-ext-artifacts/",
       "extension/content/diff.js",
       "extension/content/validate.js",
+      ".venv",
+      ".vscode",
+      "**/*.html",
     ],
   },
   {

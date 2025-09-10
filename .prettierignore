@@ -1,5 +1,6 @@
 !.eslintrc.js
 !.prettierrc.js
+.venv
 .vscode
 node_modules/
 web-ext-artifacts/
