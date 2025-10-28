@@ -13,8 +13,7 @@
   },
   "background": { "scripts": ["background.js"] },
   "browser_action": {
-    "default_title": "SearchEngines Devtools",
-    "browser_style": true
+    "default_title": "SearchEngines Devtools"
   },
   "permissions": [
     "mozillaAddons",
