@@ -3,8 +3,8 @@
     "searchengines-devtools@mozilla.com": {
       "updates": [
         {
-          "version": "3.4.20250828.132357",
-          "update_link": "https://github.com/mozilla-extensions/searchengine-devtools/releases/download/3.4.0-build1/searchengine-devtools.xpi",
+          "version": "3.5.20251111.134131",
+          "update_link": "https://github.com/mozilla-extensions/searchengine-devtools/releases/download/3.5.0-build1/searchengine-devtools.xpi",
           "applications": {
             "gecko": { "strict_min_version": "128.0" }
           }
