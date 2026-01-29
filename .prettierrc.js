@@ -1,5 +1,3 @@
-/* eslint-env node */
-
 module.exports = {
   endOfLine: "lf",
   printWidth: 80,
