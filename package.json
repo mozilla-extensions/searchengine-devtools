@@ -16,6 +16,7 @@
     "web-ext": "9.2.0"
   },
   "devDependencies": {
+    "@eslint/json": "0.14.0",
     "@microsoft/eslint-plugin-sdl": "1.1.0",
     "ajv": "8.17.1",
     "ajv-formats": "3.0.1",
@@ -23,7 +24,6 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-fetch-options": "0.0.5",
     "eslint-plugin-jsdoc": "62.5.0",
-    "eslint-plugin-json": "4.0.1",
     "eslint-plugin-mozilla": "4.3.4",
     "eslint-plugin-no-unsanitized": "4.1.4",
     "eslint-plugin-promise": "7.2.1",

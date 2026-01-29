@@ -1,5 +1,5 @@
 import globals from "globals";
-import json from "eslint-plugin-json";
+import json from "@eslint/json";
 import mozilla from "eslint-plugin-mozilla";
 
 export default [
@@ -9,6 +9,7 @@ export default [
       "web-ext-artifacts/",
       "extension/content/diff.js",
       "extension/content/validate.js",
+      "package-lock.json",
       ".venv",
       ".vscode",
       "**/*.html",
@@ -24,9 +25,8 @@ export default [
   ...mozilla.configs["flat/recommended"],
   {
     files: ["**/*.json"],
-    plugins: { json },
-    processor: json.processors[".json"],
-    rules: json.configs.recommended.rules,
+    language: "json/json",
+    ...json.configs.recommended,
   },
   {
     files: ["extension/**"],
