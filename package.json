@@ -16,7 +16,7 @@
     "web-ext": "9.2.0"
   },
   "devDependencies": {
-    "@eslint/json": "0.14.0",
+    "@eslint/json": "1.0.0",
     "@microsoft/eslint-plugin-sdl": "1.1.0",
     "ajv": "8.17.1",
     "ajv-formats": "3.0.1",
