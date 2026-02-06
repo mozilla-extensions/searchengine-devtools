@@ -125,7 +125,11 @@ async function getEngines(options) {
     let appProvidedEngine = new AppProvidedSearchEngine({ config: engine });
 
     function getSubmission(type) {
-      let engineUrl = appProvidedEngine.wrappedJSObject.getURLOfType(type);
+      let engineUrl =
+        // Support running in builds prior to 149.0a1.
+        "wrappedJSObject" in appProvidedEngine
+          ? appProvidedEngine.wrappedJSObject.getURLOfType(type)
+          : appProvidedEngine.getURLOfType(type);
       let searchTerms = SEARCH_TERMS;
       switch (type) {
         case "application/x-trending+json":
