@@ -23,7 +23,7 @@
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-fetch-options": "0.0.5",
-    "eslint-plugin-jsdoc": "62.5.2",
+    "eslint-plugin-jsdoc": "62.5.4",
     "eslint-plugin-mozilla": "4.3.4",
     "eslint-plugin-no-unsanitized": "4.1.4",
     "eslint-plugin-promise": "7.2.1",
