@@ -16,7 +16,7 @@
     "web-ext": "9.2.0"
   },
   "devDependencies": {
-    "@eslint/json": "1.0.0",
+    "@eslint/json": "1.0.1",
     "@microsoft/eslint-plugin-sdl": "1.1.0",
     "ajv": "8.17.1",
     "ajv-formats": "3.0.1",
@@ -24,12 +24,12 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-fetch-options": "0.0.5",
     "eslint-plugin-jsdoc": "62.5.4",
-    "eslint-plugin-mozilla": "4.3.4",
+    "eslint-plugin-mozilla": "4.4.0",
     "eslint-plugin-no-unsanitized": "4.1.4",
     "eslint-plugin-promise": "7.2.1",
     "prettier": "3.8.1",
     "rimraf": "6.1.2",
-    "webpack": "5.105.0",
+    "webpack": "5.105.2",
     "webpack-cli": "6.0.1"
   },
   "scripts": {
