@@ -16,11 +16,11 @@
     "web-ext": "10.0.0"
   },
   "devDependencies": {
-    "@eslint/json": "1.1.0",
+    "@eslint/json": "1.2.0",
     "@microsoft/eslint-plugin-sdl": "1.1.0",
     "ajv": "8.18.0",
     "ajv-formats": "3.0.1",
-    "eslint": "10.0.3",
+    "eslint": "10.1.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-fetch-options": "0.0.5",
     "eslint-plugin-jsdoc": "62.8.0",
