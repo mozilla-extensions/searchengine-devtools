@@ -65,15 +65,27 @@ else:
 
 
 def getIdForRecord(record):
-    if args.collection == "search-config":
-        return record["webExtension"]["id"]
+    """ Gets or creates an id based on the given record.
 
+        The id is used to correlate records when comparing those on the server
+        to the dump file locally.
+
+        The field used depends on the record type from the particular collection.
+        """
+
+    # For search-telemetry-v2
     if "telemetryId" in record:
         return record["telemetryId"]
 
+    # For search-default-override-allowlist
+    if "overridesAppIdv2" in record:
+        return record["overridesAppIdv2"] + record["thirdPartyId"]
+
+    # For search-config-v2 (search engines) and search-config-overrides-v2
     if "identifier" in record:
         return record["identifier"]
 
+    # For search-config-v2 (default engine/order records)
     return record["recordType"]
 
 
