@@ -4,7 +4,40 @@ import argparse
 from getpass import getpass
 import json
 import requests
+import subprocess
 import sys
+
+def has_uncommitted_changes():
+    """Check if there are uncommitted changes in a jj or git repository."""
+    # Try jj first — works for both native jj repos and git-backed jj repos.
+    try:
+        result = subprocess.run(
+            ["jj", "diff", "--stat"],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            # Successfully queried a jj repo; jj only tracks non-ignored files
+            # so no extra filtering is needed.
+            return bool(result.stdout.strip())
+        # jj is installed but this is not a jj repository; fall back to git.
+    except FileNotFoundError:
+        pass  # jj is not installed
+
+    # Fall back to git, ignoring untracked files.
+    try:
+        result = subprocess.run(
+            ["git", "status", "--porcelain", "--untracked-files=no"],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            return bool(result.stdout.strip())
+    except FileNotFoundError:
+        pass  # git is not installed
+
+    return False
+
 
 API_ENDPOINTS = {
     "dev": "https://remote-settings-dev.allizom.org/v1/",
@@ -37,6 +70,13 @@ if args.server is None or args.collection is None:
     parser.print_help()
     sys.exit(1)
 
+if has_uncommitted_changes():
+    reply = input(
+        "\n\nWARNING: There are local uncommitted changes. Are you sure you wish to proceed? (y/N):"
+    ).lower().strip()
+    if not reply or reply[0] != "y":
+        sys.exit(1)
+
 # workspace = 'main' if args.server == 'dev' else 'main-workspace'
 
 API_ENDPOINT = API_ENDPOINTS[args.server] + "buckets/%s/collections/%s/records" % (
@@ -56,12 +96,6 @@ records = json.loads(data)
 response = requests.get(API_ENDPOINT, headers=headers)
 
 existingRecords = response.json()
-
-# Handle python 2 backwards compatibility.
-if sys.version_info[0] < 3:
-    inputFn = raw_input
-else:
-    inputFn = input
 
 
 def getIdForRecord(record):
@@ -88,7 +122,7 @@ def findRecord(id, recordSet):
 
 def yes_or_no(question):
     while "the answer is invalid":
-        reply = str(inputFn(question + " (y/n): ")).lower().strip()
+        reply = str(input(question + " (y/n): ")).lower().strip()
         if reply[0] == "y":
             return True
         if reply[0] == "n":
@@ -145,7 +179,7 @@ for record in existingRecords["data"]:
         recordsToRemove.append(record)
 
 if len(recordsToRemove) > 0:
-    print("\Records to Remove:\n")
+    print("\nRecords to Remove:\n")
 
     for record in recordsToRemove:
         print(getIdForRecord(record))
