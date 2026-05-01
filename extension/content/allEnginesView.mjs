@@ -68,6 +68,10 @@ export default class AllEnginesView extends HTMLElement {
         // Icon
         let imageCell = row.insertCell();
         imageCell.className = "icon";
+        imageCell = row.insertCell();
+        imageCell.className = "icon";
+        imageCell = row.insertCell();
+        imageCell.className = "icon";
         // Identifier
         row.insertCell();
         // Display Name
@@ -83,17 +87,26 @@ export default class AllEnginesView extends HTMLElement {
         row = rows[currentRowIndex];
       }
 
-      Utils.addOrUpdateImage(
+      Utils.addOrUpdateImages(
         row.children[0],
-        this.#attachmentBaseUrl +
-          Utils.getIcon(this.#iconConfig, record.identifier),
-        16
+        this.#attachmentBaseUrl,
+        await Utils.getIcons(this.#iconConfig, record.identifier, "mac")
       );
-      row.children[1].textContent = record.identifier;
-      row.children[2].textContent = record.base.name;
-      row.children[3].textContent = new URL(record.base.urls.search.base).host;
-      this.#insertApplications(row.children[4], record.variants);
-      this.#insertDeployments(row.children[5], record);
+      Utils.addOrUpdateImages(
+        row.children[1],
+        this.#attachmentBaseUrl,
+        await Utils.getIcons(this.#iconConfig, record.identifier, "Android")
+      );
+      Utils.addOrUpdateImages(
+        row.children[2],
+        this.#attachmentBaseUrl,
+        await Utils.getIcons(this.#iconConfig, record.identifier, "iOS")
+      );
+      row.children[3].textContent = record.identifier;
+      row.children[4].textContent = record.base.name;
+      row.children[5].textContent = new URL(record.base.urls.search.base).host;
+      this.#insertApplications(row.children[6], record.variants);
+      this.#insertDeployments(row.children[7], record);
 
       currentRowIndex++;
     }
@@ -167,7 +180,7 @@ export default class AllEnginesView extends HTMLElement {
       throw new Error("Invalid Config");
     }
     this.#config = parsedConfig;
-    this.#iconConfig = await Utils.filterIconConfig(parsedIconConfig);
+    this.#iconConfig = parsedIconConfig;
     this.#attachmentBaseUrl = attachmentBaseUrl;
   }
 
