@@ -19,7 +19,7 @@
 
 #engines-table {
   display: grid;
-  grid-template-columns: repeat(8, max-content);
+  grid-template-columns: repeat(10, max-content);
   padding-top: 1em;
   margin: 0 auto;
   width: max-content;
@@ -29,19 +29,19 @@
   padding: 0.3em 1em;
 }
 
-#engines-table > div:nth-child(-n + 8) {
+#engines-table > div:nth-child(-n + 10) {
   font-weight: bold;
   text-align: center;
   padding-bottom: 0.5em;
 }
 
-#engines-table > div:nth-child(n + 8) {
+#engines-table > div:nth-child(n + 10) {
   opacity: 0.8;
   cursor: pointer;
 }
 
-#engines-table > div:nth-child(8n + 15),
-#engines-table > div:nth-child(8n + 16) {
+#engines-table > div:nth-child(10n + 15),
+#engines-table > div:nth-child(10n + 16) {
   opacity: 1;
   text-align: center;
 }
@@ -50,12 +50,12 @@
   opacity: 1;
 }
 
-#engines-table > div > img[size="16"] {
+#engines-table > div > a > img[size="16"] {
   width: 16px;
   height: 16px;
 }
 
-#engines-table > div > img[size="24"] {
+#engines-table > div > a > img[size="24"] {
   width: 24px;
   height: 24px;
 }

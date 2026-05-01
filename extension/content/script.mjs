@@ -93,7 +93,7 @@ async function showConfig(e) {
   if (e.target.tagName.toLowerCase() != "div") {
     return;
   }
-  let id = e.target.data.identifier;
+  let id = e.target.getAttribute("identifier");
   if (!id) {
     return;
   }
