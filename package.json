@@ -13,7 +13,7 @@
   "docker-image": "node-lts-latest",
   "dependencies": {
     "diff": "9.0.0",
-    "web-ext": "10.5.0"
+    "web-ext": "10.6.0"
   },
   "devDependencies": {
     "@eslint/json": "2.0.1",
