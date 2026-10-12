@@ -54,6 +54,9 @@ async function main() {
 async function initUI() {
   $("#config-controller").addEventListener("change", reloadPage);
 
+  $("#config-version").textContent =
+    "v" + (await browser.experiments.searchengines.getCurrentConfigVersion());
+
   $("#engines-view")
     .shadowRoot.getElementById("engines-table")
     .addEventListener("click", showConfig);

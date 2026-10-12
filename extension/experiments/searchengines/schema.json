@@ -102,6 +102,17 @@
     ],
     "functions": [
       {
+        "name": "getCurrentConfigVersion",
+        "type": "function",
+        "description": "Returns the current configuration version",
+        "async": true,
+        "parameters": [],
+        "returns": {
+          "type": "integer",
+          "description": "The version number of the configuration"
+        }
+      },
+      {
         "name": "getCurrentLocale",
         "type": "function",
         "description": "Return currently configured locale",
