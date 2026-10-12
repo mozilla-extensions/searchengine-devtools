@@ -60,9 +60,16 @@ h4 {
 
 #tabs {
   display: grid;
-  grid: auto-flow / 1fr 1fr 1fr 1fr;
+  grid: auto-flow / max-content 1fr 1fr 1fr 1fr;
   margin: 0 -15px;
   padding-bottom: 15px;
+}
+
+#config-version {
+  margin: auto 1ch;
+  border: solid 1px black;
+  padding: 0.5ch;
+  background-color: #d3ffff;
 }
 
 #compare-with[hidden] {

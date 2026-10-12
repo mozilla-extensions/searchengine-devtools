@@ -9,6 +9,7 @@ let SearchEngineSelector;
 let SearchSuggestionController;
 let AppProvidedSearchEngine;
 let AppConstants;
+let SearchUtils;
 
 // Support pre and post moz-src URLs. These are in separate try/catch
 // statements, as we expect them to land at separate times.
@@ -42,12 +43,18 @@ try {
   ({ AppProvidedSearchEngine } = ChromeUtils.importESModule(
     "resource://gre/modules/AppProvidedSearchEngine.sys.mjs"
   ));
+  ({ SearchUtils } = ChromeUtils.importESModule(
+    "resource://gre/modules/SearchUtils.sys.mjs"
+  ));
 } catch {
   ({ SearchEngineSelector } = ChromeUtils.importESModule(
     "moz-src:///toolkit/components/search/SearchEngineSelector.sys.mjs"
   ));
   ({ SearchSuggestionController } = ChromeUtils.importESModule(
     "moz-src:///toolkit/components/search/SearchSuggestionController.sys.mjs"
+  ));
+  ({ SearchUtils } = ChromeUtils.importESModule(
+    "moz-src:///toolkit/components/search/SearchUtils.sys.mjs"
   ));
   // This was migrated to ConfigSearchEngine in FF 143, kept for now for
   // backwards compatibililty.
@@ -78,6 +85,16 @@ async function getCurrentRegion() {
 
 async function getRegions() {
   return Services.intl.getAvailableLocaleDisplayNames("region");
+}
+
+async function getCurrentConfigVersion() {
+  if ("configV3FeatureGate" in SearchUtils) {
+    return SearchUtils.configV3FeatureGate ? 3 : 2;
+  }
+  // The preference was introduced in Firefox 160, so anything before that should
+  // be treated as the previous version. If there is no preference after that,
+  // we assume that we are on v3.
+  return Services.vc.compare(Services.appinfo.version, "160.0") < 0 ? 2 : 3;
 }
 
 async function getCurrentLocale() {
@@ -259,6 +276,7 @@ var searchengines = class extends ExtensionAPI {
     return {
       experiments: {
         searchengines: {
+          getCurrentConfigVersion,
           getCurrentLocale,
           getRegions,
           getCurrentRegion,
