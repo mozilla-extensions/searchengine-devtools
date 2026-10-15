@@ -193,7 +193,6 @@ async function setupEnginesView() {
     null,
     ...(await Promise.all([
       $("#config-controller").fetchPrimaryConfig(),
-      $("#config-controller").fetchConfigOverrides(),
       $("#config-controller").getAttachmentBaseUrl(),
       $("#config-controller").fetchIconConfig(),
     ]))
