@@ -127,9 +127,6 @@ export default class EnginesView extends HTMLElement {
     Utils.addDiv(fragment, "Partner Code");
     Utils.addDiv(fragment, "Classification");
     Utils.addDiv(fragment, "Aliases");
-    Utils.addDiv(fragment, "Desktop");
-    Utils.addDiv(fragment, "Android");
-    Utils.addDiv(fragment, "iOS");
     for (let [i, e] of engines.entries()) {
       if (i == 0) {
         Utils.addDiv(fragment, "1 (Application Default)", e);
@@ -142,24 +139,6 @@ export default class EnginesView extends HTMLElement {
       Utils.addDiv(fragment, e.partnerCode, e);
       Utils.addDiv(fragment, e.classification, e);
       Utils.addDiv(fragment, e.aliases.join(", "), e);
-      Utils.addImages(
-        fragment,
-        this.#attachmentBaseUrl,
-        await Utils.getIcons(this.#iconConfig, e.identifier, "mac"),
-        e
-      );
-      Utils.addImages(
-        fragment,
-        this.#attachmentBaseUrl,
-        await Utils.getIcons(this.#iconConfig, e.identifier, "Android"),
-        e
-      );
-      Utils.addImages(
-        fragment,
-        this.#attachmentBaseUrl,
-        await Utils.getIcons(this.#iconConfig, e.identifier, "iOS"),
-        e
-      );
     }
     this.shadowRoot.getElementById("engines-table").textContent = "";
     this.shadowRoot.getElementById("engines-table").appendChild(fragment);
