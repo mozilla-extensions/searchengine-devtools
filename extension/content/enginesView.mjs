@@ -10,6 +10,7 @@ const enginesSelectionElements = [
   "locale-select",
   "application-name",
   "application-version",
+  "application-platform",
   "update-channel",
   "distro-id",
   "experiment-id",
@@ -98,6 +99,7 @@ export default class EnginesView extends HTMLElement {
       experiment: this.shadowRoot.getElementById("experiment-id").value,
       channel: this.shadowRoot.getElementById("update-channel").value,
       appName: this.shadowRoot.getElementById("application-name").value,
+      platform: this.shadowRoot.getElementById("application-platform").value,
       version: this.shadowRoot.getElementById("application-version").value,
     };
 

@@ -172,6 +172,10 @@
                 "type": "string",
                 "description": "The application's name"
               },
+              "platform": {
+                "type": "string",
+                "description": "The application's platform"
+              },
               "version": {
                 "type": "string",
                 "description": "The application's version",
