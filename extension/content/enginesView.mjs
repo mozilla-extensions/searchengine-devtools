@@ -3,12 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Utils from "./utils.mjs";
-import {
-  getLocales,
-  getRegions,
-  validateConfiguration,
-  validateIconConfiguration,
-} from "./loader.mjs";
+import { getLocales, getRegions, validateConfiguration } from "./loader.mjs";
 
 const enginesSelectionElements = [
   "region-select",
@@ -22,8 +17,6 @@ const enginesSelectionElements = [
 
 export default class EnginesView extends HTMLElement {
   #config = null;
-  #attachmentBaseUrl = null;
-  #iconConfig = null;
   #initializedPromise = null;
 
   constructor() {
@@ -78,7 +71,7 @@ export default class EnginesView extends HTMLElement {
     }
   }
 
-  async loadEngines(event, config, attachmentBaseUrl, iconConfig) {
+  async loadEngines(event, config) {
     if (event) {
       event.preventDefault();
     }
@@ -87,19 +80,11 @@ export default class EnginesView extends HTMLElement {
     document.getElementById("engine-urls-table").clear();
 
     if (config) {
-      if (
-        !(await validateConfiguration(JSON.parse(config))) ||
-        !(await validateIconConfiguration(JSON.parse(iconConfig)))
-      ) {
+      if (!(await validateConfiguration(JSON.parse(config)))) {
         this.#config = null;
-        this.#iconConfig = null;
-        this.#attachmentBaseUrl = null;
         throw new Error("Invalid Config");
       }
       this.#config = config;
-      this.#iconConfig = JSON.parse(iconConfig);
-
-      this.#attachmentBaseUrl = attachmentBaseUrl;
     }
     if (!this.#config) {
       return;
@@ -127,9 +112,6 @@ export default class EnginesView extends HTMLElement {
     Utils.addDiv(fragment, "Partner Code");
     Utils.addDiv(fragment, "Classification");
     Utils.addDiv(fragment, "Aliases");
-    Utils.addDiv(fragment, "Desktop");
-    Utils.addDiv(fragment, "Android");
-    Utils.addDiv(fragment, "iOS");
     for (let [i, e] of engines.entries()) {
       if (i == 0) {
         Utils.addDiv(fragment, "1 (Application Default)", e);
@@ -142,24 +124,6 @@ export default class EnginesView extends HTMLElement {
       Utils.addDiv(fragment, e.partnerCode, e);
       Utils.addDiv(fragment, e.classification, e);
       Utils.addDiv(fragment, e.aliases.join(", "), e);
-      Utils.addImages(
-        fragment,
-        this.#attachmentBaseUrl,
-        await Utils.getIcons(this.#iconConfig, e.identifier, "mac"),
-        e
-      );
-      Utils.addImages(
-        fragment,
-        this.#attachmentBaseUrl,
-        await Utils.getIcons(this.#iconConfig, e.identifier, "Android"),
-        e
-      );
-      Utils.addImages(
-        fragment,
-        this.#attachmentBaseUrl,
-        await Utils.getIcons(this.#iconConfig, e.identifier, "iOS"),
-        e
-      );
     }
     this.shadowRoot.getElementById("engines-table").textContent = "";
     this.shadowRoot.getElementById("engines-table").appendChild(fragment);
