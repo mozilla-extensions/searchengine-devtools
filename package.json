@@ -41,7 +41,7 @@
     "postbuild": "rm validate.js",
     "clean": "rimraf web-ext-artifacts extension/content/diff.js extension/content/validate.js",
     "start": "npm run clean && npm run build && web-ext run -s extension --pref \"extensions.experiments.enabled=true\"",
-    "updateschemas": "cp ../firefox/toolkit/components/search/schema/{search-config-v2-schema.json,search-config-icons-schema.json} schemas"
+    "updateschemas": "cp ../firefox/toolkit/components/search/schema/{search-config-v2-schema.json,search-config-v3-schema.json,search-config-icons-schema.json} schemas"
   },
   "private": true,
   "license": "MPLv2"

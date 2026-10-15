@@ -146,10 +146,7 @@ export default class ConfigController extends HTMLElement {
   }
 
   async #getEngineUrl(server) {
-    return (
-      this.#getConfigUrl(server) +
-      "collections/search-config-v2/records?_cachebust=%CACHEBUST%"
-    );
+    return `${this.#getConfigUrl(server)}collections/search-config-v${await browser.experiments.searchengines.getCurrentConfigVersion()}/records?_cachebust=%CACHEBUST%`;
   }
 
   #getIconsUrl(server) {

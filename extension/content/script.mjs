@@ -54,8 +54,14 @@ async function main() {
 async function initUI() {
   $("#config-controller").addEventListener("change", reloadPage);
 
-  $("#config-version").textContent =
-    "v" + (await browser.experiments.searchengines.getCurrentConfigVersion());
+  let currentVersion =
+    await browser.experiments.searchengines.getCurrentConfigVersion();
+  $("#config-version").textContent = "v" + currentVersion;
+  if (currentVersion == 2) {
+    $("#config-version").setAttribute("v2", "1");
+  } else {
+    $("#config-version").removeAttribute("v2");
+  }
 
   $("#engines-view")
     .shadowRoot.getElementById("engines-table")
