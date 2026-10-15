@@ -87,12 +87,14 @@ async function getCurrentLocale() {
 async function getEngines(options) {
   let engineSelector = new SearchEngineSelector();
 
+  // We no longer support overrides, but we still need to ensure the collection
+  // has been set to keep Rust happy. We don't have a direct API to do that, so
+  // use this instead for now. The need for this will go away once we switch
+  // to search-config-v3.
+  await engineSelector.getEngineConfiguration();
+
   engineSelector._onConfigurationUpdated({
     data: { current: JSON.parse(options.configData).data },
-  });
-
-  engineSelector._onConfigurationOverridesUpdated({
-    data: { current: JSON.parse(options.configOverridesData).data },
   });
 
   // Due to the way the extension APIs work, if these values are not specified,

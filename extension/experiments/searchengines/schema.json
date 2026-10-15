@@ -136,10 +136,6 @@
                 "type": "string",
                 "description": "The configuration to use (a JSON string)"
               },
-              "configOverridesData": {
-                "type": "string",
-                "description": "The configuration overrides to use (a JSON string)"
-              },
               "locale": {
                 "type": "string",
                 "description": "The users locale"

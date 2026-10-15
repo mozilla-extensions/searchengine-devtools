@@ -52,13 +52,6 @@ export async function validateConfiguration(config) {
   return validateCollectionToSchema(validate.validateWithSchemaV2, config);
 }
 
-export async function validateConfigurationOverrides(overrides) {
-  return validateCollectionToSchema(
-    validate.validateWithOverridesSchemaV2,
-    overrides
-  );
-}
-
 export async function validateIconConfiguration(iconConfig) {
   return validateCollectionToSchema(
     validate.validateWithIconSchemaV1,
