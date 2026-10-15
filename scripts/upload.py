@@ -121,7 +121,7 @@ def getIdForRecord(record):
     if "overridesAppIdv2" in record:
         return record["overridesAppIdv2"] + record["thirdPartyId"]
 
-    # For search-config-v2 (search engines) and search-config-overrides-v2
+    # For search-config-v2 (search engines)
     if "identifier" in record:
         return record["identifier"]
 

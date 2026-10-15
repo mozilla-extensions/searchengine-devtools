@@ -134,8 +134,6 @@ export default class ByEngineView extends HTMLElement {
       for (const subItem of allSub) {
         const { engines } = await browser.experiments.searchengines.getEngines({
           configData,
-          // No need to apply the overrides for this view.
-          configOverridesData: '{"data":[]}',
           locale: byLocale ? item : subItem,
           region: byLocale ? subItem : item,
           distroID: "",

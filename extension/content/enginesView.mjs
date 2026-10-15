@@ -7,7 +7,6 @@ import {
   getLocales,
   getRegions,
   validateConfiguration,
-  validateConfigurationOverrides,
   validateIconConfiguration,
 } from "./loader.mjs";
 
@@ -23,7 +22,6 @@ const enginesSelectionElements = [
 
 export default class EnginesView extends HTMLElement {
   #config = null;
-  #configOverrides = null;
   #attachmentBaseUrl = null;
   #iconConfig = null;
   #initializedPromise = null;
@@ -80,13 +78,7 @@ export default class EnginesView extends HTMLElement {
     }
   }
 
-  async loadEngines(
-    event,
-    config,
-    configOverrides,
-    attachmentBaseUrl,
-    iconConfig
-  ) {
+  async loadEngines(event, config, attachmentBaseUrl, iconConfig) {
     if (event) {
       event.preventDefault();
     }
@@ -97,17 +89,14 @@ export default class EnginesView extends HTMLElement {
     if (config) {
       if (
         !(await validateConfiguration(JSON.parse(config))) ||
-        !(await validateConfigurationOverrides(JSON.parse(configOverrides))) ||
         !(await validateIconConfiguration(JSON.parse(iconConfig)))
       ) {
         this.#config = null;
-        this.#configOverrides = null;
         this.#iconConfig = null;
         this.#attachmentBaseUrl = null;
         throw new Error("Invalid Config");
       }
       this.#config = config;
-      this.#configOverrides = configOverrides;
       this.#iconConfig = JSON.parse(iconConfig);
 
       this.#attachmentBaseUrl = attachmentBaseUrl;
@@ -118,7 +107,6 @@ export default class EnginesView extends HTMLElement {
 
     let options = {
       configData: this.#config,
-      configOverridesData: this.#configOverrides,
       locale: this.shadowRoot.getElementById("locale-select").value,
       region: this.shadowRoot.getElementById("region-select").value,
       distroID: this.shadowRoot.getElementById("distro-id").value,
