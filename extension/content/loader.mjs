@@ -49,7 +49,11 @@ export async function getRegions() {
 }
 
 export async function validateConfiguration(config) {
-  return validateCollectionToSchema(validate.validateWithSchemaV2, config);
+  let validator =
+    (await browser.experiments.searchengines.getCurrentConfigVersion()) == "3"
+      ? validate.validateWithSchemaV3
+      : validate.validateWithSchemaV2;
+  return validateCollectionToSchema(validator, config);
 }
 
 export async function validateIconConfiguration(iconConfig) {

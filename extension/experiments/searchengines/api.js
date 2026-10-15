@@ -104,11 +104,12 @@ async function getCurrentLocale() {
 async function getEngines(options) {
   let engineSelector = new SearchEngineSelector();
 
-  // We no longer support overrides, but we still need to ensure the collection
-  // has been set to keep Rust happy. We don't have a direct API to do that, so
-  // use this instead for now. The need for this will go away once we switch
-  // to search-config-v3.
-  await engineSelector.getEngineConfiguration();
+  if (!SearchUtils.configV3FeatureGate) {
+    // We no longer support overrides, but we still need to ensure the collection
+    // has been set to keep Rust happy. We don't have a direct API to do that, so
+    // use this instead for now. search-config-v3 does not need this.
+    await engineSelector.getEngineConfiguration();
+  }
 
   engineSelector._onConfigurationUpdated({
     data: { current: JSON.parse(options.configData).data },
@@ -160,15 +161,19 @@ async function getEngines(options) {
           break;
       }
 
+      let submission = appProvidedEngine.getSubmission(searchTerms, type);
       return {
         displayName: engineUrl?.displayName,
-        uri: appProvidedEngine.getSubmission(searchTerms, type)?.uri?.spec,
+        uri: submission?.uri?.spec,
+        partnerCode: submission?.partnerCode,
+        telemetryId: submission?.telemetryId,
       };
     }
 
     // Return only what we need for the tables display, preferring the
     // AppProvidedSearchEngine data where appropriate, since that will reflect
     // what the application is actually using.
+    let searchSubmission = getSubmission("text/html");
     return {
       aliases: appProvidedEngine.aliases,
       classification: appProvidedEngine.isGeneralPurposeEngine
@@ -176,10 +181,10 @@ async function getEngines(options) {
         : "unknown",
       identifier: appProvidedEngine.id,
       name: appProvidedEngine.name,
-      partnerCode: engine.partnerCode,
-      telemetryId: appProvidedEngine.telemetryId,
+      partnerCode: searchSubmission.partnerCode,
+      telemetryId: searchSubmission.telemetryId,
       urls: {
-        search: getSubmission("text/html"),
+        search: searchSubmission,
         suggest: getSubmission("application/x-suggestions+json"),
         trending: getSubmission("application/x-trending+json"),
         searchForm: appProvidedEngine.searchForm,
