@@ -200,11 +200,7 @@ async function setupAllEnginesView() {
 async function setupEnginesView() {
   await $("#engines-view").loadEngines(
     null,
-    ...(await Promise.all([
-      $("#config-controller").fetchPrimaryConfig(),
-      $("#config-controller").getAttachmentBaseUrl(),
-      $("#config-controller").fetchIconConfig(),
-    ]))
+    ...(await Promise.all([$("#config-controller").fetchPrimaryConfig()]))
   );
 }
 
