@@ -139,6 +139,7 @@
             <th>Region</th>
             <th>Locale</th>
             <th>Application</th>
+            <th>Platform</th>
             <th>Update Channel</th>
             <th>Distribution ID</th>
           </tr>
@@ -148,10 +149,16 @@
             <td rowspan="5">
               <select id="application-name" size="5">
                 <option value="firefox" selected>Firefox</option>
-                <option value="firefox-android">Firefox (Android)</option>
-                <option value="focus-android">Focus (Android)</option>
-                <option value="firefox-ios">Firefox (iOS)</option>
-                <option value="focus-ios">Focus (iOS)</option>
+                <option value="focus">Focus</option>
+              </select>
+            </td>
+            <td rowspan="5">
+              <select id="application-platform" size="5">
+                <option value="win" selected>Windows</option>
+                <option value="macosx">Mac</option>
+                <option value="linux">Linux</option>
+                <option value="android">Android</option>
+                <option value="ios">iOS</option>
               </select>
             </td>
             <td rowspan="5">

@@ -127,6 +127,11 @@ async function getEngines(options) {
     delete options.version;
   }
 
+  if (!SearchUtils.configV3FeatureGate) {
+    // v2 requires the app name to include the platform as well.
+    options.appName = options.appName += "-" + options.platform;
+  }
+
   let result;
   try {
     result = await engineSelector.fetchEngineConfiguration(options);
